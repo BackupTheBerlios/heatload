@@ -75,6 +75,8 @@ You may download the new release from CVS with executing the following commands:
    cvs -z3 -d:pserver:anonymous@cvs.heatload.berlios.de:/cvsroot/heatload co heatload
 When prompted for a password for anonymous, simply press the Enter key
 
+Or you can find the source and debian package here:
+   ftp://ftp.berlios.de/pub/heatload/
 
 
     

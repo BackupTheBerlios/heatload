@@ -22,12 +22,12 @@
 #include <gtk--/drawingarea.h>
 #include "MeterStruct.hh"
 #include <vector>
+#include "Structs.hh"
 
 class GraphDrawingArea : public Gtk::DrawingArea 
 {
    private:
-    guint x_size,y_size;
-
+    const guint x_size,y_size;
     struct st_meter{std::string name; MeterStruct meter;Gdk_Color color;
            st_meter(const std::string &n,const std::string &c) 
             : name (n),meter(MeterStruct()),color(c) {} };
@@ -38,7 +38,7 @@ class GraphDrawingArea : public Gtk::DrawingArea
     void meter_alloc_color();
 
 public:
-    GraphDrawingArea(const guint x,const guint y);
+    GraphDrawingArea(const guint x,const guint y,const heatload::st_color &color);
 
     virtual gint expose_event_impl(GdkEventExpose* event);
     void refresh_pixmap();

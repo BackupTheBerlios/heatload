@@ -12,14 +12,12 @@
 
 gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
    const bool _show_graph,const bool _show_label,const bool _show_decoration,
-   const bool _read_max_cap,const st_show _show_what)
+   const bool _read_max_cap,const heatload::st_show &_show_what,
+   const heatload::st_color &_color)
 : x_size(x),y_size(y),show_graph(_show_graph),show_label(_show_label),
    show_decoration(_show_decoration),read_max_cap_(_read_max_cap),
-   show_what(_show_what),use_max_cap(true),GDA(0)
+   show_what(_show_what),color(_color),use_max_cap(true),GDA(0)
 {
-  temp_color="darkred";
-  bat_color="white";
-  load_color="SeaGreen";
   init();
   hide_or_show_elements();
   read_max_cap();
@@ -109,7 +107,7 @@ void gtk_acpi::init()
   find_filenames();
   if(show_graph)
    {
-     GDA = manage(new GraphDrawingArea(x_size,y_size));
+     GDA = manage(new GraphDrawingArea(x_size,y_size,color));
      frame_draw->add(*GDA);
      GDA->show();
    }
@@ -119,12 +117,12 @@ void gtk_acpi::init()
   if(!show_label) frame_label->hide();
   else 
    {
-     set_color(*label_temp_,temp_color);
-     set_color(*label_temp, temp_color);
-     set_color(*label_bat1_, bat_color);
-     set_color(*label_bat1,  bat_color);
-     set_color(*label_load_, load_color);
-     set_color(*label_load,  load_color);
+     set_color(*label_temp_,color.temp_label);
+     set_color(*label_temp, color.temp_label);
+     set_color(*label_bat1_,color.bat_label);
+     set_color(*label_bat1, color.bat_label);
+     set_color(*label_load_,color.load_label);
+     set_color(*label_load, color.load_label);
    }
 }
 

@@ -13,3 +13,7 @@ heatload (0.3.3-1) unstable; urgency=low
 
   * 0.3.3
  -- toggles fan/ac/battery/thermal/load on/off (command-line and run-time)
+ -- working with all (known) ACPI-Versions
+
+  * 0.3.4
+ -- command-line color choice

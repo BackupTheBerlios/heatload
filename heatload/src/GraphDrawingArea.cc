@@ -20,13 +20,13 @@
 #include <gtk--/style.h>
 #include "MeterStruct.hh"
 
-GraphDrawingArea::GraphDrawingArea(const guint x,const guint y): 
+GraphDrawingArea::GraphDrawingArea(const guint x,const guint y,const heatload::st_color &color): 
     Gtk::DrawingArea(), x_size(x),y_size(y),
     color_background("black")
 {
-    VM.push_back(st_meter("Load","green"));
-    VM.push_back(st_meter("Temperature","tomato"));
-    VM.push_back(st_meter("Battery","white"));
+    VM.push_back(st_meter("Load",color.load_meter));
+    VM.push_back(st_meter("Temperature",color.temp_meter));
+    VM.push_back(st_meter("Battery",color.bat_meter));
     set_usize(x_size,y_size);
 }
 
