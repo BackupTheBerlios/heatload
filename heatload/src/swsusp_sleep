@@ -1,0 +1,24 @@
+#!/bin/bash
+
+  echo 0:0 > /proc/acpi/processor/CPU0/limit
+  /usr/sbin/hsfstop
+  umount /proc/bus/usb
+  /etc/init.d/alsa stop
+  /etc/init.d/isdnutils stop
+  /etc/init.d/networking stop
+  /etc/init.d/hotplug stop   
+  /etc/init.d/nfs-kernel-server stop
+  /etc/init.d/inetd stop
+  killall /sbin/portmap 
+  rmmod usb-uhci
+  rmmod capi
+  rmmod kernelcapi
+  rmmod capiutil  
+  rmmod fcusb2    
+  rmmod usbcore 
+  rmmod 8139too 
+  rmmod sr_mod  
+  rmmod cdrom   
+  rmmod ide-scsi
+  rmmod nfsd
+  echo -n 4 > /proc/acpi/sleep

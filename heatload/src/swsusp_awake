@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo wakeup
+
+modprobe 8139too
+/etc/init.d/networking start
+/etc/init.d/hotplug start   
+/etc/init.d/nfs-kernel-server start
+/etc/init.d/alsa start
+/etc/init.d/inetd start
+capiinit
+hwclock --hctosys

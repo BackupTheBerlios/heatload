@@ -26,7 +26,7 @@ heatload_SOURCES = \
    FileFinder.cc \
    itos.cc
 
-man_MANS = heatload.1 set_throttling.1
+man_MANS = heatload.1 set_throttling.1 swsusp_awake.1 swsusp_sleep.1
 EXTRA_DIST = $(man_MANS)
 
 noinst_HEADERS = \
