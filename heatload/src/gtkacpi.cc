@@ -108,7 +108,8 @@ int main(int argc, char **argv)
     heatload::st_widget show_widget;
     FileFinder FF;
     HeatloadGizmo HG;
-    rc_file::load(HG,show_widget,show_sudo,FF);
+    std::vector<heatload::st_auto> AutoVec;
+    rc_file::load(HG,show_widget,show_sudo,FF,AutoVec);
                                                             
     while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:tx:y:?",options,NULL))!=EOF)
      {
@@ -128,7 +129,7 @@ int main(int argc, char **argv)
      }  
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(FF,show_widget,show_sudo,HG));
+   manage(new class gtk_acpi(FF,show_widget,show_sudo,HG,AutoVec));
    m.run();
    return 0;
 }

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.11 2003/01/31 07:22:29 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.12 2003/03/24 12:27:45 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -97,6 +97,7 @@ void gtk_acpi::select_throttling(guint i,const heatload::e_find EF)
   int b=system(com.c_str());
   if(!b) show_values();
   else show_sudo_error(heatload::eCPUthrottling);
+  reset_auto_tp();
 }
 
 void gtk_acpi::fan_activate(const bool turn_on)

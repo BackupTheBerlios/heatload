@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.23 2003/01/31 07:22:29 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.24 2003/03/24 12:27:45 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,7 @@ class gtk_acpi : public gtk_acpi_glade
         GraphDrawingArea *GDA;
         FileFinder FF;
         HeatloadGizmo HG;
+        std::vector<heatload::st_auto> AutoVec;
 
         mutable heatload::st_widget show_widget;
         mutable bool show_sudo;
@@ -66,6 +67,8 @@ class gtk_acpi : public gtk_acpi_glade
 
         void show_values();
         gint timeout();
+        void test_auto_tp();
+        void reset_auto_tp();
 
         void set_color(Gtk::Widget &W,const std::string &color);
         void hide_or_show_elements() ;
@@ -76,7 +79,8 @@ class gtk_acpi : public gtk_acpi_glade
         void ende();
    public:
         gtk_acpi(const FileFinder &FF,const heatload::st_widget &show_widget,
-                const bool _show_sudo,HeatloadGizmo &HG);
+                const bool _show_sudo,HeatloadGizmo &HG,
+                std::vector<heatload::st_auto> &AutoVec);
         void set_show_sudo(bool b) const {show_sudo=b;}
         void save() const;
 };

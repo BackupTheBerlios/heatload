@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.28 2003/01/07 06:23:31 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.29 2003/03/24 12:27:45 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -30,9 +30,9 @@
 #include "WindowInfo.hh"
 
 gtk_acpi::gtk_acpi(const FileFinder &_FF,const heatload::st_widget &_show_widget,
-                const bool _show_sudo,HeatloadGizmo &_HG)
+                const bool _show_sudo,HeatloadGizmo &_HG,std::vector<heatload::st_auto> &AV)
 :
-   menu(0),GDA(0),FF(_FF),HG(_HG),
+   menu(0),GDA(0),FF(_FF),HG(_HG),AutoVec(AV),
    show_widget(_show_widget),
    show_sudo(_show_sudo)
 {
@@ -80,6 +80,7 @@ void gtk_acpi::init()
 gint gtk_acpi::timeout()
 { 
   show_values();
+  test_auto_tp();
   return 1;
 }
 

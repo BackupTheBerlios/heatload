@@ -55,6 +55,9 @@ namespace heatload{
           st_widget() : x(110),y(65),refresh(2500),decoration(false),
                        label(true),graph(true),menu(true),swsusp(true) {}          
                     };
+   struct st_auto{e_find EF; int temperature; int state; mutable bool set;
+          st_auto(e_find ef,int t,int s) : EF(ef),temperature(t),state(s),
+                                           set(false){}};
 }
 
 #endif

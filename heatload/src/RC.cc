@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.8 2003/01/30 12:22:51 thoma Exp $ */
+/* $Id: RC.cc,v 1.9 2003/03/24 12:27:45 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -28,7 +28,7 @@
 #include <fstream>
 
 void rc_file::load(HeatloadGizmo &HG,heatload::st_widget &show_widget,
-                   bool &show_sudo,FileFinder &FF)
+                   bool &show_sudo,FileFinder &FF,std::vector<heatload::st_auto> &AutoVec)
 {
   std::vector<std::string> V;
   char currentwd[10240];
@@ -86,6 +86,15 @@ cout << "FOUND   \n";
                                     i->getAttr("Name"),
                                     i->getBoolAttr("OldStyle",false)));
        }
+     const Tag *auto_throt =data->find("Auto");
+     if(auto_throt)
+      {
+        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"Throttling")
+            AutoVec.push_back(heatload::st_auto(heatload::eCPUthrottling,t->getIntAttr("Temperature"),t->getIntAttr("State")));
+        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"Performance")
+            AutoVec.push_back(heatload::st_auto(heatload::eCPUperformance,t->getIntAttr("Temperature"),t->getIntAttr("State")));
+      }
+
      HG.battery.setReadMaxCap(data->getBoolAttr("ReadMaxCap",false));
      show_sudo=data->getBoolAttr("ShowSudo",true);
      return;
@@ -141,6 +150,25 @@ void gtk_acpi::save() const
         f.setBoolAttr("OldStyle",i->second.old_style);
    }
 
+/* 
+  Tag &auto_throt=data.push_back(Tag("Auto");
+  for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
+   {
+     if(i->EF==heatload::eCPUthrottling)
+      {
+        Tag &a=auto_throt.push_back(Tag("Throttling"));
+        a.setIntAttr("Temperature",i->temperature);
+        a.setIntAttr("State",i->state);
+      }
+     else if(i->EF==heatload::eCPUperformance)
+      {
+        Tag &a=auto_throt.push_back(Tag("Performance"));
+        a.setIntAttr("Temperature",i->temperature);
+        a.setIntAttr("State",i->state);
+      }
+   }
+ */
+ 
   data.setBoolAttr("ReadMaxCap",HG.battery.ReadMaxCap());
   data.setBoolAttr("ShowSudo",show_sudo);
 

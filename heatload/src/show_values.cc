@@ -35,9 +35,26 @@ void gtk_acpi::show_values()
  if(GDA && show_widget.graph)
   {
     if(HG.cpu_load.Visible()) GDA->getVM()[0].meter.add_value(HG.cpu_load.IValue(),show_widget.x);
-    if(HG.thermal.Visible()) GDA->getVM()[1].meter.add_value(HG.thermal.IValue(),show_widget.x);
-    if(HG.battery.Visible()) GDA->getVM()[2].meter.add_value(HG.battery.Prozent(),show_widget.x);
+    if(HG.thermal.Visible())  GDA->getVM()[1].meter.add_value(HG.thermal.IValue(),show_widget.x);
+    if(HG.battery.Visible())  GDA->getVM()[2].meter.add_value(HG.battery.Prozent(),show_widget.x);
     GDA->refresh_pixmap();
   }
 }
 
+void gtk_acpi::test_auto_tp()
+{
+   for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
+    {
+      if(!i->set && i->temperature > HG.thermal.IValue())
+       { 
+         select_throttling(i->state,i->EF);
+         i->set=true;
+       }
+    }
+}
+
+void gtk_acpi::reset_auto_tp()
+{
+   for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
+      i->set = false;   
+}
