@@ -1,4 +1,4 @@
-// $Id: Tag.cc,v 1.2 2003/01/30 12:22:51 thoma Exp $
+// $Id: Tag.cc,v 1.3 2003/03/25 13:02:31 thoma Exp $
 /*  glade--: C++ frontend for glade (Gtk+ User Interface Builder)
  *  Copyright (C) 1998-2002  Christof Petig
  *
@@ -182,7 +182,7 @@ template<>
 {  return val?"true":"false"; 
 }
 #else
-#include <Misc/itos.h>
+#include "itos.h"
 
 template<>
  std::string Tag::create_value<int>(const int &val)

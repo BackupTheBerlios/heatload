@@ -1,4 +1,4 @@
-// $Id: Tag.h,v 1.1 2003/01/31 07:22:50 thoma Exp $
+// $Id: Tag.h,v 1.2 2003/03/25 13:02:31 thoma Exp $
 /*  glade--: C++ frontend for glade (Gtk+ User Interface Builder)
  *  Copyright (C) 1998-2002  Christof Petig
  *
@@ -37,10 +37,7 @@ public: // nice to have for custom parsing
     	template <class T>
     	 static T parse_value(const std::string &val) throw(std::out_of_range);
     	template <class T>
-    	 static T parse_value_def(const std::string &val, const T &def)
-    	{  try { return parse_value(val); } 
-    	   catch (std::out_of_range &e) { return def; }
-    	}
+    	 static T parse_value_def(const std::string &val, const T &def);
     	template <class T>
     	 static std::string create_value(const T &val);
     	 
@@ -100,11 +97,7 @@ public:
 	const_attiterator attfind(const std::string &name) const;
 	
 	template <class T>
-	 T getAttr(const std::string &name) const throw(std::out_of_range)
-	{  const_attiterator t=attfind(name);
-	   if (t==attend()) throw std::out_of_range(name);
-	   return parse_value<T>(t->second);
-	}
+	 T getAttr(const std::string &name) const throw(std::out_of_range);
 	template <class T>
 	 T getAttr_def(const std::string &name, const T &def) const throw()
     	{  try { return getAttr<T>(name); } 
@@ -117,11 +110,7 @@ public:
 	bool hasTag(const std::string &typ) const throw();
 	void setValue(const std::string &tg,const std::string &value) throw();
 	template <class T>
-	 T getValue(const std::string &tg) const
-	{  const_iterator t=find(begin(),tg);
-	   if (t==end()) throw std::out_of_range(tg);
-	   return parse_value<T>(t->Value());
-	}
+	 T getValue(const std::string &tg) const;
 	template <class T>
 	 T getValue_def(const std::string &tg, const T &def) const throw()
     	{  try { return getValue<T>(tg); } 
@@ -207,6 +196,12 @@ public:
 template <> std::string Tag::create_value<int>(const int &val);
 template <> std::string Tag::create_value<double>(const double &val);
 template <> std::string Tag::create_value<bool>(const bool &val);
+template <> int Tag::parse_value<int>(const std::string &value) throw(std::out_of_range);
+template <> bool Tag::parse_value<bool>(const std::string &value) throw(std::out_of_range);
+template <> long Tag::parse_value<long>(const std::string &value) throw(std::out_of_range);
+template <> double Tag::parse_value<double>(const std::string &value) throw(std::out_of_range);
+template <> float Tag::parse_value<float>(const std::string &value) throw(std::out_of_range);
+template <> std::string Tag::parse_value<std::string>(const std::string &value) throw(std::out_of_range);
 
 inline void Tag::setIntAttr(const std::string &name, int val)
 {  setAttr(name,create_value<int>(val)); }
@@ -215,5 +210,25 @@ inline void Tag::setFloatAttr(const std::string &name, double val)
 inline void Tag::setBoolAttr(const std::string &name, bool val)
 {  setAttr(name,create_value<bool>(val)); }
 
+// g++ 2.95 does not like these inlined
+template <class T>
+ T Tag::parse_value_def(const std::string &val, const T &def)
+{  try { return parse_value(val); } 
+   catch (std::out_of_range &e) { return def; }
+}
+
+template <class T>
+ T Tag::getAttr(const std::string &name) const throw(std::out_of_range)
+{  const_attiterator t=attfind(name);
+   if (t==attend()) throw std::out_of_range(name);
+   return parse_value<T>(t->second);
+}
+
+template <class T>
+ T Tag::getValue(const std::string &tg) const
+{  const_iterator t=find(begin(),tg);
+   if (t==end()) throw std::out_of_range(tg);
+   return parse_value<T>(t->Value());
+}
 
 #endif
