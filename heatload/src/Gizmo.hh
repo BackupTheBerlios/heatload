@@ -143,7 +143,7 @@ class GizmoBattery : public Gizmo
       void setUseMaxCap(const bool b) {use_max_cap=b;}
       void toggleUseMaxCap() {use_max_cap=!use_max_cap;}
       bool UseMaxCap() const {return use_max_cap;}
-
+      bool Discharging() const {return zustand==e_discharging;}
 
       const bool ReadMaxCap() const {return read_max_cap;}
       void setReadMaxCap(const bool b) {read_max_cap=b;}

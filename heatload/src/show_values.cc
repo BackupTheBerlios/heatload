@@ -51,7 +51,7 @@ void gtk_acpi::test_auto_tp()
       if(i->set) continue;
       if(i->EF==heatload::eSuspend_sleep)
        {
-        if(i->temperature >= HG.battery.Prozent())
+        if(HG.battery.Discharging() && i->temperature >= HG.battery.Prozent())
           {
 //std::cout << "SUSPEND\n";
             suspend_activate(true);
