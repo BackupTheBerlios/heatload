@@ -26,22 +26,21 @@ void gtk_acpi::get_values()
  get_battery();
  get_load_value();
 
-/*
- if(GDA)
-  {
-   GDA->getVM()[0].meter.add_value(cpu_load.load,x_size);
-   GDA->getVM()[1].meter.add_value(thermal.temp,x_size);
-   GDA->getVM()[2].meter.add_value(battery.prozent()*100,x_size);
-   GDA->refresh_pixmap();
-  }
-*/
 }
 
 void gtk_acpi::get_ac_adapter()
 {
-  ifstream fin("/proc/acpi/ac_adapter/ACAD/state");
   std::string s1,s2;
-  fin >> s1 >>s2;
+  ifstream fin("/proc/acpi/ac_adapter/state");
+  if(fin.good())
+   {
+     fin >> s1 >>s2;
+   }
+  else
+   {
+     ifstream fin("/proc/acpi/ac_adapter/ACAD/state");
+     fin >> s1 >>s2;
+   }   
   ac_adapter.state=s2;
 }
 
@@ -49,12 +48,22 @@ void gtk_acpi::get_thermal()
 {
   std::string s1,cm,te2,st;
   guint te;
-  ifstream fin1("/proc/acpi/thermal_zone/THRM/cooling_mode");
-  fin1 >> s1>>s1 >>cm;  
-  ifstream fin2("/proc/acpi/thermal_zone/THRM/temperature");
-  fin2 >> s1 >>te>>te2;  
-  ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
-  fin3 >> s1 >>st;  
+
+  ifstream fin("/proc/acpi/thermal/0/status");
+  if(fin.good())
+   {
+     fin >> s1 >> te  >> te2;
+     fin >> s1 >> st;
+   }
+  else
+   {
+     ifstream fin1("/proc/acpi/thermal_zone/THRM/cooling_mode");
+     fin1 >> s1>>s1 >>cm;  
+     ifstream fin2("/proc/acpi/thermal_zone/THRM/temperature");
+     fin2 >> s1 >>te>>te2;  
+     ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
+     fin3 >> s1 >>st;  
+   }
   thermal=st_thermal(te,itos(te)+te2,cm,st);
 }
          
@@ -62,14 +71,27 @@ void gtk_acpi::get_battery()
 {
   std::string s1;
   std::string present,charging_state;
-  int present_rate,remaining_cap;
-  ifstream fin("/proc/acpi/battery/BAT1/state");
-  fin >> s1 >> present;
-  fin >> s1 >> s1 >> s1;  
-  fin >> s1 >> s1 >> charging_state;
-  fin >> s1 >> s1 >> present_rate >> s1;  
-  fin >> s1 >> s1 >> remaining_cap >> s1;  
-
+  std::string spresent;
+  int present_rate=0,remaining_cap;
+  ifstream fin("/proc/acpi/battery/0/status");
+  if(fin.good())
+   {
+     fin >> s1 >> present;
+     fin >> s1 >> s1;
+     fin >> s1 >> s1 >> spresent_rate;
+     if(spresent_rate!="unknown") fin >> s1;  
+     else present_rate=atoi(spresent_rate.c_str());
+   }
+  else
+   {
+     ifstream fin("/proc/acpi/battery/BAT1/state");
+     fin >> s1 >> present;
+     fin >> s1 >> s1 >> s1;  
+     fin >> s1 >> s1 >> charging_state;
+     fin >> s1 >> s1 >> present_rate
+     if(present_rate!="unknown") fin >> s1;  
+     fin >> s1 >> s1 >> remaining_cap >> s1;  
+   }
   bool bpresent,bcharging_state;
   if(present=="yes") bpresent = true;
   else if (present=="no")  bpresent = false;
