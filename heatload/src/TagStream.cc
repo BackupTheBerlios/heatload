@@ -1,4 +1,4 @@
-// $Id: TagStream.cc,v 1.1 2002/12/16 11:44:15 thoma Exp $
+// $Id: TagStream.cc,v 1.2 2003/01/06 10:50:30 thoma Exp $
 /*  glade--: C++ frontend for glade (Gtk+ User Interface Builder)
  *  Copyright (C) 1998-2002  Christof Petig
  *
@@ -20,7 +20,9 @@
 #include "TagStream.hh"
 #include <cstring>
 #include <unistd.h>
-#include <algo.h>
+//#include <algo.h>
+#include <algorithm>
+
 
 //#define REMEMBER_EMPTY_SPACE
 

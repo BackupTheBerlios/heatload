@@ -1,4 +1,4 @@
-// $Id: Tag.hh,v 1.1 2002/12/16 11:44:15 thoma Exp $
+// $Id: Tag.hh,v 1.2 2003/01/06 10:50:30 thoma Exp $
 /*  glade--: C++ frontend for glade (Gtk+ User Interface Builder)
  *  Copyright (C) 1998-2002  Christof Petig
  *
@@ -24,7 +24,8 @@
 #endif
 #include <string>
 #include <vector>
-#include <algo.h> // for find
+//#include <algo.h> // for find
+#include <algorithm>
 
 class Tag {
     	std::string type;
