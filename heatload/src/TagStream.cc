@@ -1,4 +1,4 @@
-// $Id: TagStream.cc,v 1.2 2003/01/06 10:50:30 thoma Exp $
+// $Id: TagStream.cc,v 1.3 2003/01/30 12:22:51 thoma Exp $
 /*  glade--: C++ frontend for glade (Gtk+ User Interface Builder)
  *  Copyright (C) 1998-2002  Christof Petig
  *
@@ -17,12 +17,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "TagStream.hh"
+#include "TagStream.h"
 #include <cstring>
 #include <unistd.h>
-//#include <algo.h>
-#include <algorithm>
-
+#include <algo.h>
+#include <string>
 
 //#define REMEMBER_EMPTY_SPACE
 
@@ -56,7 +55,7 @@ std::string utf82iso(const std::string &s)
 }
 
 std::string TagStream::host_encoding=
-#ifdef __MINGW32__
+#if defined (__MINGW32__) || defined(SIGC1_2)
 				"UTF-8";
 #else
 				"ISO-8859-1";
@@ -106,9 +105,7 @@ std::string TagStream::de_xml(const std::string &cont)
          else if (tag=="&lt;") ret+='<';
          else if (tag=="&gt;") ret+='>';
          else if (tag=="&quot;") ret+='"';
-#ifndef __MINGW32__         
-         else if (tag=="&auml;") ret+='ä'; // and so on ... but glade simply passes them
-#endif         
+         else if (tag=="&auml;") ret+="Ã¤"; // and so on ... but glade simply passes them
          else
          {  ret+=tag;
          }

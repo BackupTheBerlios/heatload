@@ -20,6 +20,7 @@
 #include "Gizmo.hh"
 #include "itos.h"
 #include <fstream>
+#include <iostream>
 
 
 const std::string Gizmo::Value()
