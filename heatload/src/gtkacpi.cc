@@ -32,6 +32,9 @@ void usage(const std::string &name)
                "                     BIOS the reading of the info file freezes the keybord on\n"
                "                     this laptop. If you don't have a Sony Vaio it should be\n"
                "                     save to use this option.\n\n"
+               "    run-time-options:\n"
+               "    -c        Toggles between designed- and last-max-capacity\n"
+               "              when calculating the batterys fill-percentage\n\n"
                ;
   exit(1);
 }

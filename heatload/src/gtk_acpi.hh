@@ -24,6 +24,7 @@ class gtk_acpi : public gtk_acpi_glade
         const bool show_label;
         const bool show_decoration;
         const bool read_max_cap_;
+        bool use_max_cap;
         
         std::string temp_color;
         std::string bat_color;

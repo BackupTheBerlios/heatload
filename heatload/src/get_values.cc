@@ -26,6 +26,7 @@ void gtk_acpi::get_values()
  get_battery();
  get_load_value();
 
+/*
  if(GDA)
   {
    GDA->getVM()[0].meter.add_value(cpu_load.load,x_size);
@@ -33,6 +34,7 @@ void gtk_acpi::get_values()
    GDA->getVM()[2].meter.add_value(battery.prozent()*100,x_size);
    GDA->refresh_pixmap();
   }
+*/
 }
 
 void gtk_acpi::get_ac_adapter()

@@ -14,7 +14,8 @@ gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
    const bool _show_graph,const bool _show_label,const bool _show_decoration,
    const bool _read_max_cap)
 : x_size(x),y_size(y),show_graph(_show_graph),show_label(_show_label),
-   show_decoration(_show_decoration),read_max_cap_(_read_max_cap),GDA(0)
+   show_decoration(_show_decoration),read_max_cap_(_read_max_cap),
+   use_max_cap(true),GDA(0)
 {
   temp_color="darkred";
   bat_color="white";
@@ -37,7 +38,7 @@ void gtk_acpi::read_max_cap()
    fin >> s1 >> s1 >> max_cap;
    fin >> s1 >> s1 >> s1 >> last_max_cap;
   }
- else { max_cap=44100; last_max_cap=40000;}
+ else { max_cap=44100; last_max_cap=20000;}
 }
 
 
@@ -100,6 +101,7 @@ void gtk_acpi::ende()
 gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
 {
 //  if(ev->keyval=='q') ende();
+  if(ev->keyval=='c') use_max_cap = !use_max_cap;
   return false;
 }
 

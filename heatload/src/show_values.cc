@@ -34,14 +34,17 @@ void gtk_acpi::show_values()
   {
     GDA->getVM()[0].meter.add_value(cpu_load.load,x_size);
     GDA->getVM()[1].meter.add_value(thermal.temp,x_size);
-    GDA->getVM()[2].meter.add_value(battery.prozent()*100,x_size);
+    if(use_max_cap) GDA->getVM()[2].meter.add_value(battery.prozent()*100,x_size);
+    else            GDA->getVM()[2].meter.add_value(battery.prozent_last()*100,x_size);
     GDA->refresh_pixmap();
   }
 }
 
 std::string gtk_acpi::remaining_time()
 {
-  std::string prozstring = battery.prozent_string();
+  std::string prozstring;
+  if(use_max_cap) prozstring = battery.prozent_string();
+  else            prozstring = battery.prozent_last_string();
   double th;
   if(battery.charging)
    {
