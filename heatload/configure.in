@@ -2,7 +2,7 @@
 # using glademm V0.6.4b_cvs
 
 AC_INIT(src/gtkacpi.cc)
-AM_INIT_AUTOMAKE(gtkacpi, 0.3.1)
+AM_INIT_AUTOMAKE(gtkacpi, 0.6.2)
 AM_CONFIG_HEADER(config.h)
 
 AC_ISC_POSIX

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.10 2003/01/07 07:34:33 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.11 2003/01/31 07:22:29 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@ void gtk_acpi::menu_init()
   throttling->set_submenu(*throttling_menu);
   for(std::vector<GizmoThrottling::st_state>::const_iterator i=HG.cpu_throttling.getVec().begin();i!=HG.cpu_throttling.getVec().end();++i)
    {Gtk::MenuItem *_t = manage(new class Gtk::MenuItem(i->prozent));
-     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state));
+     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state,heatload::eCPUthrottling));
      throttling_menu->append(*_t);
    }
   }
@@ -38,7 +38,7 @@ void gtk_acpi::menu_init()
   performance->set_submenu(*performance_menu);
   for(std::vector<GizmoThrottling::st_state>::const_iterator i=HG.cpu_performance.getVec().begin();i!=HG.cpu_performance.getVec().end();++i)
    {Gtk::MenuItem *_t = manage(new class Gtk::MenuItem(i->prozent));
-     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state));
+     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state,heatload::eCPUperformance));
      performance_menu->append(*_t);
    }
   }
@@ -91,9 +91,9 @@ void gtk_acpi::menu_init()
   menu->show_all();
 }
 
-void gtk_acpi::select_throttling(guint i)
+void gtk_acpi::select_throttling(guint i,const heatload::e_find EF)
 {
-  std::string com = "sudo /usr/sbin/set_throttling "+itos(i)+" "+FF.getFileName(heatload::eCPUthrottling);
+  std::string com = "sudo /usr/sbin/set_throttling "+itos(i)+" "+FF.getFileName(EF);
   int b=system(com.c_str());
   if(!b) show_values();
   else show_sudo_error(heatload::eCPUthrottling);
