@@ -31,12 +31,16 @@ void gtk_acpi::get_values()
 void gtk_acpi::get_ac_adapter()
 {
   std::string s1,s2;
-  ifstream fin("/proc/acpi/ac_adapter/0/status");
+  ifstream fin("/proc/acpi/ac_adapter/AC0/status");
   if(!fin.good()) {
      fin.close();
      fin.open("/proc/acpi/ac_adapter/ACAD/state");   
-     if(!fin.good())
-       {cerr << "Sorry can't open 'ac_adapter/state' in /proc/acpi\n"; exit(1);}
+     if(!fin.good()) {
+        fin.close();
+        fin.open("/proc/acpi/ac_adapter/0/state");
+        if(!fin.good())
+          {cerr << "Sorry can't open 'ac_adapter/state' in /proc/acpi\n"; exit(1);}
+      }
     }
   fin >> s1 >>s2;
   ac_adapter.state=s2;
@@ -73,16 +77,20 @@ void gtk_acpi::get_battery()
   std::string present,charging_state;
   std::string spresent_rate;
   int present_rate=0,remaining_cap=0;
-  ifstream fin("/proc/acpi/battery/0/status");
-  bool old_style=false;
+  bool new_style=true;
+  ifstream fin("/proc/acpi/battery/BAT0/state");
   if(!fin.good()) {
       fin.close();
       fin.open("/proc/acpi/battery/BAT1/state");
-      old_style=true;
+      if(!fin.good()) {
+         fin.close();
+         fin.open("/proc/acpi/battery/0/status"); 
+         new_style=false;
+       }
     }
   fin >> s1 >> present;
   fin >> s1 >> s1;
-  if(old_style) { fin >> s1;
+  if(new_style) { fin >> s1;
      fin >> s1 >> s1 >> charging_state;
     }
   fin >> s1 >> s1 >> spresent_rate; 

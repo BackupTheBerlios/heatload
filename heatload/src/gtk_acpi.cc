@@ -35,7 +35,10 @@ void gtk_acpi::read_max_cap()
    ifstream fin("/proc/acpi/battery/0/info");
    if(!fin.good()) {
       fin.close();
-      fin.open("/proc/acpi/battery/BAT1/info");
+      fin.open("/proc/acpi/battery/BAT0/info");
+      if(!fin.good()) {
+         fin.close();
+         fin.open("/proc/acpi/battery/BAT1/info"); }
       if(!fin.good()) 
          {cerr << "Sorry can't open 'battery info' in /proc/acpi\n"; exit(1);}
      }
