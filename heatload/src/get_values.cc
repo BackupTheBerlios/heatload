@@ -32,15 +32,13 @@ void gtk_acpi::get_ac_adapter()
 {
   std::string s1,s2;
   ifstream fin("/proc/acpi/ac_adapter/state");
-  if(fin.good())
-   {
-     fin >> s1 >>s2;
-   }
-  else
-   {
-     ifstream fin("/proc/acpi/ac_adapter/ACAD/state");
-     fin >> s1 >>s2;
-   }   
+  if(!fin.good()) {
+     fin.close();
+     fin.open("/proc/acpi/ac_adapter/ACAD/state");   
+     if(!fin.good())
+       {cerr << "Sorry can't open 'ac_adapter/state' in /proc/acpi\n"; exit(1);}
+    }
+  fin >> s1 >>s2;
   ac_adapter.state=s2;
 }
 
@@ -63,6 +61,8 @@ void gtk_acpi::get_thermal()
      fin2 >> s1 >>te>>te2;  
      ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
      fin3 >> s1 >>st;  
+     if(!fin1.good() || !fin2.good() || !fin3.good())
+      {cerr << "Sorry can't open 'thermal state' in /proc/acpi\n"; exit(1);}
    }
   thermal=st_thermal(te,itos(te)+te2,cm,st);
 }
@@ -74,43 +74,40 @@ void gtk_acpi::get_battery()
   std::string spresent_rate;
   int present_rate=0,remaining_cap=0;
   ifstream fin("/proc/acpi/battery/0/status");
-  if(fin.good())
-   {
-     fin >> s1 >> present;
-     fin >> s1 >> s1;
-     fin >> s1 >> s1 >> spresent_rate;
-     if(spresent_rate!="unknown") 
-      { fin >> s1;  
-        present_rate=atoi(spresent_rate.c_str());
-      }
-     fin >> s1 >> s1 >> remaining_cap >> s1;  
-   }
-  else
-   {
-     ifstream fin("/proc/acpi/battery/BAT1/state");
-     fin >> s1 >> present;
-     fin >> s1 >> s1 >> s1;  
+  bool old_style=false;
+  if(!fin.good()) {
+      fin.close();
+      fin.open("/proc/acpi/battery/BAT1/state");
+      old_style=true;
+    }
+  fin >> s1 >> present;
+  fin >> s1 >> s1;
+  if(old_style) { fin >> s1;
      fin >> s1 >> s1 >> charging_state;
-     fin >> s1 >> s1 >> spresent_rate;
-     if(spresent_rate!="unknown") 
-      { fin >> s1;  
-        present_rate=atoi(spresent_rate.c_str());
-      }
-     fin >> s1 >> s1 >> remaining_cap >> s1;  
+    }
+  fin >> s1 >> s1 >> spresent_rate; 
+  if(spresent_rate!="unknown") 
+   { fin >> s1;  
+     present_rate=atoi(spresent_rate.c_str());
    }
+  fin >> s1 >> s1 >> remaining_cap >> s1;  
+
   bool bpresent,bcharging_state;
   if(present=="yes") bpresent = true;
   else if (present=="no")  bpresent = false;
   else 
-   { cerr<<"'Present:' should be 'yes' or 'no' in '/proc/acpi/battery/BAT1/state'\n"
-         " but I it seems to be '"<<present<<"' assuming 'yes'\n";
+   { cerr<<"'Present:' should be 'yes' or 'no' in '/proc/acpi/battery/BAT1/state',\n"
+         " it seems to be '"<<present<<"' assuming 'yes'\n";
      bpresent = true;
    }
   if(charging_state=="charging") bcharging_state = true;
   else if (charging_state=="discharging")  bcharging_state = false;
   else 
    { cerr<<"'Present Rate:' should be 'charging' or 'discharging' in '/proc/acpi/battery/BAT1/state'\n"
-         " but I it is '"<<charging_state<<"' assuming 'charging'\n";
+         " but I it is '"<<charging_state<<"' assuming 'charging'\n"
+         " if you have a 'charging state' in /proc/acpi/battery/0/status\n"
+         " (or anywhere else) please submit a 'cat' of this file to me"
+         " <thoma@muenster.de>\n";
      bcharging_state = true;
    }
   battery=st_battery(bpresent,bcharging_state,present_rate,remaining_cap,max_cap,last_max_cap);
