@@ -47,11 +47,11 @@ void gtk_acpi::get_thermal()
   if(!therm_file.old_style)
    {
      ifstream fin1("/proc/acpi/thermal_zone/THRM/cooling_mode");
-     fin1 >> s1>>s1 >>cm;  
+     if(fin1.good()) fin1 >> s1>>s1 >>cm;  
 //     ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
 //     fin3 >> s1 >>st;  
-     if(!fin1.good())
-      {cerr << "Sorry can't open '/proc/acpi/thermal_zone/THRM/cooling_mode'\n"; abort();}
+//     if(!fin1.good())
+//      {cerr << "Sorry can't open '/proc/acpi/thermal_zone/THRM/cooling_mode'\n"; abort();}
    }
   thermal=st_thermal(te,te2,cm);
 }

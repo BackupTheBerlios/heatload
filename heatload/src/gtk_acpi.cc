@@ -95,7 +95,7 @@ bool gtk_acpi::find_filename(const e_find EF,const std::vector<st_find_filename>
       }
    }
   // Fehler
-  cerr << " Sorry can't open none of the following files:\n";
+  cerr << " Sorry can't open one of the following files:\n";
   for(std::vector<st_find_filename>::const_iterator i=F.begin();i!=F.end();++i)
      cerr << '\t'<<i->name<<'\n';
   cerr << "\n";
