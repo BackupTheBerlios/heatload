@@ -32,6 +32,16 @@ class gtk_acpi : public gtk_acpi_glade
         int max_cap,last_max_cap;
         
         friend class gtk_acpi_glade;
+
+        enum e_find{eAC,eBat,eThermal};
+        struct st_find_filename{std::string name;bool old_style;
+               st_find_filename() : old_style(false) {}
+               st_find_filename(const std::string n):name(n),old_style(false){}
+               st_find_filename(const std::string n,const bool o):name(n),old_style(o){}};
+        st_find_filename ac_file;
+        st_find_filename bat_file;
+        st_find_filename therm_file;
+        
         struct st_ac_adapter{std::string state;};
         struct st_cpu_load{guint load;};
         struct st_thermal{guint temp;std::string einheit;
@@ -67,6 +77,9 @@ class gtk_acpi : public gtk_acpi_glade
         st_cpu_load cpu_load;
 
         void init();
+        void find_filenames();
+        bool find_filename(const e_find EF,const std::vector<st_find_filename> &F);
+
         void read_max_cap();
         void show_values();
         std::string remaining_time();

@@ -51,8 +51,61 @@ void gtk_acpi::read_max_cap()
 }
 
 
+void gtk_acpi::find_filenames()
+{
+  bool alles_ok=true;
+  std::vector<st_find_filename> F;
+  F.push_back(st_find_filename("/proc/acpi/ac_adapter/AC0/state"));
+  F.push_back(st_find_filename("/proc/acpi/ac_adapter/ACAD/state"));
+  F.push_back(st_find_filename("/proc/acpi/ac_adapter/0/status"));
+  bool ok=find_filename(eAC,F);
+  if(!ok) alles_ok=ok;
+
+  F.clear(); 
+  F.push_back(st_find_filename("/proc/acpi/battery/BAT0/state"));
+  F.push_back(st_find_filename("/proc/acpi/battery/BAT1/state"));
+  F.push_back(st_find_filename("/proc/acpi/battery/0/status",true));
+  ok=find_filename(eBat,F);
+  if(!ok) alles_ok=ok;
+
+  F.clear(); 
+  F.push_back(st_find_filename("/proc/acpi/thermal_zone/THRM/temperature"));
+  F.push_back(st_find_filename("/proc/acpi/thermal/0/status",true));
+  ok=find_filename(eThermal,F);
+  if(!ok) alles_ok=ok;
+  if(!alles_ok) abort();
+  cout <<"Reading from \n\t"<<ac_file.name<<"\n\t"<<bat_file.name
+       <<"\n\t"<<therm_file.name<<'\n';
+}
+
+bool gtk_acpi::find_filename(const e_find EF,const std::vector<st_find_filename> &F)
+{
+  ifstream fin;
+  for(std::vector<st_find_filename>::const_iterator i=F.begin();i!=F.end();++i)
+   {
+     fin.close();
+     fin.open(i->name.c_str());
+     if(fin.good())
+      {
+        switch (EF) {
+           case eAC:     ac_file=*i   ; return true;
+           case eBat:    bat_file=*i  ; return true;
+           case eThermal:therm_file=*i; return true;
+         }
+      }
+   }
+  // Fehler
+  cerr << " Sorry can't open none of the following files:\n";
+  for(std::vector<st_find_filename>::const_iterator i=F.begin();i!=F.end();++i)
+     cerr << '\t'<<i->name<<'\n';
+  cerr << "\n";
+  return false;
+}
+
+
 void gtk_acpi::init()
 {
+  find_filenames();
   if(show_graph)
    {
      GDA = manage(new GraphDrawingArea(x_size,y_size));

@@ -31,17 +31,7 @@ void gtk_acpi::get_values()
 void gtk_acpi::get_ac_adapter()
 {
   std::string s1,s2;
-  ifstream fin("/proc/acpi/ac_adapter/AC0/state");
-  if(!fin.good()) {
-     fin.close();
-     fin.open("/proc/acpi/ac_adapter/ACAD/state");   
-     if(!fin.good()) {
-        fin.close();
-        fin.open("/proc/acpi/ac_adapter/0/status");
-        if(!fin.good())
-          {cerr << "Sorry can't open 'ac_adapter/state' in /proc/acpi\n"; exit(1);}
-      }
-    }
+  ifstream fin(ac_file.name.c_str());
   fin >> s1 >>s2;
   ac_adapter.state=s2;
 }
@@ -51,22 +41,17 @@ void gtk_acpi::get_thermal()
   std::string s1,cm,te2;
   guint te;
 
-  ifstream fin("/proc/acpi/thermal/0/status");
-  if(fin.good())
-   {
-     fin >> s1 >> te  >> te2;
-//     fin >> s1 >> st;
-   }
-  else
+  ifstream fin(therm_file.name.c_str());
+  fin >> s1 >> te  >> te2;
+
+  if(!therm_file.old_style)
    {
      ifstream fin1("/proc/acpi/thermal_zone/THRM/cooling_mode");
      fin1 >> s1>>s1 >>cm;  
-     ifstream fin2("/proc/acpi/thermal_zone/THRM/temperature");
-     fin2 >> s1 >>te>>te2;  
 //     ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
 //     fin3 >> s1 >>st;  
-     if(!fin1.good() || !fin2.good() )
-      {cerr << "Sorry can't open 'thermal state' in /proc/acpi\n"; exit(1);}
+     if(!fin1.good())
+      {cerr << "Sorry can't open '/proc/acpi/thermal_zone/THRM/cooling_mode'\n"; abort();}
    }
   thermal=st_thermal(te,te2,cm);
 }
@@ -77,22 +62,13 @@ void gtk_acpi::get_battery()
   std::string present,charging_state;
   std::string spresent_rate;
   int present_rate=0,remaining_cap=0;
-  bool new_style=true;
-  ifstream fin("/proc/acpi/battery/BAT0/state");
-  if(!fin.good()) {
-      fin.close();
-      fin.open("/proc/acpi/battery/BAT1/state");
-      if(!fin.good()) {
-         fin.close();
-         fin.open("/proc/acpi/battery/0/status"); 
-         new_style=false;
-       }
-    }
+  ifstream fin(bat_file.name.c_str());
   fin >> s1 >> present;
   fin >> s1 >> s1;
-  if(new_style) { fin >> s1;
+  if(!bat_file.old_style) 
+   { fin >> s1;
      fin >> s1 >> s1 >> charging_state;
-    }
+   }
   fin >> s1 >> s1 >> spresent_rate; 
   if(spresent_rate!="unknown") 
    { fin >> s1;  
