@@ -28,7 +28,7 @@ void gtk_acpi::show_values()
     label_temp->set_text(thermal.temperatur+"° "+thermal.state);
     label_cooling->set_text(thermal.cooling_mode);
     label_bat1->set_text(remaining_time());
-    label_load->set_text(itos(cpu_load.load));
+    label_load->set_text(itos(cpu_load.load)+"%");
   }
  if(GDA && show_graph)
   {

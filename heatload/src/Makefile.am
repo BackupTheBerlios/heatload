@@ -14,7 +14,8 @@ heatload_SOURCES = \
    GraphDrawingArea.cc \
    itos.cc
 
-heatload_MANPAGE = heatload.1
+man_MANS = heatload.1
+EXTRA_DIST = $(man_MANS)
 
 noinst_HEADERS = \
 	gtk_acpi_glade.hh \
