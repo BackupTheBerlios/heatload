@@ -108,6 +108,7 @@ gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
 {
 //  if(ev->keyval=='q') ende();
   if(ev->keyval=='c') use_max_cap = !use_max_cap;
+  if(ev->keyval=='r') get_show();
   return false;
 }
 

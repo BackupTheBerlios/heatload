@@ -35,6 +35,7 @@ void usage(const std::string &name)
                "    run-time-options:\n"
                "    -c        Toggles between designed- and last-max-capacity\n"
                "              when calculating the batterys fill-percentage\n\n"
+               "    -r        Immediate reload\n"
                ;
   exit(1);
 }
