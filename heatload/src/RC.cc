@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.2 2002/12/17 09:13:18 thoma Exp $ */
+/* $Id: RC.cc,v 1.3 2002/12/18 13:29:17 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -24,7 +24,8 @@
 #include <TagStream.hh>
 
 void rc_file::load(heatload::st_show &show_what,heatload::st_color &color,
-                  heatload::st_widget &show_widget,bool &read_max_cap)
+                  heatload::st_widget &show_widget,bool &read_max_cap,
+                  bool &show_sudo)
 {
   std::vector<std::string> V;
   char currentwd[10240];
@@ -71,12 +72,14 @@ cout << "looking for "<<*i<<'\n';
          color.load_meter = tcolor->getAttr("Load_Meter");
       }           
      read_max_cap=data->getBoolAttr("ReadMaxCap",false);
+     show_sudo=data->getBoolAttr("ShowSudo",true);
      return;
    }
 }
 
 void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &color,
-                  const heatload::st_widget &show_widget,const bool &read_max_cap)
+                  const heatload::st_widget &show_widget,const bool read_max_cap,
+                  const bool show_sudo)
 {                  
   std::string file=std::string(getenv("HOME"))+"/.heatloadrc";
   std::ofstream datei(file.c_str());
@@ -113,6 +116,7 @@ void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &
   tcolor.setAttr("Load_Meter",color.load_meter);
 
   data.setBoolAttr("ReadMaxCap",read_max_cap);
+  data.setBoolAttr("ShowSudo",show_sudo);
 
   ts.write(datei);
 }

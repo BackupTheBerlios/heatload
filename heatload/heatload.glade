@@ -475,7 +475,7 @@
 		  <xpad>0</xpad>
 		  <ypad>0</ypad>
 		  <xexpand>False</xexpand>
-		  <yexpand>True</yexpand>
+		  <yexpand>False</yexpand>
 		  <xshrink>True</xshrink>
 		  <yshrink>True</yshrink>
 		  <xfill>True</xfill>
@@ -491,7 +491,7 @@
 		  <widget>
 		    <class>GtkLabel</class>
 		    <name>label_cpu_throttling_</name>
-		    <label>CPU: </label>
+		    <label>Throt.: </label>
 		    <justify>GTK_JUSTIFY_CENTER</justify>
 		    <wrap>False</wrap>
 		    <xalign>0</xalign>
@@ -528,6 +528,111 @@
 	  </widget>
 	</widget>
       </widget>
+    </widget>
+  </widget>
+</widget>
+
+<widget>
+  <class>GtkWindow</class>
+  <name>WindowInfo</name>
+  <title>Info</title>
+  <type>GTK_WINDOW_TOPLEVEL</type>
+  <position>GTK_WIN_POS_NONE</position>
+  <modal>False</modal>
+  <allow_shrink>True</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>True</auto_shrink>
+
+  <widget>
+    <class>GtkTable</class>
+    <name>table4</name>
+    <rows>2</rows>
+    <columns>2</columns>
+    <homogeneous>False</homogeneous>
+    <row_spacing>0</row_spacing>
+    <column_spacing>0</column_spacing>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button_close</name>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button_close_clicked</handler>
+	<last_modification_time>Tue, 17 Dec 2002 14:22:59 GMT</last_modification_time>
+      </signal>
+      <label>Close</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+      <child>
+	<left_attach>1</left_attach>
+	<right_attach>2</right_attach>
+	<top_attach>1</top_attach>
+	<bottom_attach>2</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>False</xexpand>
+	<yexpand>False</yexpand>
+	<xshrink>False</xshrink>
+	<yshrink>False</yshrink>
+	<xfill>True</xfill>
+	<yfill>False</yfill>
+      </child>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label_info</name>
+      <cxx_visibility>protected</cxx_visibility>
+      <label>label4</label>
+      <justify>GTK_JUSTIFY_LEFT</justify>
+      <wrap>False</wrap>
+      <xalign>7.45058e-09</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+      <child>
+	<left_attach>0</left_attach>
+	<right_attach>2</right_attach>
+	<top_attach>0</top_attach>
+	<bottom_attach>1</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>False</xexpand>
+	<yexpand>False</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>False</yfill>
+      </child>
+    </widget>
+
+    <widget>
+      <class>GtkCheckButton</class>
+      <name>checkbutton_show</name>
+      <cxx_visibility>protected</cxx_visibility>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>toggled</name>
+	<handler>on_checkbutton_show_toggled</handler>
+	<last_modification_time>Wed, 18 Dec 2002 07:52:04 GMT</last_modification_time>
+      </signal>
+      <label>don't show this window again</label>
+      <active>False</active>
+      <draw_indicator>True</draw_indicator>
+      <child>
+	<left_attach>0</left_attach>
+	<right_attach>1</right_attach>
+	<top_attach>1</top_attach>
+	<bottom_attach>2</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>False</xexpand>
+	<yexpand>False</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>False</yfill>
+      </child>
     </widget>
   </widget>
 </widget>

@@ -4,7 +4,7 @@
 # newer (non customized) versions of this file go to Makefile.am_new
 
 bin_PROGRAMS = heatload
-sbin_SCRIPTS = sudo_set_throttling
+sbin_SCRIPTS = set_throttling
 
 heatload_SOURCES = \
 	gtkacpi.cc\
@@ -18,9 +18,11 @@ heatload_SOURCES = \
    RC.cc \
    TagStream.cc \
    Tag.cc \
+   WindowInfo.cc \
+   WindowInfo_glade.cc \
    itos.cc
 
-man_MANS = heatload.1 sudo_set_throttling.1
+man_MANS = heatload.1 set_throttling.1
 EXTRA_DIST = $(man_MANS)
 
 noinst_HEADERS = \
@@ -31,6 +33,8 @@ noinst_HEADERS = \
    RC.hh \
    TagStream.hh \
    Tag.hh \
+   WindowInfo.hh \
+   WindowInfo_glade.hh \
    itos.h 
 
 CXXFLAGS = @CXXFLAGS@ @GTKMM_CFLAGS@ 

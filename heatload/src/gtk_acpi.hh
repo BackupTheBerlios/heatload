@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.14 2002/12/17 09:13:18 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.15 2002/12/18 13:29:17 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -46,10 +46,11 @@ class gtk_acpi : public gtk_acpi_glade
         const bool read_max_cap_;
         heatload::st_show show_what;
         heatload::st_color color;
-        bool use_max_cap;
+        bool use_max_cap,show_sudo;
         int max_cap,last_max_cap;
         
         friend class gtk_acpi_glade;
+        friend class WindowInfo;
 
         enum e_find{eAC,eBat,eThermal,eCPUthrottling};
         struct st_find_filename{std::string name;bool old_style;
@@ -110,6 +111,8 @@ class gtk_acpi : public gtk_acpi_glade
         void load_thrott_file();
         st_throttling throttling_from_state(const std::string &s);
 
+        void show_sudo_error();
+        void show_run_time_options();
         void find_filenames();
         bool find_filename(const e_find EF,const std::vector<st_find_filename> &F);
 
@@ -132,19 +135,11 @@ class gtk_acpi : public gtk_acpi_glade
         GraphDrawingArea *GDA;
         gint on_gtk_acpi_delete_event(GdkEventAny *ev);
         gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
+        void save();
         void ende();
    public:
-       gtk_acpi::gtk_acpi(const heatload::st_widget &show_widget,const bool _read_max_cap,
+       gtk_acpi::gtk_acpi(const heatload::st_widget &show_widget,
+             const bool _read_max_cap, const bool _show_sudo,
              const heatload::st_show &_show_what,const heatload::st_color &_color);
-                
-/*
-        gtk_acpi(const guint x,const guint y,const guint refresh,
-                 const bool show_graph,const bool show_label,
-                 const bool show_decoration,
-                 const bool read_max_cap,
-                 const heatload::st_show &show_what,
-                 const heatload::st_color &color);
-
-*/
 };
 #endif

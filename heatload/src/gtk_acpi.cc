@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.15 2002/12/17 09:13:18 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.16 2002/12/18 13:29:17 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -30,17 +30,20 @@
 #include <fstream>
 #include "RC.hh"
 
-gtk_acpi::gtk_acpi(const heatload::st_widget &_show_widget,const bool _read_max_cap,
+gtk_acpi::gtk_acpi(const heatload::st_widget &_show_widget,
+         const bool _read_max_cap,const bool _show_sudo,
          const heatload::st_show &_show_what,const heatload::st_color &_color)
-:  menu(0),
-   show_widget(_show_widget),read_max_cap_(_read_max_cap),
-   show_what(_show_what),color(_color),use_max_cap(true),GDA(0)
+:
+   menu(0),show_widget(_show_widget),read_max_cap_(_read_max_cap),
+   show_what(_show_what),color(_color),use_max_cap(true),show_sudo(_show_sudo),
+   GDA(0)
 {
   init();
   hide_or_show_elements();
   read_max_cap();
   get_show();
   Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
+  if(show_sudo) show_sudo_error();
 }
 
 
@@ -130,26 +133,21 @@ bool gtk_acpi::find_filename(const e_find EF,const std::vector<st_find_filename>
 void gtk_acpi::init()
 {
   find_filenames();
-  if(show_widget.graph)
-   {
-     GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,color));
-     frame_draw->add(*GDA);
-     GDA->show();
-   }
-  if(show_widget.decoration) label_decoration->set_text("Heatload written by Lennart Poettering (2002)\n"
-                  "rewritten and enhanced by Malte Thoma");
-  else label_decoration->hide();
-  if(!show_widget.label) frame_label->hide();
-  else 
-   {
-     set_color(*label_temp_,color.temp_label);
-     set_color(*label_temp, color.temp_label);
-     set_color(*label_bat1_,color.bat_label);
-     set_color(*label_bat1, color.bat_label);
-     set_color(*label_load_,color.load_label);
-     set_color(*label_load, color.load_label);
-   }
- if(show_widget.menu) menu_init();
+
+  GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,color));
+  frame_draw->add(*GDA);
+
+  label_decoration->set_text("Heatload written by Lennart Poettering (2002)\n"
+                             "rewritten and enhanced by Malte Thoma");
+
+   set_color(*label_temp_,color.temp_label);
+   set_color(*label_temp, color.temp_label);
+   set_color(*label_bat1_,color.bat_label);
+   set_color(*label_bat1, color.bat_label);
+   set_color(*label_load_,color.load_label);
+   set_color(*label_load, color.load_label);
+
+   if(show_widget.menu) menu_init();
 }
 
 void gtk_acpi::get_show()
@@ -185,25 +183,42 @@ void gtk_acpi::ende()
   Gtk::Main::instance()->quit(); 
 }
 
+void gtk_acpi::save()
+{
+  rc_file::save(show_what,color,show_widget,read_max_cap_,show_sudo);
+}
+
+
 gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
 {
 //  if(ev->keyval=='q') ende();
   if     (ev->keyval=='a') show_what.ac=!show_what.ac;
   else if(ev->keyval=='b') show_what.bat=!show_what.bat;
   else if(ev->keyval=='c') use_max_cap = !use_max_cap;
+  else if(ev->keyval=='d') show_widget.decoration = !show_widget.decoration;
+  else if(ev->keyval=='e') show_widget.label = !show_widget.label;
   else if(ev->keyval=='f') show_what.fan=!show_what.fan;
+  else if(ev->keyval=='g') show_widget.graph = !show_widget.graph;
   else if(ev->keyval=='l') show_what.load=!show_what.load;
   else if(ev->keyval=='r') get_show();
+  else if(ev->keyval=='s') show_sudo_error();
   else if(ev->keyval=='t') show_what.temp=!show_what.temp;
   else if(ev->keyval=='u') show_what.cpu_throttling=!show_what.cpu_throttling;
+  else if(ev->keyval=='?') show_run_time_options();
   hide_or_show_elements();
-   rc_file::save(show_what,color,show_widget,read_max_cap_);
-
+  save();
   return false;
 }
 
 void gtk_acpi::hide_or_show_elements()
 {
+  if(show_widget.decoration) label_decoration->show();
+  else                       label_decoration->hide();
+  if(show_widget.graph)      GDA->show();
+  else                       GDA->hide();
+  if(show_widget.label)      frame_label->show();
+  else                       frame_label->hide();
+
   if(show_what.ac) { label_ac_->show(); label_ac->show(); }
   else             { label_ac_->hide(); label_ac->hide(); }
 

@@ -23,9 +23,28 @@
 
 namespace heatload{
 
+ static std::string run_time_options="    run-time-options:\n"
+                 "    ?        show summery of all run time options\n"
+                 "    a        toggle show/hide ac\n\n"
+                 "    b        toggle show/hide battery\n"
+                 "    c        toggles between designed- and last-max-capacity\n"
+                 "              when calculating the batterys fill-percentage\n"
+                 "    d        toggles show/hide decoration\n"
+                 "    e        toggles show/hide label\n"
+                 "    f        toggle show/hide fan\n"   
+                 "    g        toggles show/hide graph\n"
+                 "    l        toggle show/hide load\n"  
+                 "    r        immediate reload\n"
+                 "    s        show sudo hints\n" 
+                 "    t        toggle show/hide thermal\n"
+                 "    u        toggle show/hide cpu throttling\n\n"
+                 ;
+
+
+
    struct st_widget{unsigned int x;unsigned int y;unsigned int refresh;
                     bool decoration;bool label; bool graph; bool menu;
-          st_widget() : x(100),y(50),refresh(2500),decoration(false),
+          st_widget() : x(100),y(70),refresh(2500),decoration(false),
                        label(true),graph(true),menu(true) {}          
                     };
 

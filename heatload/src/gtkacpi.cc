@@ -18,23 +18,19 @@ void usage(const std::string &name)
           "  heatload is free software under the terms of the GNU General Public License\n\n"
                "  Usage: "<<name<<" [OPTION]... \n"
                "  [OPTION]... can be a combination of the following items: \n"
+               " -?, --help               display this help message and exit\n"
                " -c, --color X           X = 'widget=color' where widget is on of\n"
                "                            battery_label battery_meter \n"
                "                            thermal_label thermal_meter\n"
                "                            load_label    load_meter\n"
                "                          and color is named in '/usr/X11R6/lib/X11/rgb.txt'\n"
                "                          use this Option as often as you need it.\n"
-               " -d, --decoration      with decoration\n"
-//               " -f X, --frame_size X     X = border-size sourounding boxes [5]\n"
-               " -g, --no_graph           no graphical display\n"
-               " -h, --help               display this help message and exit\n"
-               " -l, --no_label           no numerical temp. and load display\n"
-               " -r X, --refresh X        X = refresh rate [1000]\n"
-               " -x X, --x_size X         X = x-size of meter [256]\n"
-               " -y X, --y_size X         X = y-size of meter [100]\n\n"
+               " -d, --decoration         toggles show/hide decoration\n"
+               " -g, --graph           toggles graphical display\n"
                " -h , --hide [OPTION]     OPTION must be one of\n"
                "                            ac battery thermal load fan cpu\n"
                "                          can be given as often as you need ist\n"
+               " -l, --label           toggles numerical thermal and load display\n"
                " -m  , --read_max_capacity  This is a HACK: If you use this\n"
                "                     option the max_cap will be read from\n"
                "                     /proc/acpi/battery/BAT1/info (as it should be).\n"
@@ -42,17 +38,28 @@ void usage(const std::string &name)
                "                     this is the max_cap on an Sony-Vaio. Because of a buggy \n"
                "                     BIOS the reading of the info file freezes the keybord on\n"
                "                     this laptop. If you don't have a Sony Vaio it should be\n"
-               "                     save to use this option.\n\n"
+               "                     save (and good idea :-) to use this option.\n\n"
+               " -r X, --refresh X        X = refresh rate [2500]\n"
+               " -t  , --show throttling hint   pop up the throttling hint window\n"
+               " -x X, --x_size X         X = x-size of meter [100]\n"
+               " -y X, --y_size X         X = y-size of meter [70]\n\n"
                "    run-time-options:\n"
+               +heatload::run_time_options+
+/*
                "    a        toggle show/hide ac\n\n"
                "    b        toggle show/hide battery\n"
-               "    c        Toggles between designed- and last-max-capacity\n"
+               "    c        toggles between designed- and last-max-capacity\n"
                "              when calculating the batterys fill-percentage\n\n"
+               "    d        toggles show/hide decoration\n"
+               "    e        toggles show/hide label\n"
                "    f        toggle show/hide fan\n"
+               "    g        toggles show/hide graph\n"
                "    l        toggle show/hide load\n"
-               "    r        Immediate reload\n"
+               "    r        immediate reload\n"
+               "    s        show sudo hints\n"
                "    t        toggle show/hide thermal\n"
                "    u        toggle show/hide cpu throttling\n\n"
+*/
                " command-line options override the default settings in \n"
                "  './.heatloadrc', '~/.heatloadrc' resp. '/etc/heatload/heatload.conf'\n\n" 
                ;
@@ -90,8 +97,8 @@ void change_color(const std::string &s,heatload::st_color &color,const std::stri
  
 const static struct option options[]=
 {{ "decoration", no_argument,      NULL, 'd' },
- { "no_label", no_argument,      NULL, 'l' },
- { "no_graph", no_argument,      NULL, 'g' },
+ { "label", no_argument,      NULL, 'l' },
+ { "graph", no_argument,      NULL, 'g' },
  { "help", no_argument,      NULL, '?' },
  { "read_max_capacity", required_argument,      NULL, 'm' },   
  { "refresh", required_argument,      NULL, 'r' },   
@@ -107,12 +114,12 @@ int main(int argc, char **argv)
 {  
     int opt;
 
-    bool read_max_cap=false;
+    bool read_max_cap=false,show_sudo=true;
     heatload::st_widget show_widget;
     heatload::st_show show_what;
     heatload::st_color color;
-    rc_file::load(show_what,color,show_widget,read_max_cap);
-    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:x:y:?",options,NULL))!=EOF)
+    rc_file::load(show_what,color,show_widget,read_max_cap,show_sudo);
+    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:sx:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
          case 'd' : show_widget.decoration=!show_widget.decoration; break;
@@ -120,6 +127,7 @@ int main(int argc, char **argv)
          case 'g' : show_widget.graph= !show_widget.graph; break;
          case 'm' : read_max_cap=true; break;
          case 'r' : show_widget.refresh=atoi(optarg); break;   
+         case 's' : show_sudo=true; break;   
          case 'x' : show_widget.x=atoi(optarg); break;
          case 'y' : show_widget.y=atoi(optarg); break;
          case 'h' : evaluate(optarg,show_what); break;
@@ -127,10 +135,10 @@ int main(int argc, char **argv)
          default : usage(argv[0]);
        }
      }  
-   rc_file::save(show_what,color,show_widget,read_max_cap);
+   rc_file::save(show_what,color,show_widget,read_max_cap,show_sudo);
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(show_widget,read_max_cap,show_what,color));
+   manage(new class gtk_acpi(show_widget,read_max_cap,show_sudo,show_what,color));
    m.run();
    return 0;
 }

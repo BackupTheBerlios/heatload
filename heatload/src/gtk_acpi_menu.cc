@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.2 2002/12/17 13:37:30 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.3 2002/12/18 13:29:17 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -59,12 +59,29 @@ void gtk_acpi::load_thrott_file()
 
 void gtk_acpi::select_throttling(guint i)
 {
-  std::string com = "sudo /usr/sbin/sudo_set_throttling "+itos(i)+" "+cpu_thrott_file.name;
+  std::string com = "sudo /usr/sbin/set_throttling "+itos(i)+" "+cpu_thrott_file.name;
   int b=system(com.c_str());
   if(!b) get_show();
-  else { label_cpu_throttling->set_text("sorry, must be root for this");
-         eventbox_cpu_throttling->show();
-       }
+  else show_sudo_error();
+}
+
+#include "WindowInfo.hh"
+void gtk_acpi::show_sudo_error()
+{
+   std::string s="To use the throttling adjustment, check the following:\n\n"
+       " * is '/usr/sbin/set_throttling' installed?'\n"
+       " * are the permissons set to '-rwx------' (chmod 700) correctly?\n"
+       " * is 'sudo' installed ? (apt-get install sudo for debian)\n"
+       " * The following two lines must be inserted into '/etc/sudoers':\n"
+       "    Cmnd_Alias      THROTTLING=/usr/sbin/set_throttling\n"
+       "    ALL     ALL=NOPASSWD: THROTTLING \n"
+       " if you still have problems or ideas tell me <thoma@muenster.de>\n";
+   manage(new WindowInfo(this,s,true));
+}
+
+void gtk_acpi::show_run_time_options()
+{
+   manage(new WindowInfo(this,heatload::run_time_options,false));
 }
 
 
