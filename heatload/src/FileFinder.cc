@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.10 2003/06/20 06:51:26 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.11 2003/07/14 07:36:35 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 #include "gtk_acpi.hh"
 #include "WindowInfo.hh"
 #include <fstream>
+#include <iostream> // debug
 #include <assert.h>
 #include "Gizmo.hh"
 
@@ -42,7 +43,7 @@ bool FileFinder::check(const bool fix,const HeatloadGizmo &HG)
   bool alles_ok=true;
   for(std::map<heatload::e_find,std::vector<st_file> >::const_iterator i=VFiles.begin();i!=VFiles.end();++i)
    {
-//cout<<i->first<<'\t' <<FileMap[i->first].name<<'\t'<< FileMap[i->first].ok<<'\n';
+//std::cout<<i->first<<'\t' <<FileMap[i->first].name<<'\t'<< FileMap[i->first].ok<<'\n';
      if(!const_cast<FileMap_t&>(FileMap)[i->first].ok && HG.Visible(i->first))
       {  
          set_dummy_file(FileMap[i->first],i->first);
@@ -68,7 +69,7 @@ void FileFinder::find_filenames()
       for(std::vector<st_file>::const_iterator j=i->second.begin();j!=i->second.end();++j)
        {
          std::ifstream fin(j->name.c_str());
-//cout << "find: "<<i->first<<' '<<j->name<<' '<<fin.good()<<'\n';
+//std::cout << "find: "<<i->first<<' '<<j->name<<' '<<fin.good()<<'\n';
          if(fin.good())
            {
              FileMap[i->first]=*j;
@@ -90,14 +91,18 @@ void FileFinder::init()
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/AC/state"));
 
   B=Bezeichnung(heatload::eBat);
+//  VFiles[heatload::eBat].push_back(st_file(B,"/tmp/acpi/battery/1/status"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT0/state"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT1/state"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/0/status",true));
+  VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/1/status",true));
 
   B=Bezeichnung(heatload::eBatInfo);
+// VFiles[heatload::eBat].push_back(st_file(B,"/tmp/acpi/battery/1/info"));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT0/info"));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT1/info"));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/0/info",true));
+  VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/1/info",true));
 
   B=Bezeichnung(heatload::eFan);
   VFiles[heatload::eFan].push_back(st_file(B,"/proc/acpi/fan/FAN/state"));
@@ -126,13 +131,13 @@ void FileFinder::init()
 
 std::string FileFinder::looking_for(const heatload::e_find e)
 {
-  if(e==heatload::eAC) return "/proc/acpi/ac_adapter/*/state";
-  if(e==heatload::eFan) return "/proc/acpi/fan/*/state";
-  if(e==heatload::eBat) return "/proc/acpi/battery/*/state";
-  if(e==heatload::eBatInfo) return "/proc/acpi/battery/*/info";
-  if(e==heatload::eThermal) return "/proc/acpi/thermal[_zone]/*/[temperature|status]";
-  if(e==heatload::eCPUthrottling) return "/proc/acpi/processor/*/throttling";
-  if(e==heatload::eCPUperformance) return "/proc/acpi/processor/*/performance";
+  if(e==heatload::eAC) return "/proc/acpi/ac_adapter/___/state";
+  if(e==heatload::eFan) return "/proc/acpi/fan/___/state";
+  if(e==heatload::eBat) return "/proc/acpi/battery/___/state";
+  if(e==heatload::eBatInfo) return "/proc/acpi/battery/___ */info";
+  if(e==heatload::eThermal) return "/proc/acpi/thermal[_zone]/___/[temperature|status]";
+  if(e==heatload::eCPUthrottling) return "/proc/acpi/processor/___/throttling";
+  if(e==heatload::eCPUperformance) return "/proc/acpi/processor/___/performance";
   if(e==heatload::eLoad) return "/proc/stat";
   if(e==heatload::eSuspend_sleep) return "/usr/sbin/swsusp_sleep";
   if(e==heatload::eSuspend_awake) return "/usr/sbin/swsusp_awake";
