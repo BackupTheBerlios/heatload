@@ -49,7 +49,8 @@ void usage(const std::string &name)
                "    t        toggle show/hide thermal\n"
                "    b        toggle show/hide battery\n"
                "    l        toggle show/hide load\n"
-               "    a        toggle show/hide ac\n"
+               "    a        toggle show/hide ac\n\n"
+               " in the very near future: /etc/heatloadrc ... for the preferences\n"
                ;
   exit(1);
 }
