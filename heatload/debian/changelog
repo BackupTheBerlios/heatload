@@ -1,9 +1,12 @@
-heatload (0.5.1) unstable; urgency=low
+heatload (0.6.0) unstable; urgency=low
 
-  * 0.5.0
+  * 0.6.0
   * completed the strict class redesign
+  * added performance adjustment/monitoring (untetsted)
+  * added interface to suspend|awake the computer with swsusp
+  * added help menu
 
- -- Malte Thoma <thoma@muenster.de>  Fri, 27 Dec 2002 00:28:42 +0100
+ -- Malte Thoma <thoma@muenster.de>  Tue, 31 Dec 2002 21:23:53 +0100
 
 heatload (0.5.0) unstable; urgency=low
 

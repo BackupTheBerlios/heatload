@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.6 2002/12/23 07:59:28 thoma Exp $ */
+/* $Id: RC.cc,v 1.7 2003/01/05 09:24:23 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -36,12 +36,13 @@ void rc_file::load(HeatloadGizmo &HG,heatload::st_widget &show_widget,
   getcwd(currentwd,sizeof currentwd);
   V.push_back(std::string(currentwd)+"/.heatloadrc");
   V.push_back(std::string(getenv("HOME"))+"/.heatloadrc");
-  V.push_back("/etc/heatload/heatload.conf");
+  V.push_back("/etc/heatload.conf");
   for(std::vector<std::string>::const_iterator i=V.begin();i!=V.end();++i)
    {
 cout << "looking for "<<*i<<'\n';
      std::ifstream f(i->c_str());
      if (!f.good()) continue;
+cout << "FOUND   \n";
      TagStream ts(f);
      const Tag *data=ts.find("heatload-preferences");
      if (!data) {std::cerr << "Wrong format in '"<<*i<<"': 'heatload-preferences' not found\n"; return;}
@@ -54,6 +55,7 @@ cout << "looking for "<<*i<<'\n';
         show_widget.decoration = widget->getBoolAttr("Decoration");
         show_widget.label = widget->getBoolAttr("Label");
         show_widget.graph = widget->getBoolAttr("Graph");
+        show_widget.swsusp = widget->getBoolAttr("swsusp",true);
       }
      const Tag *show=data->find("Show");
      if(!show) {std::cerr << "Wrong format in '"<<*i<<"': 'Show' not found\n'"; }     
@@ -110,6 +112,7 @@ void gtk_acpi::save() const
   widget.setBoolAttr("Decoration",show_widget.decoration);
   widget.setBoolAttr("Label",show_widget.label);
   widget.setBoolAttr("Graph",show_widget.graph);
+  widget.setBoolAttr("swsusp",show_widget.swsusp);
 
   Tag &show=data.push_back(Tag("Show"));
   show.setBoolAttr("AC",HG.ac_adapter.Visible());

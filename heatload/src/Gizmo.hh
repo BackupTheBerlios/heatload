@@ -58,7 +58,7 @@ public:
       Gizmo(const heatload::e_find _what) : what(_what),
                              visible(true), i_value(invalid) {}
       virtual ~Gizmo() {}
-
+      const heatload::e_find What() const {return what;}
 
       virtual const std::string Value() ;
       int IValue() const {return i_value;}
@@ -84,7 +84,8 @@ public:
 class GizmoThermal : public Gizmo
 {
     public:
-      GizmoThermal(const heatload::e_find what) : Gizmo(what) {}
+      GizmoThermal(const heatload::e_find what) : Gizmo(what) 
+         {color_label="darkred"; color_meter="tomato"; }
       const std::string Value() ;
 };
 
@@ -128,7 +129,7 @@ class GizmoBattery : public Gizmo
                        present(false),zustand(e_unknown),present_rate_mW(0),
                        remaining_capacity_mWh(0),max_capacity_mWh(0),
                        last_max_capacity_mWh(0) 
-                        {}
+               {color_label="white"; color_meter="white"; }
       void load_info_file(const std::string &info_filename);
       void get_value();
       const std::string Value() ;
@@ -160,7 +161,9 @@ class GizmoBattery : public Gizmo
 class GizmoLoad : public Gizmo
 {
   public:
-      GizmoLoad(const heatload::e_find what): Gizmo(what){};
+      GizmoLoad(const heatload::e_find what): Gizmo(what)
+             {color_label="SeaGreen"; color_meter="green"; }
+      
       void get_value();
 };
 

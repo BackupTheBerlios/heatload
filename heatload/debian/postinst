@@ -27,6 +27,8 @@ case "$1" in
     configure)
 
     chmod 700 /usr/sbin/set_throttling
+    chmod 700 /usr/sbin/swsusp_sleep
+    chmod 700 /usr/sbin/swsusp_awake
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

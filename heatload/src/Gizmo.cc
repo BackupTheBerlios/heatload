@@ -47,7 +47,8 @@ void Gizmo::get_value()
      fin >> unit;
 //cout <<'\t'<< sdummy <<'\t'<<ivalue<<'*'<<svalue<<'\t'
 // <<unit<<"#"<< file_value.column_of_unit<<'\n';
-  if(what==heatload::eCPUthrottling)setValue(  static_cast<GizmoThrottling&>(*this).prozent_from_state(svalue));
+  if     (what==heatload::eCPUthrottling) setValue(static_cast<GizmoThrottling&>(*this).prozent_from_state(svalue));
+  else if(what==heatload::eCPUperformance)setValue(static_cast<GizmoThrottling&>(*this).prozent_from_state(svalue));
   else if(!file_value.value_is_int) setValue(svalue);
   else                              setValue(ivalue,unit);
 }
@@ -156,26 +157,39 @@ void GizmoBattery::get_value()
  setValue(bpresent,bcharging_state,present_rate,remaining_cap);
 }
 
-
+void delete_leading_space(std::string &s)
+{
+  while(true)
+   {
+     std::string::size_type st = s.find_first_of(" ");     
+     if(st==std::string::npos || st != 0) return;
+     std::string s_(s,1,std::string::npos);
+     s=s_;
+   }
+}
 
 void GizmoThrottling::load_thrott_file(const std::string &filename)
 {
   char c1[100];
-//  std::ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
   std::ifstream fin(filename.c_str());
   for(int i=0;i<3;++i) fin.getline(c1,sizeof(c1));  // Kommentarzeilen
   while(fin)
    { fin.getline(c1,sizeof(c1));
      if(!fin.good()) break;
      std::string s1=c1;
-     std::string::size_type st1 = s1.find("T");
+
+     std::string C;
+     if     (What()==heatload::eCPUthrottling) C="T";
+     else if(What()==heatload::eCPUperformance)C="P";
+     else assert(!"never get here");
+     std::string::size_type st1 = s1.find(C);
      std::string::size_type st2 = s1.find_first_of(":");
-     std::string::size_type st3 = s1.find_last_of(" "); 
      if(st1==std::string::npos||st2==std::string::npos) 
          {cerr<<"Error while reading "<<filename<<'\n'; abort();}
      std::string st(s1,st1,st2-st1);
      std::string sv(s1,st1+1,st2-st1-1);
-     std::string sp(s1,st3+1,std::string::npos);
+     std::string sp(s1,st2+1,std::string::npos);
+     delete_leading_space(sp);      
      vec_state.push_back(st_state(st,atoi(sv.c_str()),sp));
    }
 }
@@ -184,12 +198,19 @@ const std::string GizmoThrottling::prozent_from_state(const std::string &s)
 {
   for(std::vector<GizmoThrottling::st_state>::const_iterator i=vec_state.begin();i!=vec_state.end();++i)
    {
-     if(i->tstate==s) return i->prozent;
+     if(i->tstate!=s) continue;
+     std::string x=i->prozent;
+     if(x.find(",")!=std::string::npos) x.erase(x.find(","),std::string::npos);
+     return x;
    }
-   cerr << "Warning: throttling not supported,\n if the read throttling-file "
+   std::string ss,ss2;
+   if     (What()==heatload::eCPUthrottling)  {ss="throttling"; ss2="u";}
+   else if(What()==heatload::eCPUperformance) {ss="performance"; ss2="p";}
+   else assert(!"never get here");
+   cerr << "Warning: "<<ss<<" not supported,\n if the "<<ss<<"-file "
              " looking good\n please contact me <thoma@muenster.de>\n"
-             " if your CPU does not support throttling you can "
-             "switch it of by pressing 'p'\n\n\n";
+             " if your CPU does not support "<<ss<<" you can "
+             "switch it of by pressing '"<<ss2<<"'\n\n\n";
    return "";                                     
 }
 

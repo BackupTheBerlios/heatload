@@ -1,4 +1,4 @@
-/* $Id: FileFinder.hh,v 1.3 2002/12/27 08:27:30 thoma Exp $ */
+/* $Id: FileFinder.hh,v 1.4 2003/01/05 09:24:23 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -53,11 +53,12 @@ class FileFinder
         FileFinder();
         void find();
 
-        const std::string &getFileName(heatload::e_find e) {return FileMap[e].name;}    
+        const std::string &getFileName(heatload::e_find e) const 
+            {return const_cast<FileMap_t&>(FileMap)[e].name;}    
         bool check(const bool fix);
 
         const FileMap_t &getFileMap() const {return FileMap;}
-        const st_file &getFile(heatload::e_find e) {return FileMap[e];}    
+        const st_file &getFile(heatload::e_find e) const {return  const_cast<FileMap_t&>(FileMap)[e];}    
 
         void NewFileName(heatload::e_find e,const st_file &s)
                {VFiles[e].push_back(s);}

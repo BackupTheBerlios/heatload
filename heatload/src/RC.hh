@@ -1,4 +1,4 @@
-/* $Id: RC.hh,v 1.4 2002/12/23 07:59:28 thoma Exp $ */
+/* $Id: RC.hh,v 1.5 2003/01/05 09:24:24 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -29,12 +29,6 @@ namespace rc_file{
              heatload::st_widget &show_widget,
              bool &show_sudo,FileFinder &FileMap);
 
-/*
-  void save(const heatload::st_show &show_what,const heatload::st_color &color,
-             const heatload::st_widget &show_widget,const bool read_max_cap,
-             const bool show_sudo,
-             const FileFinder::FileMap_t &FileMap);
-*/
 }
 
 #endif

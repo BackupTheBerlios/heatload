@@ -61,6 +61,22 @@ permanently on your system by issuing "make install" as root. This
 install the heatload executable to /usr/local/bin/. For removing this
 installation you might want to try "make deinstall" as root.
 
+The use of root-privilege commands needs sudo, please install it and
+add the following lies to '/etc/sudoers':
+Cmnd_Alias      HEATLOAD=/usr/sbin/set_throttling, /usr/sbin/swsusp_sleep, \
+                         /usr/sbin/swsusp_awake
+ALL     ALL=NOPASSWD: HEATLOAD
+
+The swsusp_sleep|swsusp_awake files fork fine for me, but they MUST be
+edited for your system, if you want swsusp work correctly. If you have 
+suggestions to improve the sleep/awake scripts please contact me.
+
+Please start 'heatload' the first time from a shell (x-term) and test, if 
+everything you need workes fine. I fyou have problems, don't hesitate to 
+contact me <thoma@muenster.de>
+
+
+
 Internet
 --------
 
@@ -78,8 +94,6 @@ When prompted for a password for anonymous, simply press the Enter key
 Or you can find the source and debian package here:
    ftp://ftp.berlios.de/pub/heatload/
 
-
-    
 ---------------------------------------------------------------------
 
 Lennart Poettering <mz686561746c6f6164@poettering.de>, 2002

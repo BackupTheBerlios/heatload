@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.6 2002/12/27 08:27:30 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.7 2003/01/05 09:24:23 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,7 @@ bool FileFinder::check(const bool fix)
   for(std::map<heatload::e_find,std::vector<st_file> >::const_iterator i=VFiles.begin();i!=VFiles.end();++i)
    {
 //cout<<i->first<<'\t' <<FileMap[i->first].name<<'\t'<< FileMap[i->first].ok<<'\n';
-     if(!FileMap[i->first].ok)
+     if(!const_cast<FileMap_t&>(FileMap)[i->first].ok)
       {  
          set_dummy_file(FileMap[i->first],i->first);
          std::string s=" Sorry can't open any of the following files:\n";
@@ -114,6 +114,11 @@ void FileFinder::init()
 
   B=Bezeichnung(heatload::eLoad);
   VFiles[heatload::eLoad].push_back(st_file(B,"/proc/stat"));
+
+  B=Bezeichnung(heatload::eSuspend_sleep);
+  VFiles[heatload::eSuspend_sleep].push_back(st_file(B,"/usr/sbin/swsusp_sleep"));
+  B=Bezeichnung(heatload::eSuspend_awake);
+  VFiles[heatload::eSuspend_awake].push_back(st_file(B,"/usr/sbin/swsusp_awake"));
 }
 
 std::string FileFinder::looking_for(const heatload::e_find e)
@@ -125,6 +130,9 @@ std::string FileFinder::looking_for(const heatload::e_find e)
   if(e==heatload::eThermal) return "/proc/acpi/thermal[_zone]/*/[temperature|status]";
   if(e==heatload::eCPUthrottling) return "/proc/acpi/processor/*/throttling";
   if(e==heatload::eCPUperformance) return "/proc/acpi/processor/*/performance";
+  if(e==heatload::eLoad) return "/proc/stat";
+  if(e==heatload::eSuspend_sleep) return "/usr/sbin/swsusp_sleep";
+  if(e==heatload::eSuspend_awake) return "/usr/sbin/swsusp_awake";
   assert(!" never get here\n");
   abort();
 }
@@ -139,6 +147,8 @@ std::string FileFinder::Bezeichnung(const heatload::e_find e)
   if(e==heatload::eCPUthrottling) return "CPU-Throttling";
   if(e==heatload::eCPUperformance) return "CPU-Performance";
   if(e==heatload::eLoad) return "CPU-Load";
+  if(e==heatload::eSuspend_sleep) return "Suspend-Sleep";
+  if(e==heatload::eSuspend_awake) return "Suspend-Awake";
   assert(!" never get here\n");
   abort();
 }

@@ -28,12 +28,12 @@ void usage(const std::string &name)
                "                          and color is named in '/usr/X11R6/lib/X11/rgb.txt'\n"
                "                          use this Option as often as you need it.\n"
                " -d, --decoration         toggles show/hide decoration\n"
-               " -g, --graph           toggles graphical display\n"
+               " -g, --graph              toggles graphical display\n"
                " -h , --hide [OPTION]     OPTION must be one of\n"
-               "                            ac battery thermal load fan\n"
+               "                            ac battery thermal load fan swsusp\n"
                "                            cpu_throttling cpu_performance\n"
                "                          can be given as often as you need ist\n"
-               " -l, --label           toggles numerical thermal and load display\n"
+               " -l, --label              toggles numerical thermal and load display\n"
                " -m  , --read_max_capacity  This is a HACK: If you use this\n"
                "                     option the max_cap will be read from\n"
                "                     /proc/acpi/battery/BAT1/info (as it should be).\n"
@@ -54,7 +54,7 @@ void usage(const std::string &name)
   exit(1);
 }
 
-void evaluate(const std::string &s,HeatloadGizmo &HG)
+void evaluate(const std::string &s,HeatloadGizmo &HG,heatload::st_widget &show_widget)
 {
   if     (s=="ac")      HG.ac_adapter.toggleVisible()  ;
   else if(s=="battery") HG.battery.toggleVisible() ; 
@@ -63,6 +63,7 @@ void evaluate(const std::string &s,HeatloadGizmo &HG)
   else if(s=="fan")     HG.fan.toggleVisible() ; 
   else if(s=="cpu_throttling")   HG.cpu_throttling.toggleVisible() ; 
   else if(s=="cpu_performance")  HG.cpu_performance.toggleVisible() ; 
+  else if(s=="swsusp")  show_widget.swsusp=!show_widget.swsusp;
   else {cerr << s<<" unknown \n";}
 }
 
@@ -120,7 +121,7 @@ int main(int argc, char **argv)
          case 't' : show_sudo=true; break;   
          case 'x' : show_widget.x=atoi(optarg); break;
          case 'y' : show_widget.y=atoi(optarg); break;
-         case 'h' : evaluate(optarg,HG); break;
+         case 'h' : evaluate(optarg,HG,show_widget); break;
          case 'c' : change_color(optarg,HG,argv[0]); break;
          default : usage(argv[0]);
        }

@@ -24,9 +24,6 @@
 
 namespace heatload{
 
-
-
-
  static std::string run_time_options="    run-time-options:\n"
                  "    ?        show summery of all run time options\n"
                  "    a        toggle show/hide ac\n"
@@ -49,33 +46,16 @@ namespace heatload{
         enum e_find{None=0,eAC='A',eBat='B',eBatInfo='I',eFan='F',
                     eThermal='T',
                     eCPUthrottling='C',eCPUperformance='P',
-                    eLoad='L'};
-
-        struct st_find_filename{std::string bezeichnung;std::string name;bool old_style;
-               st_find_filename() : old_style(false) {}
-               st_find_filename(const std::string n)
-                  : name(n),old_style(false){}
-               st_find_filename(const std::string n,const bool o)
-                  : name(n),old_style(o){}};
-
+                    eLoad='L',eSuspend_sleep='S',eSuspend_awake='a'};
 
    struct st_widget{unsigned int x;unsigned int y;unsigned int refresh;
                     bool decoration;bool label; bool graph; bool menu;
+                    bool swsusp;
           st_widget() : x(110),y(65),refresh(2500),decoration(false),
-                       label(true),graph(true),menu(true) {}          
+                       label(true),graph(true),menu(true),swsusp(true) {}          
                     };
 
-
-   struct st_show{bool ac;bool bat; bool temp;bool load; bool fan; 
-                  bool cpu_throttling; bool cpu_performance;
-          st_show() : ac(true),bat(true),temp(true),load(true),fan(true),
-                      cpu_throttling(true),cpu_performance(true) {}
-//          st_show(const bool a,const bool b,,const bool t,
-//                       ,const bool l,,const bool f,const bool c,const bool cp)
-//                   : ac(a),bat(b),temp(t),load(l),fan(f),cpu_throttling(c),cpu_performance(cp){}
-                       };
-
-
+/*
     struct st_color{std::string temp_label;std::string bat_label;
                         std::string load_label;
                         std::string temp_meter;std::string bat_meter;
@@ -85,6 +65,7 @@ namespace heatload{
                             temp_meter("tomato"),bat_meter("white"),
                             load_meter("green"){}
                         };
+*/
 }
 
 #endif

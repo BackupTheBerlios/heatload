@@ -62,7 +62,6 @@ install: build
 	# Add here commands to install the package into debian/heatload.
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/heatload
 
-
 # Build architecture-independent files here.
 binary-indep: build install
 # We have nothing to do by default.

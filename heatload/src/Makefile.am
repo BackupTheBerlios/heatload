@@ -3,8 +3,11 @@
 #
 # newer (non customized) versions of this file go to Makefile.am_new
 
+etcdir = /etc
+
 bin_PROGRAMS = heatload
-sbin_SCRIPTS = set_throttling
+sbin_SCRIPTS = set_throttling swsusp_sleep swsusp_awake
+etc_DATA = heatload.conf
 
 heatload_SOURCES = \
    Gizmo.cc \

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.20 2002/12/27 08:27:30 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.21 2003/01/05 09:24:24 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -48,24 +48,26 @@ class gtk_acpi : public gtk_acpi_glade
         FileFinder FF;
         HeatloadGizmo HG;
 
-        heatload::st_widget show_widget;
+        mutable heatload::st_widget show_widget;
         mutable bool show_sudo;
         
         friend class gtk_acpi_glade;
         friend class WindowInfo;
 
         void init();
-        void menu_init();
+        void menu_init() ;
         void select_throttling(guint i);
+        void suspend_activate(const bool turn_to_sleep);
 
-        void show_sudo_error();
+        void show_sudo_error(const heatload::e_find EF) const;
         void show_run_time_options();
+        void show_about() ;
 
         void show_values();
         gint timeout();
 
         void set_color(Gtk::Widget &W,const std::string &color);
-        void hide_or_show_elements();
+        void hide_or_show_elements() ;
 
         gint on_gtk_acpi_delete_event(GdkEventAny *ev);
         gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
