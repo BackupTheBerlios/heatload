@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.9 2003/01/07 06:23:31 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.10 2003/01/07 07:34:33 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -105,7 +105,7 @@ void gtk_acpi::fan_activate(const bool turn_on)
   if(turn_on) com += itos(0); // 0 = on
   else        com += itos(3); // 3 = off
   com += " "+FF.getFileName(heatload::eFan);  
-cout << com<<'\n';
+//cout << com<<'\n';
   int b=system(com.c_str());
   if(!b) show_values();
   else   show_sudo_error(heatload::eFan);
