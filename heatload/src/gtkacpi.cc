@@ -115,9 +115,9 @@ int main(int argc, char **argv)
     while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:x:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
-         case 'd' : show_widget.decoration=true; break;
-         case 'l' : show_widget.label= false; break;
-         case 'g' : show_widget.graph=false; break;
+         case 'd' : show_widget.decoration=!show_widget.decoration; break;
+         case 'l' : show_widget.label= !show_widget.label; break;
+         case 'g' : show_widget.graph= !show_widget.graph; break;
          case 'm' : read_max_cap=true; break;
          case 'r' : show_widget.refresh=atoi(optarg); break;   
          case 'x' : show_widget.x=atoi(optarg); break;

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.1 2002/12/17 09:13:18 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.2 2002/12/17 13:37:30 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@ void gtk_acpi::load_thrott_file()
 
 void gtk_acpi::select_throttling(guint i)
 {
-  std::string com = "echo "+itos(i)+" > "+cpu_thrott_file.name;
+  std::string com = "sudo /usr/sbin/sudo_set_throttling "+itos(i)+" "+cpu_thrott_file.name;
   int b=system(com.c_str());
   if(!b) get_show();
   else { label_cpu_throttling->set_text("sorry, must be root for this");

@@ -4,6 +4,7 @@
 # newer (non customized) versions of this file go to Makefile.am_new
 
 bin_PROGRAMS = heatload
+sbin_SCRIPTS = sudo_set_throttling
 
 heatload_SOURCES = \
 	gtkacpi.cc\
@@ -19,7 +20,7 @@ heatload_SOURCES = \
    Tag.cc \
    itos.cc
 
-man_MANS = heatload.1
+man_MANS = heatload.1 sudo_set_throttling.1
 EXTRA_DIST = $(man_MANS)
 
 noinst_HEADERS = \
