@@ -14,6 +14,7 @@ heatload_SOURCES = \
    GraphDrawingArea.cc \
    itos.cc
 
+heatload_MANPAGE = heatload.1
 
 noinst_HEADERS = \
 	gtk_acpi_glade.hh \

@@ -23,6 +23,12 @@ class gtk_acpi : public gtk_acpi_glade
         const bool show_graph;
         const bool show_label;
         const bool show_decoration;
+        const bool read_max_cap_;
+        
+        std::string temp_color;
+        std::string bat_color;
+        std::string load_color;
+        int max_cap;
         
         friend class gtk_acpi_glade;
         struct st_ac_adapter{std::string state;};
@@ -48,6 +54,8 @@ class gtk_acpi : public gtk_acpi_glade
         st_battery battery;
         st_cpu_load cpu_load;
 
+        void init();
+        void read_max_cap();
         void show_values();
         std::string remaining_time();
         void get_values();
@@ -62,9 +70,12 @@ class gtk_acpi : public gtk_acpi_glade
         void set_color(Gtk::Widget &W,const std::string &color);
 
         GraphDrawingArea *GDA;
+        gint on_gtk_acpi_delete_event(GdkEventAny *ev);
+        void ende();
    public:
         gtk_acpi(const guint x,const guint y,const guint refresh,
-                 const bool show_graph,const bool show_label,const bool show_decoration);
+                 const bool show_graph,const bool show_label,const bool show_decoration,
+                 const bool read_max_cap);
 
 };
 #endif

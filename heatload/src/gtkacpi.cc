@@ -24,6 +24,14 @@ void usage(const std::string &name)
                " -r X, --refresh X        X = refresh rate [1000]\n"
                " -x X, --x_size X         X = x-size of meter [256]\n"
                " -y X, --y_size X         X = y-size of meter [100]\n\n"
+               " -m  , --read_max_capacity  This is a HACK: If you use this\n"
+               "                          option the max_cap will be read from\n"
+               "                          /proc/acpi/battery/BAT1/info (as it sholud be).\n"
+               "                          If this option is NOT given the max_cap will be 44100 mWh\n"
+               "                          this is the max_cap on an Sony-Vaio. Because of a buggy \n"
+               "                          BIOS the reading of the info file freezes the keybord on\n"
+               "                          this laptop. If you don't have a Sony Vaio it should be\n"
+               "                          save to use this option.\n\n"
                ;
   exit(1);
 }
@@ -35,6 +43,7 @@ const static struct option options[]=
  { "no_graph", no_argument,      NULL, 'g' },
  { "help", no_argument,      NULL, 'h' },
 // { "frame_size", required_argument,      NULL, 'f' },
+ { "read_max_capacity", required_argument,      NULL, 'm' },   
  { "refresh", required_argument,      NULL, 'r' },   
  { "x_size", required_argument,      NULL, 'x' },    
  { "y_size", required_argument,      NULL, 'y' },    
@@ -48,17 +57,19 @@ int main(int argc, char **argv)
     bool show_decoration=true;
     bool show_label=true;
     bool show_graph=true;
+    bool read_max_cap=false;
 //    int frame_size=5;
     guint x=100;
     guint y=50;
     guint refresh=1000;
-    while ((opt=getopt_long(argc,argv,"dlfgr:x:y:h?",options,NULL))!=EOF)
+    while ((opt=getopt_long(argc,argv,"dlfgmr:x:y:h?",options,NULL))!=EOF)
      {
       switch(opt) {
          case 'd' : show_decoration=false; break;
          case 'l' : show_label= false; break;
 //         case 'f' : frame_size=atoi(optarg); break;
          case 'g' : show_graph=false; break;
+         case 'm' : read_max_cap=true; break;
          case 'r' : refresh=atoi(optarg); break;   
          case 'x' : x=atoi(optarg); break;
          case 'y' : y=atoi(optarg); break;
@@ -67,7 +78,7 @@ int main(int argc, char **argv)
      }  
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(x,y,refresh,show_graph,show_label,show_decoration));
+   manage(new class gtk_acpi(x,y,refresh,show_graph,show_label,show_decoration,read_max_cap));
    m.run();
    return 0;
 }

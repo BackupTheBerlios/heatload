@@ -4,3 +4,5 @@
 SUBDIRS = src 
 
 EXTRA_DIST = AUTHORS TODO README configure 
+
+CLEAN = config.log config.cache config.status

@@ -15,6 +15,11 @@
 <widget>
   <class>GtkWindow</class>
   <name>gtk_acpi</name>
+  <signal>
+    <name>delete_event</name>
+    <handler>on_gtk_acpi_delete_event</handler>
+    <last_modification_time>Mon, 09 Dec 2002 13:19:59 GMT</last_modification_time>
+  </signal>
   <title>HeatLoad</title>
   <type>GTK_WINDOW_TOPLEVEL</type>
   <position>GTK_WIN_POS_NONE</position>

@@ -60,7 +60,7 @@ void gtk_acpi::get_battery()
 {
   std::string s1;
   std::string present,charging_state;
-  int present_rate,remaining_cap,max_cap;
+  int present_rate,remaining_cap;
   ifstream fin("/proc/acpi/battery/BAT1/state");
   fin >> s1 >> present;
   fin >> s1 >> s1 >> s1;  
@@ -68,9 +68,6 @@ void gtk_acpi::get_battery()
   fin >> s1 >> s1 >> present_rate >> s1;  
   fin >> s1 >> s1 >> remaining_cap >> s1;  
 
-#warning HACK 
-max_cap=44100;
-  
   bool bpresent,bcharging_state;
   if(present=="yes") bpresent = true;
   else if (present=="no")  bpresent = false;

@@ -10,9 +10,33 @@
 #include <gtk--/main.h>
 
 gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
-   const bool _show_graph,const bool _show_label,const bool _show_decoration)
+   const bool _show_graph,const bool _show_label,const bool _show_decoration,
+   const bool _read_max_cap)
 : x_size(x),y_size(y),show_graph(_show_graph),show_label(_show_label),
-   show_decoration(_show_decoration),GDA(0)
+   show_decoration(_show_decoration),read_max_cap_(_read_max_cap),GDA(0)
+{
+  temp_color="darkred";
+  bat_color="white";
+  load_color="SeaGreen";
+  init();
+  read_max_cap();
+  get_show();
+  Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),refresh);
+}
+
+
+void gtk_acpi::read_max_cap()
+{
+ #warning HACK 
+ if(read_max_cap_)
+  {
+//   ifstream fin("/proc/acpi/battery/BAT1/info");
+  }
+ else max_cap=44100;
+}
+
+
+void gtk_acpi::init()
 {
   if(show_graph)
    {
@@ -26,15 +50,13 @@ gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
   if(!show_label) frame_label->hide();
   else 
    {
-     set_color(*label_temp_,"darkred");
-     set_color(*label_temp, "darkred");
-     set_color(*label_bat1_, "white");
-     set_color(*label_bat1,  "white");
-     set_color(*label_load_, "darkgreen");
-     set_color(*label_load,  "darkgreen");
+     set_color(*label_temp_,temp_color);
+     set_color(*label_temp, temp_color);
+     set_color(*label_bat1_, bat_color);
+     set_color(*label_bat1,  bat_color);
+     set_color(*label_load_, load_color);
+     set_color(*label_load,  load_color);
    }
-  get_show();
-  Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),refresh);
 }
 
 void gtk_acpi::get_show()
@@ -59,4 +81,13 @@ void gtk_acpi::set_color(Gtk::Widget &W,const std::string &color)
   gtk_rc_style_unref(rc_style);
 }
 
- 
+gint gtk_acpi::on_gtk_acpi_delete_event(GdkEventAny *ev)
+{
+  ende();  
+  return false;
+}
+
+void gtk_acpi::ende()
+{
+  Gtk::Main::instance()->quit(); 
+}
