@@ -1,16 +1,15 @@
-heatload (0.3.2-1) unstable; urgency=low
+heatload (0.3.3-1) unstable; urgency=low
 
   * Initial Release.
-
  -- Malte Thoma <thoma@muenster.de>  Tue, 10 Dec 2002 08:46:30 +0100
 
   * 0.3.1
-
  -- working with new version of ACPI
  -- many bugfixes
   
   * 0.3.2
- 
  -- better init of filenames 
  -- many bugfixes
 
+  * 0.3.3
+ -- toggles fan/ac/battery/thermal/load on/off (command-line and run-time)

@@ -24,6 +24,9 @@ void usage(const std::string &name)
                " -r X, --refresh X        X = refresh rate [1000]\n"
                " -x X, --x_size X         X = x-size of meter [256]\n"
                " -y X, --y_size X         X = y-size of meter [100]\n\n"
+               " -h , --hide [OPTION]     OPTION must be one of\n"
+               "                            ac battery thermal load fan\n"
+               "                          can be given as often as you need ist\n"
                " -m  , --read_max_capacity  This is a HACK: If you use this\n"
                "                     option the max_cap will be read from\n"
                "                     /proc/acpi/battery/BAT1/info (as it should be).\n"
@@ -36,8 +39,23 @@ void usage(const std::string &name)
                "    -c        Toggles between designed- and last-max-capacity\n"
                "              when calculating the batterys fill-percentage\n\n"
                "    -r        Immediate reload\n"
+               "    -f        toggle show/hide fan\n"
+               "    -t        toggle show/hide thermal\n"
+               "    -b        toggle show/hide battery\n"
+               "    -l        toggle show/hide load\n"
+               "    -a        toggle show/hide ac\n"
                ;
   exit(1);
+}
+
+void evaluate(const std::string &s,gtk_acpi::st_show &show_what)
+{
+  if     (s=="ac")      show_what.ac=false  ;
+  else if(s=="battery") show_what.bat=false ; 
+  else if(s=="thermal") show_what.temp=false ; 
+  else if(s=="load")    show_what.load=false ; 
+  else if(s=="fan")     show_what.fan=false ; 
+  else {cerr << s<<" unknown \n";}
 }
 
  
@@ -51,8 +69,10 @@ const static struct option options[]=
  { "refresh", required_argument,      NULL, 'r' },   
  { "x_size", required_argument,      NULL, 'x' },    
  { "y_size", required_argument,      NULL, 'y' },    
+ { "hide", required_argument,      NULL, 'h' },    
  { NULL,      0,       NULL, 0 }
 };
+ 
   
 
 int main(int argc, char **argv)
@@ -66,7 +86,8 @@ int main(int argc, char **argv)
     guint x=100;
     guint y=50;
     guint refresh=2500;
-    while ((opt=getopt_long(argc,argv,"dlfgmr:x:y:h?",options,NULL))!=EOF)
+    gtk_acpi::st_show show_what;
+    while ((opt=getopt_long(argc,argv,"dlfghmr:x:y:h?",options,NULL))!=EOF)
      {
       switch(opt) {
          case 'd' : show_decoration=false; break;
@@ -77,12 +98,13 @@ int main(int argc, char **argv)
          case 'r' : refresh=atoi(optarg); break;   
          case 'x' : x=atoi(optarg); break;
          case 'y' : y=atoi(optarg); break;
+         case 'h' : evaluate(optarg,show_what); break;
          default : usage(argv[0]);
        }
      }  
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(x,y,refresh,show_graph,show_label,show_decoration,read_max_cap));
+   manage(new class gtk_acpi(x,y,refresh,show_graph,show_label,show_decoration,read_max_cap,show_what));
    m.run();
    return 0;
 }

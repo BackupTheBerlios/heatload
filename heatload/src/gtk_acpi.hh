@@ -24,6 +24,13 @@ class gtk_acpi : public gtk_acpi_glade
         const bool show_label;
         const bool show_decoration;
         const bool read_max_cap_;
+        struct st_show{bool ac;bool bat; bool temp;bool load; bool fan;
+               st_show() : ac(true),bat(true),temp(true),load(true),fan(true){}
+//               st_show(const bool a,const bool b,,const bool t,
+//                       ,const bool l,,const bool f) 
+//                   : ac(a),bat(b),temp(t),load(l),fan(f){}
+                       };
+        st_show show_what;
         bool use_max_cap;
         
         std::string temp_color;
@@ -93,6 +100,7 @@ class gtk_acpi : public gtk_acpi_glade
         gint timeout();
 
         void set_color(Gtk::Widget &W,const std::string &color);
+        void hide_or_show_elements();
 
         GraphDrawingArea *GDA;
         gint on_gtk_acpi_delete_event(GdkEventAny *ev);
@@ -100,8 +108,10 @@ class gtk_acpi : public gtk_acpi_glade
         void ende();
    public:
         gtk_acpi(const guint x,const guint y,const guint refresh,
-                 const bool show_graph,const bool show_label,const bool show_decoration,
-                 const bool read_max_cap);
+                 const bool show_graph,const bool show_label,
+                 const bool show_decoration,
+                 const bool read_max_cap,
+                 const st_show show_what);
 
 };
 #endif

@@ -21,10 +21,11 @@
 
 void gtk_acpi::get_values()
 {
- get_ac_adapter();
- get_thermal();
- get_battery();
- get_load_value();
+
+ if(show_what.ac)   get_ac_adapter();
+ if(show_what.temp || show_what.fan) get_thermal();
+ if(show_what.bat)  get_battery();
+ if(show_what.load) get_load_value();
 
 }
 

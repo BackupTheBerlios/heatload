@@ -12,15 +12,16 @@
 
 gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
    const bool _show_graph,const bool _show_label,const bool _show_decoration,
-   const bool _read_max_cap)
+   const bool _read_max_cap,const st_show _show_what)
 : x_size(x),y_size(y),show_graph(_show_graph),show_label(_show_label),
    show_decoration(_show_decoration),read_max_cap_(_read_max_cap),
-   use_max_cap(true),GDA(0)
+   show_what(_show_what),use_max_cap(true),GDA(0)
 {
   temp_color="darkred";
   bat_color="white";
   load_color="SeaGreen";
   init();
+  hide_or_show_elements();
   read_max_cap();
   get_show();
   Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),refresh);
@@ -163,9 +164,32 @@ void gtk_acpi::ende()
 gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
 {
 //  if(ev->keyval=='q') ende();
-  if(ev->keyval=='c') use_max_cap = !use_max_cap;
-  if(ev->keyval=='r') get_show();
+  if     (ev->keyval=='c') use_max_cap = !use_max_cap;
+  else if(ev->keyval=='r') get_show();
+  else if(ev->keyval=='f') show_what.fan=!show_what.fan;
+  else if(ev->keyval=='t') show_what.temp=!show_what.temp;
+  else if(ev->keyval=='b') show_what.bat=!show_what.bat;
+  else if(ev->keyval=='l') show_what.load=!show_what.load;
+  else if(ev->keyval=='a') show_what.ac=!show_what.ac;
+  hide_or_show_elements();
   return false;
 }
 
+void gtk_acpi::hide_or_show_elements()
+{
+  if(show_what.ac) { label_ac_->show(); label_ac->show(); }
+  else             { label_ac_->hide(); label_ac->hide(); }
+
+  if(show_what.fan) { label_fan_->show(); label_cooling->show(); }
+  else              { label_fan_->hide(); label_cooling->hide(); }
+
+  if(show_what.bat) { label_bat1_->show(); label_bat1->show(); }
+  else              { label_bat1_->hide(); label_bat1->hide(); }
+
+  if(show_what.load) { label_load_->show(); label_load->show(); }
+  else               { label_load_->hide(); label_load->hide(); }
+
+  if(show_what.temp) { label_temp_->show(); label_temp->show(); }
+  else               { label_temp_->hide(); label_temp->hide(); }
+}
 

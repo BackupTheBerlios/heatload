@@ -24,18 +24,20 @@ void gtk_acpi::show_values()
 {
  if(show_label)
   {
-    label_ac->set_text(ac_adapter.state);
-    label_temp->set_text(thermal.Celsius());
-    label_cooling->set_text(thermal.cooling_mode);
-    label_bat1->set_text(remaining_time());
-    label_load->set_text(itos(cpu_load.load)+"%");
+    if(show_what.ac)   label_ac->set_text(ac_adapter.state); 
+    if(show_what.temp) label_temp->set_text(thermal.Celsius()); 
+    if(show_what.fan)  label_cooling->set_text(thermal.cooling_mode);
+    if(show_what.bat)  label_bat1->set_text(remaining_time());
+    if(show_what.load) label_load->set_text(itos(cpu_load.load)+"%");
   }
  if(GDA && show_graph)
   {
-    GDA->getVM()[0].meter.add_value(cpu_load.load,x_size);
-    GDA->getVM()[1].meter.add_value(thermal.temp,x_size);
-    if(use_max_cap) GDA->getVM()[2].meter.add_value(battery.prozent()*100,x_size);
-    else            GDA->getVM()[2].meter.add_value(battery.prozent_last()*100,x_size);
+    if(show_what.load) GDA->getVM()[0].meter.add_value(cpu_load.load,x_size);
+    if(show_what.temp) GDA->getVM()[1].meter.add_value(thermal.temp,x_size);
+    if(show_what.bat) {
+       if(use_max_cap) GDA->getVM()[2].meter.add_value(battery.prozent()*100,x_size);
+       else            GDA->getVM()[2].meter.add_value(battery.prozent_last()*100,x_size);
+      }
     GDA->refresh_pixmap();
   }
 }
