@@ -96,18 +96,24 @@ void gtk_acpi::get_battery()
   if(present=="yes") bpresent = true;
   else if (present=="no")  bpresent = false;
   else 
-   { cerr<<"'Present:' should be 'yes' or 'no' in '/proc/acpi/battery/BAT1/state',\n"
-         " it seems to be '"<<present<<"' assuming 'yes'\n";
+   { static bool show=true;
+     if(show) { show=false;
+        cerr<<"'Present:' should be 'yes' or 'no' in '/proc/acpi/battery/BAT1/state',\n"
+              " it seems to be '"<<present<<"' assuming 'yes'\n";
+       }
      bpresent = true;
    }
   if(charging_state=="charging") bcharging_state = true;
   else if (charging_state=="discharging")  bcharging_state = false;
   else 
-   { cerr<<"'Present Rate:' should be 'charging' or 'discharging' in '/proc/acpi/battery/BAT1/state'\n"
+   { static bool show=true;
+     if(show) { show=false;
+         cerr<<"'Present Rate:' should be 'charging' or 'discharging' in '/proc/acpi/battery/BAT1/state'\n"
          " but I it is '"<<charging_state<<"' assuming 'charging'\n"
          " if you have a 'charging state' in /proc/acpi/battery/0/status\n"
          " (or anywhere else) please submit a 'cat' of this file to me"
          " <thoma@muenster.de>\n";
+        }
      bcharging_state = true;
    }
   battery=st_battery(bpresent,bcharging_state,present_rate,remaining_cap,max_cap,last_max_cap);
