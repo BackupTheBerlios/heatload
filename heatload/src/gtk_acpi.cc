@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.17 2002/12/18 15:14:17 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.18 2002/12/18 15:19:41 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -89,8 +89,8 @@ void gtk_acpi::find_filenames()
   if(!ok) alles_ok=ok;
 
   F.clear(); 
-  F.push_back(st_find_filename("/proc/acpi/thermal_zone",true));
   F.push_back(st_find_filename("/proc/acpi/thermal_zone/THRM/temperature"));
+  F.push_back(st_find_filename("/proc/acpi/thermal_zone",true));
   F.push_back(st_find_filename("/proc/acpi/thermal/0/status",true));
   ok=find_filename(eThermal,F);
   if(!ok) alles_ok=ok;
