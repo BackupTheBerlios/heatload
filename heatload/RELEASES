@@ -1,0 +1,22 @@
+heatload 0.3:
+		Malte Thoma takes over the project
+		added comand-line options for
+
+	 -d, --no_decoration      no decoration
+	 -h, --help               display this help message and exit
+	 -l, --no_label           no numerical display
+	 -g, --no_graph           no graphical display
+	 -r X, --refresh X        X = refresh rate [1000]
+	 -x X, --x_size X         X = x-size of meter [256]
+	 -y X, --y_size X         X = y-size of meter [100]
+
+      completly rewritten Gtk-surface
+
+heatload 0.2:
+
+		 Compilation fixes for libsigc++ on Ximian
+		 Support for ACPI 20011018	 
+
+heatload 0.1:
+
+		 Initial Release

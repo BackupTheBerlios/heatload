@@ -3,3 +3,82 @@
 
 This project was generated using glade--
 and the README file has not been edited since then ;-).
+
+---------------------------------------------------------------------
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+
+---------------------------------------------------------------------
+
+This Gtk utility produces nice looking realtime graphs for the
+current CPU load and some ACPI values (eg. temperature) of your Linux 
+machine. It is nice for monitoring the direct relation of 
+the former to the latter.
+
+The reason I developed this program was that the ACPI implementation
+of my laptop seems to be broken, and I needed a simple way to
+determine when the machines became too hot.
+
+Requirements
+------------
+
+As of version 0.1 you need a Linux kernel 2.4 with a fairly recent
+ACPI patch. (I used 20020308) Without this patch, the utility will not
+recognize your temperature sensor. Starting with 0.2, I added support
+for plain 2.4.18-Kernels (and some kernel versions prior) with ACPI
+20011018 based on a patch by Ian Morgan. lm_sensor-devices are not
+supported. (Somebody wants to send me a patch?)
+
+For compiling you need a recent g++ with Gtk-- and Gnome--
+installed. I did my development with 1.2.8 resp. 1.2.2.
+
+Development
+-----------
+
+Development was done under Debian GNU Linux Woody for i386 from March
+2002. The used machine was a Medion 9580-F laptop.
+
+[Malte:]
+Debian GNU Linux sid from December 2002 on an Sony Vaio FX505
+
+Installation
+------------
+
+Run "make" for compiling the program. You might want to install it
+permanently on your system by issuing "make install" as root. This
+install the heatload executable to /usr/local/bin/. For removing this
+installation you might want to try "make deinstall" as root.
+
+Internet
+--------
+
+You may find up to date releases of this utility on
+   http://www.stud.uni-hamburg.de/users/lennart/projects/heatload/
+
+You may download the old release from
+   http://www.stud.uni-hamburg.de/users/lennart/projects/heatload/heatload-0.2.
+
+You may download the new release from CVS with executing the following commands:
+   cvs -d:pserver:anonymous@cvs.heatload.berlios.de:/cvsroot/heatload login
+   cvs -z3 -d:pserver:anonymous@cvs.heatload.berlios.de:/cvsroot/heatload co heatload
+When prompted for a password for anonymous, simply press the Enter key
+
+
+
+    
+---------------------------------------------------------------------
+
+Lennart Poettering <mz686561746c6f6164@poettering.de>, 2002
+Malte Thoma <thoma@muenster.de>, 2002
