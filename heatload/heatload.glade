@@ -429,6 +429,7 @@
 	    <widget>
 	      <class>GtkLabel</class>
 	      <name>label1</name>
+	      <width>3</width>
 	      <label>  </label>
 	      <justify>GTK_JUSTIFY_CENTER</justify>
 	      <wrap>False</wrap>
