@@ -60,6 +60,18 @@ permanently on your system by issuing "make install" as root. This
 install the heatload executable to /usr/local/bin/. For removing this
 installation you might want to try "make deinstall" as root.
 
+FVWM2 
+______
+
+Insert into ~/.fvwm2rc the follwoing Lines 
+(perhaps they must me edited for you)
+
+Style   "heatload"      NoTitle, Sticky
+*FvwmButtons: (2x1 Swallow "heatload" 'Exec  heatload -x 115 -y 56 -l -d -f 0')
+
+and you will get it in your Buttons
+
+
 Internet
 --------
 
