@@ -19,6 +19,3 @@ install-sh
 *_new
 macros
 stamp-h1
-COPYING
-missing
-mkinstalldirs
