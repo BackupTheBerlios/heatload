@@ -40,8 +40,8 @@ class gtk_acpi : public gtk_acpi_glade
                st_thermal(guint t1,std::string e,std::string c)
                   : temp(t1),einheit(e),cooling_mode(c){}
                std::string Celsius() const 
-                  { if(einheit=="C") return itos(temp)+"C";
-                    else if(einheit=="dK") return itos((temp/10)-273)+"C";
+                  { if(einheit=="C") return itos(temp)+"C   ";
+                    else if(einheit=="dK") return itos((temp/10)-273)+"C   ";
                     else return "unknown unit of tempertur, please contact thoma@muenster.de\n";
                    }};
         struct st_battery{bool present;bool charging; int present_rate_mW; 
