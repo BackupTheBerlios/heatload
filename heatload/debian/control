@@ -2,13 +2,13 @@ Source: heatload
 Section: x11
 Priority: optional
 Maintainer: Malte Thoma <thoma@muenster.de>
-Build-Depends: debhelper (>> 3.0.0)
+Build-Depends: debhelper (>> 3.0.0), libgtkmm-dev, libgtk1.2-dev, libglib1.2-dev, libsigc++-dev, xlibs-dev
 Standards-Version: 3.5.8
 
 Package: heatload
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: Graphical and nummerical ACPI- and CPU-load-monitor applett for X11
+Description: Graphical and numerical ACPI- and CPU-load-monitor applet for X11
  This Gtk utility produces nice looking realtime graphs for the
  current CPU-load and some ACPI-values (eg. temperature, battery) of your
  Linux machine. It is nice for monitoring the direct relation of 

@@ -22,8 +22,14 @@ configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
 
+	# results of autoconf, et.al.should be shipped in by upstream in
+	# orig.tar.gz or at least by the debian-maintaner in the diff, to
+	# keep build-depends small and work around the famous "No version of 
+	# automake is compatible with any other"-problem.
+	# ./autogen.sh --mandir=\$${prefix}/share/man --prefix=/usr
+	
+	./configure --mandir=\$${prefix}/share/man --prefix=/usr
 	touch configure-stamp
-	./autogen.sh --mandir=\$${prefix}/share/man --prefix=/usr
 
 build: build-stamp
 
@@ -42,8 +48,8 @@ clean:
 	rm -f build-stamp configure-stamp 
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) clean
-	rm config.log config.cache config.status
+	-$(MAKE) distclean
+	rm -f config.log config.cache config.status
 
 	dh_clean
 
@@ -74,7 +80,7 @@ binary-arch: build install
 #	dh_installpam
 #	dh_installmime
 #	dh_installinit
-	dh_installcron
+#	dh_installcron
 	dh_installman
 	dh_installinfo
 #	dh_undocumented

@@ -11,8 +11,8 @@
 
 void usage(const std::string &name)
 {
-  std::cerr << "\n  heatload is written by Lennart Poettering (until 0.2),\n"
-          "  rewritten and enhanced (since 0.3) by Malte Thoma (thoma@muenster.de)\n"
+  std::cerr << "\n  heatload is written by Malte Thoma (thoma@muenster.de),\n"
+          "  based upon code of Lennart Poettering\n"
           "  heatload is free software under the terms of the GNU General Public License\n\n"
                "  Usage: "<<name<<" [OPTION]... \n"
                "  [OPTION]... can be a combination of the following items: \n"

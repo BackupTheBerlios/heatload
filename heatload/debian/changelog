@@ -1,19 +1,34 @@
-heatload (0.3.3-1) unstable; urgency=low
+heatload (0.3.4) unstable; urgency=low
 
-  * Initial Release.
- -- Malte Thoma <thoma@muenster.de>  Tue, 10 Dec 2002 08:46:30 +0100
+  * command-line color choice
 
-  * 0.3.1
- -- working with new version of ACPI
- -- many bugfixes
-  
+ -- Malte Thoma <thoma@muenster.de>  Mon, 16 Dec 2002 08:15:10 +0100
+
+heatload (0.3.3-2) unstable; urgency=low
+
+  * Split debian-part to separate diff. This is no native package.
+  * clean up debian/rules:
+     -don't call auto{conf,make}.
+      results of autoconf, et.al.should be shipped by upstream in
+      orig.tar.gz or at least by the debian-maintaner in the diff, to
+      keep build-depends small and work around the famous "No version of 
+      automake is compatible with any other"-problem.
+     - fix clean. it failed if clean was called without config.status,...
+  * correct build-depends.
+  * Typos in package-description.
+
+ -- Andreas Metzler <ametzler@logic.univie.ac.at>  Fri, 13 Dec 2002 16:28:51 +0100
+
+  * 0.3.3
+ -- toggles fan/ac/battery/thermal/load on/off (command-line and run-time)
+
   * 0.3.2
  -- better init of filenames 
  -- many bugfixes
 
-  * 0.3.3
- -- toggles fan/ac/battery/thermal/load on/off (command-line and run-time)
- -- working with all (known) ACPI-Versions
+  * 0.3.1
+ -- working with new version of ACPI
+ -- many bugfixes
 
-  * 0.3.4
- -- command-line color choice
+  * Initial Release.
+ -- Malte Thoma <thoma@muenster.de>  Tue, 10 Dec 2002 08:46:30 +0100
