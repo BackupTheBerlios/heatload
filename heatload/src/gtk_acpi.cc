@@ -38,7 +38,7 @@ void gtk_acpi::read_max_cap()
    fin >> s1 >> s1 >> max_cap;
    fin >> s1 >> s1 >> s1 >> last_max_cap;
   }
- else { max_cap=44100; last_max_cap=20000;}
+ else { max_cap=44100; last_max_cap=41000;}
 }
 
 
