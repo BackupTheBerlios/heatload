@@ -33,7 +33,6 @@ noinst_HEADERS = \
 	gtk_acpi.hh \
    MeterStruct.hh \
    GraphDrawingArea.hh \
-   RC.hh \
    TagStream.hh \
    Tag.hh \
    WindowInfo.hh \

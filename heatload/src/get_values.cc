@@ -21,13 +21,12 @@
 
 void gtk_acpi::get_values()
 {
-
- if(show_what.ac)   get_ac_adapter();
- if(show_what.temp || show_what.fan) get_thermal();
- if(show_what.bat)  get_battery();
- if(show_what.load) get_load_value();
- if(show_what.cpu_throttling) get_throttling();
- if(show_what.cpu_performance) get_performance();
+ if(HG.ac_adapter.Visible())   get_ac_adapter();
+ if(HG.thermal.Visible() || HG.fan.Visible()) get_thermal();
+ if(HG.battery.Visible())  get_battery();
+ if(HG.cpu_load.Visible()) get_load_value();
+ if(HG.cpu_throttling.Visible()) get_throttling();
+// if(HG.cpu_performance.Visible()) get_performance();
 }
 
 void gtk_acpi::get_ac_adapter()
@@ -35,7 +34,7 @@ void gtk_acpi::get_ac_adapter()
   std::string s1,s2;
   std::ifstream fin(FF.getFileName(heatload::eAC).c_str());
   fin >> s1 >>s2;
-  ac_adapter.setValue(s2);
+  HG.ac_adapter.setValue(s2);
 }
 
 void gtk_acpi::get_thermal()
@@ -56,8 +55,8 @@ void gtk_acpi::get_thermal()
 //      {cerr << "Sorry can't open '/proc/acpi/thermal_zone/THRM/cooling_mode'\n"; abort();}
    }
 //  thermal=st_thermal(te,te2,cm);
-  thermal.setValue(te,te2);
-  fan.setValue(cm);
+  HG.thermal.setValue(te,te2);
+  HG.fan.setValue(cm);
 }
          
 void gtk_acpi::get_battery()
@@ -107,8 +106,7 @@ void gtk_acpi::get_battery()
         }
      bcharging_state = GizmoBattery::e_unknown;
    }
-cout <<"PP\t"<< present_rate<<'\t'<<remaining_cap<<'\n';
- battery.setValue(bpresent,bcharging_state,present_rate,remaining_cap);
+ HG.battery.setValue(bpresent,bcharging_state,present_rate,remaining_cap);
 }
 
 
@@ -119,21 +117,11 @@ void gtk_acpi::get_throttling()
   std::ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
   fin.getline(c1,sizeof(c1));
   fin >> s1 >> s1 >> s;
-  cpu.throttling = throttling_from_state(s);
-}
-
-gtk_acpi::st_throttling gtk_acpi::throttling_from_state(const std::string &s)
-{
-  for(std::vector<st_throttling>::const_iterator i=vec_throttling.begin();i!=vec_throttling.end();++i) 
-   {
-     if(i->tstate==s) return *i;
-   }
-  cerr << "Warning: throttling not supported,\n if '"+FF.getFileName(heatload::eCPUthrottling)+"' looking good\n please contact me <thoma@muenster.de>\n"
-          " if your CPU does not support throttling you can switch it of by pressing 'p'\n\n\n";
-  return st_throttling();
+  HG.cpu_throttling.setValue(HG.cpu_throttling.prozent_from_state(s));
 }
 
 
+/*
 void gtk_acpi::get_performance()
 {
   char c1[100];
@@ -141,7 +129,9 @@ void gtk_acpi::get_performance()
   std::ifstream fin(FF.getFileName(heatload::eCPUperformance).c_str());
   fin.getline(c1,sizeof(c1));
   fin >> s1 >> s1 >> s;
-  cpu.performance = performance_from_state(s);
+//  cpu.performance = performance_from_state(s);
+  performance.setValue(performance_from_state(s));
+
 }
 
 gtk_acpi::st_performance gtk_acpi::performance_from_state(const std::string &s)
@@ -154,7 +144,7 @@ gtk_acpi::st_performance gtk_acpi::performance_from_state(const std::string &s)
           " if your CPU does not support performance you can switch it of by pressing 'p'\n\n\n";
   return st_performance();
 }
-
+*/
 
 void failure(const string &txt) 
 {         
@@ -207,5 +197,5 @@ void gtk_acpi::get_load_value()
     
     n = 1-n;
 
-   cpu_load.setValue((guint8) (v*100),"%");
+   HG.cpu_load.setValue((guint8) (v*100),"%");
 }

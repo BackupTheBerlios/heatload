@@ -24,19 +24,19 @@ void gtk_acpi::show_values()
 {
  if(show_widget.label)
   {
-    if(show_what.ac)   label_ac->set_text(ac_adapter.Value()); 
-    if(show_what.temp) label_temp->set_text(thermal.Value()); 
-    if(show_what.fan)  label_cooling->set_text(fan.Value());
-    if(show_what.bat)  label_bat1->set_text(itos(battery.Prozent())+battery.Einheit()+" "+battery.RemainingTime());
-    if(show_what.load) label_load->set_text(cpu_load.Value());
-    if(show_what.cpu_throttling)  label_cpu_throttling->set_text(cpu.throttling.prozent);
-    if(show_what.cpu_performance) label_cpu_performance->set_text(cpu.performance.value);
+    if(HG.ac_adapter.Visible())   label_ac->set_text(HG.ac_adapter.Value()); 
+    if(HG.thermal.Visible())      label_temp->set_text(HG.thermal.Value()); 
+    if(HG.fan.Visible())          label_cooling->set_text(HG.fan.Value());
+    if(HG.battery.Visible())      label_bat1->set_text(itos(HG.battery.Prozent())+HG.battery.Einheit()+" "+HG.battery.RemainingTime());
+    if(HG.cpu_load.Visible())     label_load->set_text(HG.cpu_load.Value());
+    if(HG.cpu_throttling.Visible())label_cpu_throttling->set_text(HG.cpu_throttling.Value());
+//    if(show_what.cpu_performance) label_cpu_performance->set_text(HG.cpu.performance.value);
   }
  if(GDA && show_widget.graph)
   {
-    if(show_what.load) GDA->getVM()[0].meter.add_value(cpu_load.IValue(),show_widget.x);
-    if(show_what.temp) GDA->getVM()[1].meter.add_value(thermal.IValue(),show_widget.x);
-    if(show_what.bat) GDA->getVM()[2].meter.add_value(battery.Prozent(),show_widget.x);
+    if(HG.cpu_load.Visible()) GDA->getVM()[0].meter.add_value(HG.cpu_load.IValue(),show_widget.x);
+    if(HG.thermal.Visible()) GDA->getVM()[1].meter.add_value(HG.thermal.IValue(),show_widget.x);
+    if(HG.battery.Visible()) GDA->getVM()[2].meter.add_value(HG.battery.Prozent(),show_widget.x);
     GDA->refresh_pixmap();
   }
 }

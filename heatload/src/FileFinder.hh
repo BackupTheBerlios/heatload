@@ -1,4 +1,4 @@
-/* $Id: FileFinder.hh,v 1.1 2002/12/20 08:03:55 thoma Exp $ */
+/* $Id: FileFinder.hh,v 1.2 2002/12/23 07:59:28 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -40,9 +40,9 @@ class FileFinder
 
       typedef std::map<heatload::e_find,st_file> FileMap_t;
    private:
-        gtk_acpi *hauptfenster;
         std::map<heatload::e_find,std::vector<st_file> > VFiles;
         FileMap_t FileMap;
+
          
 
         void init();
@@ -51,19 +51,19 @@ class FileFinder
         std::string looking_for(const heatload::e_find e);
         void set_dummy_file(st_file &FM,const heatload::e_find e);
 
-
    public:
-        FileFinder(gtk_acpi *h,const FileMap_t fm);
+        FileFinder();
+        void find();
 
-        const FileMap_t &getFileMap() const {return FileMap;}
-        const st_file &getFile(heatload::e_find e) {return FileMap[e];}    
         const std::string &getFileName(heatload::e_find e) {return FileMap[e].name;}    
         bool check(const bool fix);
 
-        void setFileName(heatload::e_find e,const std::string &s)
-               { FileMap[e].name=s ;}
+        const FileMap_t &getFileMap() const {return FileMap;}
+        const st_file &getFile(heatload::e_find e) {return FileMap[e];}    
 
-        void NewFileName(heatload::e_find e,const std::string &s);
+        void NewFileName(heatload::e_find e,const st_file &s)
+               {VFiles[e].push_back(s);}
+            
 };
 
 

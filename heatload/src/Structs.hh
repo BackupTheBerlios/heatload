@@ -73,6 +73,7 @@ namespace heatload{
 //                   : ac(a),bat(b),temp(t),load(l),fan(f),cpu_throttling(c),cpu_performance(cp){}
                        };
 
+
     struct st_color{std::string temp_label;std::string bat_label;
                         std::string load_label;
                         std::string temp_meter;std::string bat_meter;

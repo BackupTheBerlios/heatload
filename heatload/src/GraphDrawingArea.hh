@@ -22,7 +22,8 @@
 #include <gtk--/drawingarea.h>
 #include "MeterStruct.hh"
 #include <vector>
-#include "Structs.hh"
+//#include "Structs.hh"
+#include "Gizmo.hh"
 
 class GraphDrawingArea : public Gtk::DrawingArea 
 {
@@ -38,7 +39,8 @@ class GraphDrawingArea : public Gtk::DrawingArea
     void meter_alloc_color();
 
 public:
-    GraphDrawingArea(const guint x,const guint y,const heatload::st_color &color);
+    GraphDrawingArea(const guint x,const guint y,
+                     const HeatloadGizmo &HG);
 
     virtual gint expose_event_impl(GdkEventExpose* event);
     void refresh_pixmap();

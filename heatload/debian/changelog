@@ -1,3 +1,10 @@
+heatload (0.4.2) unstable; urgency=low
+
+  * 0.4.2
+  * much better class design
+
+ -- Malte Thoma <thoma@sony>  Mon, 23 Dec 2002 09:00:12 +0100
+
 heatload (0.4.1) unstable; urgency=low
 
   * 0.4.1

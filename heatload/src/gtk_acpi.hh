@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.18 2002/12/20 22:12:05 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.19 2002/12/23 07:59:28 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -46,45 +46,18 @@ class gtk_acpi : public gtk_acpi_glade
         Gtk::Menu *menu;
         GraphDrawingArea *GDA;
         FileFinder FF;
+        HeatloadGizmo HG;
 
         heatload::st_widget show_widget;
-        heatload::st_show show_what;
-        heatload::st_color color;
         mutable bool show_sudo;
         
         friend class gtk_acpi_glade;
         friend class WindowInfo;
 
-        struct st_throttling{std::string tstate;int state;std::string prozent;
-               st_throttling() : state(-1),prozent("?") {}
-               st_throttling(const std::string &t,const int s,const std::string &p)
-                  :tstate(t),state(s),prozent(p) {}};
-        std::vector<st_throttling> vec_throttling;
-
-        struct st_performance{std::string tstate;int state;std::string value;
-               st_performance() : state(-1),value("?"){}
-               st_performance(const std::string &t,const int s,const std::string &p)
-                  :tstate(t),state(s),value(p) {}};
-        std::vector<st_performance> vec_performance;
-
-
-        struct st_cpu{st_throttling throttling;st_performance performance;};
-        Gizmo ac_adapter;
-        st_cpu cpu;
-        GizmoThermal thermal;
-        Gizmo fan;
-        GizmoBattery battery;
-        Gizmo cpu_load;
-
         void init();
         void menu_init();
         gint on_eventbox_main_button_press_event(GdkEventButton *event);
         void select_throttling(guint i);
-        void load_thrott_file();
-        st_throttling throttling_from_state(const std::string &s);
-        void load_performance_file();
-        void select_performance(guint i);
-        st_performance performance_from_state(const std::string &s);
 
         void show_sudo_error();
         void show_run_time_options();
@@ -96,9 +69,9 @@ class gtk_acpi : public gtk_acpi_glade
         void get_battery();        
         void get_load_value();
         void get_throttling();
-        void get_performance();
         
-
+        void load();
+      
         void get_show();
         gint timeout();
 
@@ -109,11 +82,8 @@ class gtk_acpi : public gtk_acpi_glade
         gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
         void ende();
    public:
-       gtk_acpi(const FileFinder::FileMap_t &_FileMap,
-             const heatload::st_widget &show_widget,
-             const bool _read_max_cap, const bool _show_sudo,
-             const heatload::st_show &_show_what,const heatload::st_color &_color);
-
+       gtk_acpi(const FileFinder &FF,const heatload::st_widget &show_widget,
+                const bool _show_sudo,HeatloadGizmo &HG);
         void set_show_sudo(bool b) const {show_sudo=b;}
         void save() const;
         void re_init() {init();}

@@ -1,4 +1,4 @@
-/* $Id: RC.hh,v 1.3 2002/12/20 07:53:34 thoma Exp $ */
+/* $Id: RC.hh,v 1.4 2002/12/23 07:59:28 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -20,19 +20,21 @@
 #ifndef _HEAT_RC_H
 #define _HEAT_RC_H
 
-#include <Structs.hh>
+#include "Structs.hh"
 #include "FileFinder.hh"
 
 namespace rc_file{
-   void load(heatload::st_show &show_what,heatload::st_color &color,
-                  heatload::st_widget &show_widget,bool &read_max_cap,
-                  bool &show_sudo,FileFinder::FileMap_t &FileMap);
 
+   void load(HeatloadGizmo &HG,
+             heatload::st_widget &show_widget,
+             bool &show_sudo,FileFinder &FileMap);
 
+/*
   void save(const heatload::st_show &show_what,const heatload::st_color &color,
              const heatload::st_widget &show_widget,const bool read_max_cap,
              const bool show_sudo,
              const FileFinder::FileMap_t &FileMap);
+*/
 }
 
 #endif

@@ -38,6 +38,7 @@ void WindowInfo::on_button_close_clicked()
 
 void WindowInfo::on_checkbutton_show_toggled()
 {
+  if(!hauptfenster) return ;
   hauptfenster->set_show_sudo(!checkbutton_show->get_active());
   hauptfenster->save();
 }

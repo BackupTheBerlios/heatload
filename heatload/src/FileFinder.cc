@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.4 2002/12/20 22:12:05 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.5 2002/12/23 07:59:28 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -22,19 +22,25 @@
 #include "WindowInfo.hh"
 #include <fstream>
 
-FileFinder::FileFinder(gtk_acpi *h,const FileMap_t fm) 
- : hauptfenster(h),FileMap(fm)
+FileFinder::FileFinder()
 {
   init();
+}
+
+void FileFinder::find()
+{
   find_filenames();
   check(true);
 }
+
+
 
 bool FileFinder::check(const bool fix)
 {
   bool alles_ok=true;
   for(std::map<heatload::e_find,std::vector<st_file> >::const_iterator i=VFiles.begin();i!=VFiles.end();++i)
    {
+//cout<<i->first<<'\t' <<FileMap[i->first].name<<'\t'<< FileMap[i->first].ok<<'\n';
      if(!FileMap[i->first].ok)
       {  
          set_dummy_file(FileMap[i->first],i->first);
@@ -42,64 +48,64 @@ bool FileFinder::check(const bool fix)
          for(std::vector<st_file>::const_iterator j=i->second.begin();j!=i->second.end();++j)
            s+= "   "+j->name+'\n';
          s+="\nI've written a dummy ~/.heatloadrc. Please edit the filenames and restart.\n";
-         if(fix) manage(new WindowInfo(hauptfenster,s,false));  
+         if(fix) manage(new WindowInfo(0,s,false));
          alles_ok=false;     
       }
    }
- if(!alles_ok) hauptfenster->save();
+// if(!alles_ok) hauptfenster->save();
  return alles_ok;
 }
 
 void FileFinder::find_filenames()
 {
+//cout << "FFsize_ "<<FileMap.size()<<'\n';
    for(std::map<heatload::e_find,std::vector<st_file> >::const_iterator i=VFiles.begin();i!=VFiles.end();++i)
     {
+      FileMap[i->first]=st_file();
+//cout << "\tS="<<i->second.size()<<'\n';
       for(std::vector<st_file>::const_iterator j=i->second.begin();j!=i->second.end();++j)
        {
          std::ifstream fin(j->name.c_str());
+//cout << "find: "<<i->first<<' '<<j->name<<' '<<fin.good()<<'\n';
          if(fin.good())
            {
              FileMap[i->first]=*j;
              FileMap[i->first].ok=true;
              break;
-          }
-      }
+           }
+       }
    }
+//cout << "FFsize_ "<<FileMap.size()<<'\n';
 }
+
 
 void FileFinder::init()
 {
   std::string B=Bezeichnung(heatload::eAC);
-  VFiles[heatload::eAC].push_back(st_file(FileMap[heatload::eAC]));
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/AC0/state"));
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/ACAD/state"));
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/0/status"));
 
   B=Bezeichnung(heatload::eBat);
-  VFiles[heatload::eBat].push_back(st_file(FileMap[heatload::eBat]));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT0/state"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT1/state"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/0/status",true));
 
   B=Bezeichnung(heatload::eBatInfo);
-  VFiles[heatload::eBatInfo].push_back(st_file(FileMap[heatload::eBatInfo]));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT0/info"));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT1/info"));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/0/info",true));
 
   B=Bezeichnung(heatload::eThermal);
-  VFiles[heatload::eThermal].push_back(st_file(FileMap[heatload::eThermal]));
   VFiles[heatload::eThermal].push_back(st_file(B,"/proc/acpi/thermal_zone/THRM/temperature"));
   VFiles[heatload::eThermal].push_back(st_file(B,"/proc/acpi/thermal_zone/THM0"));
   VFiles[heatload::eThermal].push_back(st_file(B,"/proc/acpi/thermal/0/status",true));
 
   B=Bezeichnung(heatload::eCPUthrottling);
-  VFiles[heatload::eCPUthrottling].push_back(st_file(FileMap[heatload::eCPUthrottling]));
   VFiles[heatload::eCPUthrottling].push_back(st_file(B,"/proc/acpi/processor/CPU0/throttling"));
   VFiles[heatload::eCPUthrottling].push_back(st_file(B,"/proc/acpi/processor/CPU1/throttling"));
 
   B=Bezeichnung(heatload::eCPUperformance);
-  VFiles[heatload::eCPUperformance].push_back(st_file(FileMap[heatload::eCPUperformance]));
   VFiles[heatload::eCPUperformance].push_back(st_file(B,"/proc/acpi/processor/CPU0/performance"));
   VFiles[heatload::eCPUperformance].push_back(st_file(B,"/proc/acpi/processor/CPU1/performance"));
 }

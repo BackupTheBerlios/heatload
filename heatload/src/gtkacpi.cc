@@ -8,8 +8,9 @@
 #include <gtk--/main.h>
 #include "gtk_acpi.hh"
 #include <getopt.h>
-#include "RC.hh"
 #include "FileFinder.hh"
+#include "Gizmo.hh"
+#include "RC.hh"
 
 void usage(const std::string &name)
 {
@@ -46,53 +47,38 @@ void usage(const std::string &name)
                " -x X, --x_size X         X = x-size of meter [100]\n"
                " -y X, --y_size X         X = y-size of meter [70]\n\n"
                "    run-time-options:\n"
-               +heatload::run_time_options+
-/*
-               "    a        toggle show/hide ac\n\n"
-               "    b        toggle show/hide battery\n"
-               "    c        toggles between designed- and last-max-capacity\n"
-               "              when calculating the batterys fill-percentage\n\n"
-               "    d        toggles show/hide decoration\n"
-               "    e        toggles show/hide label\n"
-               "    f        toggle show/hide fan\n"
-               "    g        toggles show/hide graph\n"
-               "    l        toggle show/hide load\n"
-               "    r        immediate reload\n"
-               "    s        show sudo hints\n"
-               "    t        toggle show/hide thermal\n"
-               "    u        toggle show/hide cpu throttling\n\n"
-*/
+               + heatload::run_time_options+
                " command-line options override the default settings in \n"
                "  './.heatloadrc', '~/.heatloadrc' resp. '/etc/heatload/heatload.conf'\n\n" 
                ;
   exit(1);
 }
 
-void evaluate(const std::string &s,heatload::st_show &show_what)
+void evaluate(const std::string &s,HeatloadGizmo &HG)
 {
-  if     (s=="ac")      show_what.ac=false  ;
-  else if(s=="battery") show_what.bat=false ; 
-  else if(s=="thermal") show_what.temp=false ; 
-  else if(s=="load")    show_what.load=false ; 
-  else if(s=="fan")     show_what.fan=false ; 
-  else if(s=="cpu_throttling")   show_what.cpu_throttling=false ; 
-  else if(s=="cpu_performance")   show_what.cpu_performance=false ; 
+  if     (s=="ac")      HG.ac_adapter.toggleVisible()  ;
+  else if(s=="battery") HG.battery.toggleVisible() ; 
+  else if(s=="thermal") HG.thermal.toggleVisible() ; 
+  else if(s=="load")    HG.cpu_load.toggleVisible() ; 
+  else if(s=="fan")     HG.fan.toggleVisible() ; 
+  else if(s=="cpu_throttling")   HG.cpu_throttling.toggleVisible() ; 
+  else if(s=="cpu_performance")  HG.cpu_performance.toggleVisible() ; 
   else {cerr << s<<" unknown \n";}
 }
 
-void change_color(const std::string &s,heatload::st_color &color,const std::string &name)
+void change_color(const std::string &s,HeatloadGizmo &HG,const std::string &name)
 {
  cout << s<<'\n';
  std::string::size_type st=s.find("=");
  if(st==std::string::npos) {std::cerr << "Wrong color: "<<s<<'\n'; usage(name);}
  std::string c(s,0,st);
  std::string w(s,st+1);
- if     (c=="battery_label") color.bat_label=w;
- else if(c=="battery_meter") color.bat_meter=w;
- else if(c=="thermal_label") color.temp_label=w;
- else if(c=="thermal_meter") color.temp_meter=w;
- else if(c=="load_label")    color.load_label=w;
- else if(c=="load_meter")    color.load_meter=w;
+ if     (c=="battery_label") HG.battery.setColorLabel(w);
+ else if(c=="battery_meter") HG.battery.setColorMeter(w);
+ else if(c=="thermal_label") HG.thermal.setColorLabel(w);
+ else if(c=="thermal_meter") HG.thermal.setColorMeter(w);
+ else if(c=="load_label")    HG.cpu_load.setColorLabel(w);
+ else if(c=="load_meter")    HG.cpu_load.setColorMeter(w);
  else  {std::cerr << "Wrong color: "<<s<<'\n'; usage(name);}
 }
 
@@ -117,32 +103,31 @@ const static struct option options[]=
 int main(int argc, char **argv)
 {  
     int opt;
-
-    bool read_max_cap=false,show_sudo=true;
+    bool show_sudo=true;
     heatload::st_widget show_widget;
-    heatload::st_show show_what;
-    heatload::st_color color;
-    FileFinder::FileMap_t FileMap;
-    rc_file::load(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
+    FileFinder FF;
+    HeatloadGizmo HG;
+    rc_file::load(HG,show_widget,show_sudo,FF);
+                                                            
     while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:tx:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
          case 'd' : show_widget.decoration=!show_widget.decoration; break;
          case 'l' : show_widget.label= !show_widget.label; break;
          case 'g' : show_widget.graph= !show_widget.graph; break;
-         case 'm' : read_max_cap=true; break;
+         case 'm' : HG.battery.setReadMaxCap(true); break;
          case 'r' : show_widget.refresh=atoi(optarg); break;   
          case 't' : show_sudo=true; break;   
          case 'x' : show_widget.x=atoi(optarg); break;
          case 'y' : show_widget.y=atoi(optarg); break;
-         case 'h' : evaluate(optarg,show_what); break;
-         case 'c' : change_color(optarg,color,argv[0]); break;
+         case 'h' : evaluate(optarg,HG); break;
+         case 'c' : change_color(optarg,HG,argv[0]); break;
          default : usage(argv[0]);
        }
      }  
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(FileMap,show_widget,read_max_cap,show_sudo,show_what,color));
+   manage(new class gtk_acpi(FF,show_widget,show_sudo,HG));
    m.run();
    return 0;
 }

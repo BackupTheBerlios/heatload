@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.5 2002/12/20 22:12:05 thoma Exp $ */
+/* $Id: RC.cc,v 1.6 2002/12/23 07:59:28 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -17,16 +17,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "RC.hh"
 #include <vector>
 #include <map>
 #include <string>
 #include <unistd.h>
 #include <TagStream.hh>
+#include "gtk_acpi.hh"
+#include "Gizmo.hh"
+#include "RC.hh"
 
-void rc_file::load(heatload::st_show &show_what,heatload::st_color &color,
-                  heatload::st_widget &show_widget,bool &read_max_cap,
-                  bool &show_sudo,FileFinder::FileMap_t &FileMap)
+
+void rc_file::load(HeatloadGizmo &HG,heatload::st_widget &show_widget,
+                   bool &show_sudo,FileFinder &FF)
 {
   std::vector<std::string> V;
   char currentwd[10240];
@@ -56,42 +58,39 @@ cout << "looking for "<<*i<<'\n';
      const Tag *show=data->find("Show");
      if(!show) {std::cerr << "Wrong format in '"<<*i<<"': 'Show' not found\n'"; }     
      else {
-        show_what.ac=show->getBoolAttr("AC",true);
-        show_what.bat=show->getBoolAttr("Battery",true);
-        show_what.temp=show->getBoolAttr("Thermal",true);
-        show_what.fan=show->getBoolAttr("Fan",true);
-        show_what.cpu_throttling=show->getBoolAttr("CPU-Throttling",true);
-        show_what.cpu_performance=show->getBoolAttr("CPU-Performance",true);
+        HG.ac_adapter.setVisible(show->getBoolAttr("AC",true));
+        HG.battery.setVisible(show->getBoolAttr("Battery",true));
+        HG.thermal.setVisible(show->getBoolAttr("Thermal",true));
+        HG.fan.setVisible(show->getBoolAttr("Fan",true));
+        HG.cpu_throttling.setVisible(show->getBoolAttr("CPU-Throttling",true));
+        HG.cpu_performance.setVisible(show->getBoolAttr("CPU-Performance",true));
       }           
      const Tag *tcolor=data->find("Color");
      if(!show) {std::cerr << "Wrong format in '"<<*i<<"': 'Show' not found\n'"; }     
      else {
-         color.temp_label = tcolor->getAttr("Thermal_Label");
-         color.temp_meter = tcolor->getAttr("Thermal_Meter");
-         color.bat_label = tcolor->getAttr("Battery_Label");
-         color.bat_meter = tcolor->getAttr("Battery_Meter");
-         color.load_label = tcolor->getAttr("Load_Label");
-         color.load_meter = tcolor->getAttr("Load_Meter");
+         HG.thermal.setColorLabel(tcolor->getAttr("Thermal_Label"));
+         HG.thermal.setColorMeter(tcolor->getAttr("Thermal_Meter"));
+         HG.battery.setColorLabel(tcolor->getAttr("Battery_Label"));
+         HG.battery.setColorMeter(tcolor->getAttr("Battery_Meter"));
+         HG.cpu_load.setColorLabel(tcolor->getAttr("Load_Label"));
+         HG.cpu_load.setColorMeter(tcolor->getAttr("Load_Meter"));
       }           
      const Tag *files=data->find("Files");
      if(files)
       FOR_EACH_CONST_TAG_OF(i,*files,"File")
        { 
-         FileMap[heatload::e_find(i->getIntAttr("Id"))]=
-               FileFinder::st_file(i->getAttr("Bezeichnung"),i->getAttr("Name"),
-                                   i->getBoolAttr("OldStyle",false));
+         FF.NewFileName(heatload::e_find(i->getIntAttr("Id")),
+                FileFinder::st_file(i->getAttr("Bezeichnung"),
+                                    i->getAttr("Name"),
+                                    i->getBoolAttr("OldStyle",false)));
        }
-
-     read_max_cap=data->getBoolAttr("ReadMaxCap",false);
+     HG.battery.setReadMaxCap(data->getBoolAttr("ReadMaxCap",false));
      show_sudo=data->getBoolAttr("ShowSudo",true);
      return;
    }
 }
 
-void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &color,
-                  const heatload::st_widget &show_widget,const bool read_max_cap,
-                  const bool show_sudo,
-                  const FileFinder::FileMap_t &FileMap)
+void gtk_acpi::save() const
 {                  
   std::string file=std::string(getenv("HOME"))+"/.heatloadrc";
   std::ofstream datei(file.c_str());
@@ -113,23 +112,23 @@ void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &
   widget.setBoolAttr("Graph",show_widget.graph);
 
   Tag &show=data.push_back(Tag("Show"));
-  show.setBoolAttr("AC",show_what.ac);
-  show.setBoolAttr("Battery",show_what.bat);
-  show.setBoolAttr("Thermal",show_what.temp);
-  show.setBoolAttr("Fan",show_what.fan);
-  show.setBoolAttr("CPU-Throttling",show_what.cpu_throttling);
-  show.setBoolAttr("CPU-Performance",show_what.cpu_performance);
+  show.setBoolAttr("AC",HG.ac_adapter.Visible());
+  show.setBoolAttr("Battery",HG.battery.Visible());
+  show.setBoolAttr("Thermal",HG.thermal.Visible());
+  show.setBoolAttr("Fan",HG.fan.Visible());
+  show.setBoolAttr("CPU-Throttling",HG.cpu_throttling.Visible());
+  show.setBoolAttr("CPU-Performance",HG.cpu_performance.Visible());
 
   Tag &tcolor=data.push_back(Tag("Color"));
-  tcolor.setAttr("Thermal_Label",color.temp_label);
-  tcolor.setAttr("Thermal_Meter",color.temp_meter);
-  tcolor.setAttr("Battery_Label",color.bat_label);
-  tcolor.setAttr("Battery_Meter",color.bat_meter);
-  tcolor.setAttr("Load_Label",color.load_label);
-  tcolor.setAttr("Load_Meter",color.load_meter);
+  tcolor.setAttr("Thermal_Label",HG.thermal.ColorLabel());
+  tcolor.setAttr("Thermal_Meter",HG.thermal.ColorMeter());
+  tcolor.setAttr("Battery_Label",HG.battery.ColorLabel());
+  tcolor.setAttr("Battery_Meter",HG.battery.ColorMeter());
+  tcolor.setAttr("Load_Label",HG.cpu_load.ColorLabel());
+  tcolor.setAttr("Load_Meter",HG.cpu_load.ColorMeter());
 
   Tag &files=data.push_back(Tag("Files"));
-  for(FileFinder::FileMap_t::const_iterator i=FileMap.begin();i!=FileMap.end();++i)
+  for(FileFinder::FileMap_t::const_iterator i=FF.getFileMap().begin();i!=FF.getFileMap().end();++i)
    {
      Tag &f=files.push_back(Tag("File"));
      f.setAttr("Bezeichnung",i->second.bezeichnung);
@@ -139,7 +138,7 @@ void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &
         f.setBoolAttr("OldStyle",i->second.old_style);
    }
 
-  data.setBoolAttr("ReadMaxCap",read_max_cap);
+  data.setBoolAttr("ReadMaxCap",HG.battery.ReadMaxCap());
   data.setBoolAttr("ShowSudo",show_sudo);
 
   ts.write(datei);
