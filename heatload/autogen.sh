@@ -30,4 +30,4 @@ autoheader
 aclocal
 automake --add-missing --copy --gnu
 autoconf
-./configure $* && $MAKE
+./configure $* 

@@ -1,3 +1,9 @@
+heatload (0.7.4) unstable; urgency=low
+
+  * Fixed reading battery state bug, so more architectures will be suported
+
+ -- Malte Thoma <thoma@muenster.de>  Tue,  8 Jul 2003 14:01:25 +0200
+
 heatload (0.7.3) unstable; urgency=low
 
   * Auto-suspend only if battery ist discharging

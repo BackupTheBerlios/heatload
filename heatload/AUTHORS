@@ -4,3 +4,12 @@ heatload - CPU Load and ACPI Monitor
 Copyright 2002
 Lennart Poettering <mz686561746c6f6164@poettering.de>
 Malte Thoma <thoma@muenster.de>
+
+To make a *.deb:
+
+cd ../Deb
+cvs -d thoma@cvs.berlios.de:/cvsroot/heatload co heatload
+mv heatload heatload_X.Y.Z
+cd heatload_X.Y.Z
+./autogen.sh
+su -c "debuild"

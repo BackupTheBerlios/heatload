@@ -116,11 +116,27 @@ void GizmoBattery::get_value()
   int present_rate=0,remaining_cap=0;
   std::ifstream fin(getFilenameForValues().c_str());
   fin >> s1 >> present;
+#if 0  
   fin >> s1 >> s1;
   if(!getFileOldStyleForValues())
    { fin >> s1;
      fin >> s1 >> s1 >> charging_state;
    }
+#else
+  int count=0;
+  while(true)
+   {
+     if(++count>10) break;
+     std::getline(fin,s1);
+     if(s1.find_last_of(" ")!=std::string::npos)
+       s1=s1.substr(s1.find_last_of(" ")+1,std::string::npos);
+     if(s1=="charging" || s1=="unknown" || s1=="discharging")
+      {
+        charging_state=s1;
+        break; 
+      }
+   }
+#endif
   fin >> s1 >> s1 >> spresent_rate;
   if(spresent_rate!="unknown") 
    { fin >> s1;  
@@ -148,7 +164,7 @@ void GizmoBattery::get_value()
      if(show) { show=false;
          cerr<<"'Present Rate:' should be 'charging', 'discharging' or 'unknown'\n"
          " in '"<<getFilenameForValues()<<"'\n"
-         " but I it is '"<<charging_state<<"' assuming 'unknown'\n"
+         " but it is '"<<charging_state<<"' assuming 'unknown'\n"
          " if you have a 'charging state' in "<<getFilenameForValues()<<"\n"
          " (or anywhere else) please submit a 'cat' of this file to me"
          " <thoma@muenster.de>\n";
