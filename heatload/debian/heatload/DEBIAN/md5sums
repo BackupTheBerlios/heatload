@@ -1,0 +1,9 @@
+2c9522865a7f8132c9cca2f3dc0fb88b  usr/bin/heatload
+c0626dd872eda7b072df60decd4b3179  usr/share/man/man1/heatload.1.gz
+80e4d8249189f1eeaa2d12c76f27ba58  usr/share/doc/heatload/README
+056f5653bfcc0893a632368bdf02ee67  usr/share/doc/heatload/TODO
+4aaf50583ead7ff18e9b5c00c4c62a59  usr/share/doc/heatload/copyright
+c1bd1b5127878e421d201f598b93076b  usr/share/doc/heatload/changelog.gz
+b8f3cd3fce018b5ef4705d7e6d081a08  usr/share/doc/heatload/NEWS.gz
+75f7f1b467007ed33342cf21b69a0a02  usr/share/doc/heatload/changelog.Debian.gz
+df31d71b1a953ea25c9f23aa3ee9f529  usr/lib/menu/heatload

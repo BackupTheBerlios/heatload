@@ -75,7 +75,7 @@ void gtk_acpi::get_battery()
   if(charging_state=="charging") bcharging_state = true;
   else if (charging_state=="discharging")  bcharging_state = false;
   else assert(!"ERRROR\n");
-  battery=st_battery(bpresent,bcharging_state,present_rate,remaining_cap,max_cap);
+  battery=st_battery(bpresent,bcharging_state,present_rate,remaining_cap,max_cap,last_max_cap);
 }
 
 void failure(const string &txt) 

@@ -1,0 +1,13 @@
+Package: heatload
+Version: 0.3-1
+Section: x11
+Priority: optional
+Architecture: i386
+Depends: libc6 (>= 2.3.1-1), libglib1.2 (>= 1.2.0), libgtk1.2 (>= 1.2.10-4), libgtkmm1.2, libsigc++0, libstdc++2.10-glibc2.2 (>= 1:2.95.4-15), xlibs (>> 4.1.0)
+Installed-Size: 200
+Maintainer: Malte Thoma <thoma@muenster.de>
+Description: <Graphical and nummerical ACPI- and cpuload- monitor for X11>
+ This Gtk utility produces nice looking realtime graphs for the
+ current CPU load and some ACPI values (eg. temperature) of your Linux
+ machine. It is nice for monitoring the direct relation of
+ the former to the latter.

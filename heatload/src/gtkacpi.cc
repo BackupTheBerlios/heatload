@@ -12,7 +12,7 @@
 void usage(const std::string &name)
 {
   std::cerr << "\n  heatload is written by Lennart Poettering (until 0.2),\n"
-          "  enhanced (since 0.3) by Malte Thoma (thoma@muenster.de)\n"
+          "  rewritten and enhanced (since 0.3) by Malte Thoma (thoma@muenster.de)\n"
           "  heatload is free software under the terms of the GNU General Public License\n\n"
                "  Usage: "<<name<<" [OPTION]... \n"
                "  [OPTION]... can be a combination of the following items: \n"
@@ -25,13 +25,13 @@ void usage(const std::string &name)
                " -x X, --x_size X         X = x-size of meter [256]\n"
                " -y X, --y_size X         X = y-size of meter [100]\n\n"
                " -m  , --read_max_capacity  This is a HACK: If you use this\n"
-               "                          option the max_cap will be read from\n"
-               "                          /proc/acpi/battery/BAT1/info (as it sholud be).\n"
-               "                          If this option is NOT given the max_cap will be 44100 mWh\n"
-               "                          this is the max_cap on an Sony-Vaio. Because of a buggy \n"
-               "                          BIOS the reading of the info file freezes the keybord on\n"
-               "                          this laptop. If you don't have a Sony Vaio it should be\n"
-               "                          save to use this option.\n\n"
+               "                     option the max_cap will be read from\n"
+               "                     /proc/acpi/battery/BAT1/info (as it should be).\n"
+               "                     If this option is NOT given the max_cap will be 44100 mWh\n"
+               "                     this is the max_cap on an Sony-Vaio. Because of a buggy \n"
+               "                     BIOS the reading of the info file freezes the keybord on\n"
+               "                     this laptop. If you don't have a Sony Vaio it should be\n"
+               "                     save to use this option.\n\n"
                ;
   exit(1);
 }

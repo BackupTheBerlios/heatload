@@ -28,7 +28,7 @@ class gtk_acpi : public gtk_acpi_glade
         std::string temp_color;
         std::string bat_color;
         std::string load_color;
-        int max_cap;
+        int max_cap,last_max_cap;
         
         friend class gtk_acpi_glade;
         struct st_ac_adapter{std::string state;};
@@ -39,14 +39,19 @@ class gtk_acpi : public gtk_acpi_glade
                   : temp(t1),temperatur(t),cooling_mode(c),state(s){} };
         struct st_battery{bool present;bool charging; int present_rate_mW; 
                           int remaining_capacity_mWh;int max_capacity_mWh;
+                          int last_max_capacity_mWh;
                st_battery() :present(false),charging(false),present_rate_mW(0),
-                         remaining_capacity_mWh(0),max_capacity_mWh(0) {}
-               st_battery(bool p,bool c,int pr,int r,int m)
+                         remaining_capacity_mWh(0),max_capacity_mWh(0),
+                         last_max_capacity_mWh(0) {}
+               st_battery(const bool p,const bool c,const int pr,
+                          const int r,const int m,const int lm)
                   : present(p),charging(c),present_rate_mW(pr),
-                    remaining_capacity_mWh(r),max_capacity_mWh(m) {}
+                    remaining_capacity_mWh(r),max_capacity_mWh(m),
+                    last_max_capacity_mWh(lm) {}
                const double prozent() const {return double(remaining_capacity_mWh)/max_capacity_mWh;}
+               const double prozent_last() const {return double(remaining_capacity_mWh)/last_max_capacity_mWh;}
                const std::string prozent_string() const {return ::itos(int(prozent()*100))+"%";}
-               
+               const std::string prozent_last_string() const {return ::itos(int(prozent_last()*100))+"%";}
                 };
               
         st_ac_adapter ac_adapter;
@@ -71,6 +76,7 @@ class gtk_acpi : public gtk_acpi_glade
 
         GraphDrawingArea *GDA;
         gint on_gtk_acpi_delete_event(GdkEventAny *ev);
+        gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
         void ende();
    public:
         gtk_acpi(const guint x,const guint y,const guint refresh,

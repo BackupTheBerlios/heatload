@@ -8,6 +8,7 @@
 #include "config.h"
 #include "gtk_acpi.hh"
 #include <gtk--/main.h>
+#include <fstream>
 
 gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
    const bool _show_graph,const bool _show_label,const bool _show_decoration,
@@ -30,9 +31,13 @@ void gtk_acpi::read_max_cap()
  #warning HACK 
  if(read_max_cap_)
   {
-//   ifstream fin("/proc/acpi/battery/BAT1/info");
+   ifstream fin("/proc/acpi/battery/BAT1/info");
+   std::string s1,s2;
+   fin >> s1 >> s1;
+   fin >> s1 >> s1 >> max_cap;
+   fin >> s1 >> s1 >> s1 >> last_max_cap;
   }
- else max_cap=44100;
+ else { max_cap=44100; last_max_cap=40000;}
 }
 
 
@@ -91,3 +96,11 @@ void gtk_acpi::ende()
 {
   Gtk::Main::instance()->quit(); 
 }
+
+gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
+{
+//  if(ev->keyval=='q') ende();
+  return false;
+}
+
+
