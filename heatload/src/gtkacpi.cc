@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 //    int frame_size=5;
     guint x=100;
     guint y=50;
-    guint refresh=1000;
+    guint refresh=2500;
     while ((opt=getopt_long(argc,argv,"dlfgmr:x:y:h?",options,NULL))!=EOF)
      {
       switch(opt) {

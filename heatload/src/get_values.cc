@@ -71,16 +71,19 @@ void gtk_acpi::get_battery()
 {
   std::string s1;
   std::string present,charging_state;
-  std::string spresent;
-  int present_rate=0,remaining_cap;
+  std::string spresent_rate;
+  int present_rate=0,remaining_cap=0;
   ifstream fin("/proc/acpi/battery/0/status");
   if(fin.good())
    {
      fin >> s1 >> present;
      fin >> s1 >> s1;
      fin >> s1 >> s1 >> spresent_rate;
-     if(spresent_rate!="unknown") fin >> s1;  
-     else present_rate=atoi(spresent_rate.c_str());
+     if(spresent_rate!="unknown") 
+      { fin >> s1;  
+        present_rate=atoi(spresent_rate.c_str());
+      }
+     fin >> s1 >> s1 >> remaining_cap >> s1;  
    }
   else
    {
@@ -88,8 +91,11 @@ void gtk_acpi::get_battery()
      fin >> s1 >> present;
      fin >> s1 >> s1 >> s1;  
      fin >> s1 >> s1 >> charging_state;
-     fin >> s1 >> s1 >> present_rate
-     if(present_rate!="unknown") fin >> s1;  
+     fin >> s1 >> s1 >> spresent_rate;
+     if(spresent_rate!="unknown") 
+      { fin >> s1;  
+        present_rate=atoi(spresent_rate.c_str());
+      }
      fin >> s1 >> s1 >> remaining_cap >> s1;  
    }
   bool bpresent,bcharging_state;
