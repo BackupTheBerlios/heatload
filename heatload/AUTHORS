@@ -13,3 +13,5 @@ mv heatload heatload_X.Y.Z
 cd heatload_X.Y.Z
 ./autogen.sh
 su -c "debuild"
+cd ..
+scp heatload_X.Y.Z*  shell.berlios.de:/home/groups/ftp/pub/heatload/
