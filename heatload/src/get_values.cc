@@ -31,13 +31,13 @@ void gtk_acpi::get_values()
 void gtk_acpi::get_ac_adapter()
 {
   std::string s1,s2;
-  ifstream fin("/proc/acpi/ac_adapter/AC0/status");
+  ifstream fin("/proc/acpi/ac_adapter/AC0/state");
   if(!fin.good()) {
      fin.close();
      fin.open("/proc/acpi/ac_adapter/ACAD/state");   
      if(!fin.good()) {
         fin.close();
-        fin.open("/proc/acpi/ac_adapter/0/state");
+        fin.open("/proc/acpi/ac_adapter/0/status");
         if(!fin.good())
           {cerr << "Sorry can't open 'ac_adapter/state' in /proc/acpi\n"; exit(1);}
       }
