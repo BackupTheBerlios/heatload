@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH SUDO_SET_THROTTLING 1 "Dezember 10, 2002"
+.TH SET_THROTTLING 1 "Dezember 10, 2002"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -16,7 +16,7 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-sudo_set_throttling \- to set the throttling as non-root via sudo.
+set_throttling \- to set the throttling as non-root via sudo.
 .SH SYNOPSIS
 .B heatload
 .RI [ options ] " files" ...
@@ -29,7 +29,7 @@ This manual page documents briefly the
 and
 .B bar
 commands.
-Using: sudo sudo_set_throttling X file
+Using: sudo set_throttling X file
 where X is a valid throttling state (see /proc/acpi/processor/CPU0/throttling)
 and file is '/proc/acpi/processor/CPU0/throttling' or whatever this file is
 named.

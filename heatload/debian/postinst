@@ -26,7 +26,7 @@ set -e
 case "$1" in
     configure)
 
-    chmod 744 /usr/sbin/sudo_set_throttling
+    chmod 700 /usr/sbin/set_throttling
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
