@@ -34,10 +34,16 @@ class gtk_acpi : public gtk_acpi_glade
         friend class gtk_acpi_glade;
         struct st_ac_adapter{std::string state;};
         struct st_cpu_load{guint load;};
-        struct st_thermal{guint temp;std::string temperatur;std::string cooling_mode;std::string state;
+        struct st_thermal{guint temp;std::string einheit;
+                          std::string cooling_mode;
                st_thermal() {}
-               st_thermal(guint t1,std::string t,std::string c,std::string s)
-                  : temp(t1),temperatur(t),cooling_mode(c),state(s){} };
+               st_thermal(guint t1,std::string e,std::string c)
+                  : temp(t1),einheit(e),cooling_mode(c){}
+               std::string Celsius() const 
+                  { if(einheit=="C") return itos(temp)+""+einheit;
+                    else if(einheit=="dK") return itos((temp/10)-273)+""+einheit;
+                    else return "unknown unit of tempertur, please contact thoma@muenster.de\n";
+                   }};
         struct st_battery{bool present;bool charging; int present_rate_mW; 
                           int remaining_capacity_mWh;int max_capacity_mWh;
                           int last_max_capacity_mWh;

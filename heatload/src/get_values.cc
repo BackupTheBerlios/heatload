@@ -44,14 +44,14 @@ void gtk_acpi::get_ac_adapter()
 
 void gtk_acpi::get_thermal()
 {
-  std::string s1,cm,te2,st;
+  std::string s1,cm,te2;
   guint te;
 
   ifstream fin("/proc/acpi/thermal/0/status");
   if(fin.good())
    {
      fin >> s1 >> te  >> te2;
-     fin >> s1 >> st;
+//     fin >> s1 >> st;
    }
   else
    {
@@ -59,12 +59,12 @@ void gtk_acpi::get_thermal()
      fin1 >> s1>>s1 >>cm;  
      ifstream fin2("/proc/acpi/thermal_zone/THRM/temperature");
      fin2 >> s1 >>te>>te2;  
-     ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
-     fin3 >> s1 >>st;  
-     if(!fin1.good() || !fin2.good() || !fin3.good())
+//     ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
+//     fin3 >> s1 >>st;  
+     if(!fin1.good() || !fin2.good() )
       {cerr << "Sorry can't open 'thermal state' in /proc/acpi\n"; exit(1);}
    }
-  thermal=st_thermal(te,itos(te)+te2,cm,st);
+  thermal=st_thermal(te,te2,cm);
 }
          
 void gtk_acpi::get_battery()

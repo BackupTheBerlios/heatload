@@ -25,7 +25,7 @@ void gtk_acpi::show_values()
  if(show_label)
   {
     label_ac->set_text(ac_adapter.state);
-    label_temp->set_text(thermal.temperatur+"° "+thermal.state);
+    label_temp->set_text(thermal.Celsius());
     label_cooling->set_text(thermal.cooling_mode);
     label_bat1->set_text(remaining_time());
     label_load->set_text(itos(cpu_load.load)+"%");

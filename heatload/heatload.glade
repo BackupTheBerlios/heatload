@@ -151,7 +151,7 @@
 	    <class>GtkTable</class>
 	    <name>table2</name>
 	    <rows>5</rows>
-	    <columns>4</columns>
+	    <columns>5</columns>
 	    <homogeneous>False</homogeneous>
 	    <row_spacing>0</row_spacing>
 	    <column_spacing>0</column_spacing>
@@ -222,8 +222,8 @@
 	      <xpad>0</xpad>
 	      <ypad>0</ypad>
 	      <child>
-		<left_attach>3</left_attach>
-		<right_attach>4</right_attach>
+		<left_attach>4</left_attach>
+		<right_attach>5</right_attach>
 		<top_attach>0</top_attach>
 		<bottom_attach>1</bottom_attach>
 		<xpad>0</xpad>
@@ -249,8 +249,8 @@
 	      <xpad>0</xpad>
 	      <ypad>0</ypad>
 	      <child>
-		<left_attach>3</left_attach>
-		<right_attach>4</right_attach>
+		<left_attach>4</left_attach>
+		<right_attach>5</right_attach>
 		<top_attach>1</top_attach>
 		<bottom_attach>2</bottom_attach>
 		<xpad>0</xpad>
@@ -276,8 +276,8 @@
 	      <xpad>0</xpad>
 	      <ypad>0</ypad>
 	      <child>
-		<left_attach>2</left_attach>
-		<right_attach>3</right_attach>
+		<left_attach>3</left_attach>
+		<right_attach>4</right_attach>
 		<top_attach>0</top_attach>
 		<bottom_attach>1</bottom_attach>
 		<xpad>0</xpad>
@@ -303,8 +303,8 @@
 	      <xpad>0</xpad>
 	      <ypad>0</ypad>
 	      <child>
-		<left_attach>2</left_attach>
-		<right_attach>3</right_attach>
+		<left_attach>3</left_attach>
+		<right_attach>4</right_attach>
 		<top_attach>1</top_attach>
 		<bottom_attach>2</bottom_attach>
 		<xpad>0</xpad>
@@ -422,6 +422,32 @@
 		<xshrink>True</xshrink>
 		<yshrink>True</yshrink>
 		<xfill>True</xfill>
+		<yfill>False</yfill>
+	      </child>
+	    </widget>
+
+	    <widget>
+	      <class>GtkLabel</class>
+	      <name>label1</name>
+	      <label>  </label>
+	      <justify>GTK_JUSTIFY_CENTER</justify>
+	      <wrap>False</wrap>
+	      <xalign>0</xalign>
+	      <yalign>0.5</yalign>
+	      <xpad>0</xpad>
+	      <ypad>0</ypad>
+	      <child>
+		<left_attach>2</left_attach>
+		<right_attach>3</right_attach>
+		<top_attach>0</top_attach>
+		<bottom_attach>2</bottom_attach>
+		<xpad>0</xpad>
+		<ypad>0</ypad>
+		<xexpand>False</xexpand>
+		<yexpand>False</yexpand>
+		<xshrink>True</xshrink>
+		<yshrink>True</yshrink>
+		<xfill>False</xfill>
 		<yfill>False</yfill>
 	      </child>
 	    </widget>
