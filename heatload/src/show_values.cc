@@ -45,11 +45,14 @@ void gtk_acpi::test_auto_tp()
 {
    for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
     {
-      if(!i->set && i->temperature > HG.thermal.IValue())
+std::cout <<i->set<< ' '<< i->temperature<<' '<<HG.thermal.IValue()<<' ';
+      if(!i->set && i->temperature <= HG.thermal.IValue())
        { 
+std::cout << "TRUE";
          select_throttling(i->state,i->EF);
          i->set=true;
        }
+std::cout << '\n';
     }
 }
 
