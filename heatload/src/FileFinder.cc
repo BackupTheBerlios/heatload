@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.9 2003/03/26 08:01:06 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.10 2003/06/20 06:51:26 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 #include "gtk_acpi.hh"
 #include "WindowInfo.hh"
 #include <fstream>
+#include <assert.h>
 #include "Gizmo.hh"
 
 FileFinder::FileFinder()

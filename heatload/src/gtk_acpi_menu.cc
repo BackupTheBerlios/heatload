@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.14 2003/03/28 07:36:58 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.15 2003/06/20 06:50:06 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 #include "gtk_acpi.hh"
 #include <fstream>
 #include <iostream> // debug
+#include <assert.h>
 
 void gtk_acpi::menu_init() 
 {

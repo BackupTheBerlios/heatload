@@ -21,7 +21,7 @@
 #include "itos.h"
 #include <fstream>
 #include <iostream>
-
+#include <assert.h>
 
 const std::string Gizmo::Value()
 {
