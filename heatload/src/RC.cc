@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.4 2002/12/20 07:53:34 thoma Exp $ */
+/* $Id: RC.cc,v 1.5 2002/12/20 22:12:05 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -60,7 +60,8 @@ cout << "looking for "<<*i<<'\n';
         show_what.bat=show->getBoolAttr("Battery",true);
         show_what.temp=show->getBoolAttr("Thermal",true);
         show_what.fan=show->getBoolAttr("Fan",true);
-        show_what.cpu_throttling=show->getBoolAttr("CPU",true);
+        show_what.cpu_throttling=show->getBoolAttr("CPU-Throttling",true);
+        show_what.cpu_performance=show->getBoolAttr("CPU-Performance",true);
       }           
      const Tag *tcolor=data->find("Color");
      if(!show) {std::cerr << "Wrong format in '"<<*i<<"': 'Show' not found\n'"; }     
@@ -116,7 +117,8 @@ void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &
   show.setBoolAttr("Battery",show_what.bat);
   show.setBoolAttr("Thermal",show_what.temp);
   show.setBoolAttr("Fan",show_what.fan);
-  show.setBoolAttr("CPU",show_what.cpu_throttling);
+  show.setBoolAttr("CPU-Throttling",show_what.cpu_throttling);
+  show.setBoolAttr("CPU-Performance",show_what.cpu_performance);
 
   Tag &tcolor=data.push_back(Tag("Color"));
   tcolor.setAttr("Thermal_Label",color.temp_label);

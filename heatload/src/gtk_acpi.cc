@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.23 2002/12/20 09:55:51 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.24 2002/12/20 22:12:05 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
 #include "config.h"
 #include "gtk_acpi.hh"
 #include <gtk--/main.h>
-#include <fstream>
+//#include <fstream>
 #include "RC.hh"
 #include "WindowInfo.hh"
 
@@ -36,27 +36,14 @@ gtk_acpi::gtk_acpi(const FileFinder::FileMap_t &_FileMap,
          const bool _read_max_cap,const bool _show_sudo,
          const heatload::st_show &_show_what,const heatload::st_color &_color)
 :
-   menu(0),show_widget(_show_widget),read_max_cap_(_read_max_cap),
-   show_what(_show_what),color(_color),use_max_cap(true),show_sudo(_show_sudo),
-   GDA(0),FF(FileFinder(this,_FileMap))
+   menu(0),GDA(0),FF(FileFinder(this,_FileMap)),
+   show_widget(_show_widget),
+   show_what(_show_what),color(_color),show_sudo(_show_sudo),
+   battery(GizmoBattery(FF.getFileName(heatload::eBatInfo),_read_max_cap))
 {
   init();
 }
 
-
-void gtk_acpi::read_max_cap()
-{
- #warning HACK 
- if(read_max_cap_)
-  {
-   std::ifstream fin(FF.getFileName(heatload::eBatInfo).c_str());
-   std::string s1,s2;
-   fin >> s1 >> s1;
-   fin >> s1 >> s1 >> max_cap;
-   fin >> s1 >> s1 >> s1 >> last_max_cap;
-  }
- else { max_cap=44100; last_max_cap=41000;}
-}
 
 void gtk_acpi::init()
 {
@@ -78,7 +65,6 @@ void gtk_acpi::init()
    if(show_widget.menu) menu_init();
 
    hide_or_show_elements();
-   read_max_cap();
    get_show();
    Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
    if(show_sudo) show_sudo_error();
@@ -120,7 +106,7 @@ void gtk_acpi::ende()
 
 void gtk_acpi::save() const
 {
-  rc_file::save(show_what,color,show_widget,read_max_cap_,show_sudo,FF.getFileMap());
+  rc_file::save(show_what,color,show_widget,battery.ReadMaxCap(),show_sudo,FF.getFileMap());
 }
 
 
@@ -129,7 +115,7 @@ gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
 //  if(ev->keyval=='q') ende();
   if     (ev->keyval=='a') show_what.ac=!show_what.ac;
   else if(ev->keyval=='b') show_what.bat=!show_what.bat;
-  else if(ev->keyval=='c') use_max_cap = !use_max_cap;
+  else if(ev->keyval=='c') battery.toggleUseMaxCap();
   else if(ev->keyval=='d') show_widget.decoration = !show_widget.decoration;
   else if(ev->keyval=='e') show_widget.label = !show_widget.label;
   else if(ev->keyval=='f') show_what.fan=!show_what.fan;

@@ -24,43 +24,20 @@ void gtk_acpi::show_values()
 {
  if(show_widget.label)
   {
-    if(show_what.ac)   label_ac->set_text(ac_adapter.state); 
-    if(show_what.temp) label_temp->set_text(thermal.Celsius()); 
-    if(show_what.fan)  label_cooling->set_text(thermal.cooling_mode);
-    if(show_what.bat)  label_bat1->set_text(remaining_time());
-    if(show_what.load) label_load->set_text(itos(cpu_load.load)+"%");
+    if(show_what.ac)   label_ac->set_text(ac_adapter.Value()); 
+    if(show_what.temp) label_temp->set_text(thermal.Value()); 
+    if(show_what.fan)  label_cooling->set_text(fan.Value());
+    if(show_what.bat)  label_bat1->set_text(itos(battery.Prozent())+battery.Einheit()+" "+battery.RemainingTime());
+    if(show_what.load) label_load->set_text(cpu_load.Value());
     if(show_what.cpu_throttling)  label_cpu_throttling->set_text(cpu.throttling.prozent);
     if(show_what.cpu_performance) label_cpu_performance->set_text(cpu.performance.value);
   }
  if(GDA && show_widget.graph)
   {
-    if(show_what.load) GDA->getVM()[0].meter.add_value(cpu_load.load,show_widget.x);
-    if(show_what.temp) GDA->getVM()[1].meter.add_value(thermal.temp,show_widget.x);
-    if(show_what.bat) {
-       if(use_max_cap) GDA->getVM()[2].meter.add_value(battery.prozent()*100,show_widget.x);
-       else            GDA->getVM()[2].meter.add_value(battery.prozent_last()*100,show_widget.x);
-      }
+    if(show_what.load) GDA->getVM()[0].meter.add_value(cpu_load.IValue(),show_widget.x);
+    if(show_what.temp) GDA->getVM()[1].meter.add_value(thermal.IValue(),show_widget.x);
+    if(show_what.bat) GDA->getVM()[2].meter.add_value(battery.Prozent(),show_widget.x);
     GDA->refresh_pixmap();
   }
-}
-
-std::string gtk_acpi::remaining_time()
-{
-  std::string prozstring;
-  if(use_max_cap) prozstring = battery.prozent_string();
-  else            prozstring = battery.prozent_last_string();
-  double th;
-  if(battery.charging)
-   {
-     if(battery.present_rate_mW==0) return prozstring;
-     th=double(battery.max_capacity_mWh-battery.remaining_capacity_mWh)/battery.present_rate_mW;
-   }
-  else
-   {
-     th=double(battery.remaining_capacity_mWh)/battery.present_rate_mW;
-   }
-  int h=int(th);
-  int min=int(60*(th-h));
-  return prozstring+" "+itos(h)+":"+itos0p(min)+"h";
 }
 

@@ -524,6 +524,69 @@
 		  </widget>
 		</widget>
 	      </widget>
+
+	      <widget>
+		<class>GtkEventBox</class>
+		<name>eventbox_cpu_performance</name>
+		<cxx_visibility>protected</cxx_visibility>
+		<tooltip>CPU performance: Can be changed by the context menu (right mouse button).</tooltip>
+		<child>
+		  <left_attach>3</left_attach>
+		  <right_attach>5</right_attach>
+		  <top_attach>2</top_attach>
+		  <bottom_attach>3</bottom_attach>
+		  <xpad>0</xpad>
+		  <ypad>0</ypad>
+		  <xexpand>False</xexpand>
+		  <yexpand>False</yexpand>
+		  <xshrink>True</xshrink>
+		  <yshrink>True</yshrink>
+		  <xfill>True</xfill>
+		  <yfill>True</yfill>
+		</child>
+
+		<widget>
+		  <class>GtkHBox</class>
+		  <name>hbox2</name>
+		  <homogeneous>False</homogeneous>
+		  <spacing>0</spacing>
+
+		  <widget>
+		    <class>GtkLabel</class>
+		    <name>label_cpu_performance_</name>
+		    <label>Perf.</label>
+		    <justify>GTK_JUSTIFY_CENTER</justify>
+		    <wrap>False</wrap>
+		    <xalign>0</xalign>
+		    <yalign>0.5</yalign>
+		    <xpad>0</xpad>
+		    <ypad>0</ypad>
+		    <child>
+		      <padding>0</padding>
+		      <expand>False</expand>
+		      <fill>False</fill>
+		    </child>
+		  </widget>
+
+		  <widget>
+		    <class>GtkLabel</class>
+		    <name>label_cpu_performance</name>
+		    <cxx_visibility>protected</cxx_visibility>
+		    <label>label3</label>
+		    <justify>GTK_JUSTIFY_CENTER</justify>
+		    <wrap>False</wrap>
+		    <xalign>0</xalign>
+		    <yalign>0.5</yalign>
+		    <xpad>0</xpad>
+		    <ypad>0</ypad>
+		    <child>
+		      <padding>0</padding>
+		      <expand>False</expand>
+		      <fill>False</fill>
+		    </child>
+		  </widget>
+		</widget>
+	      </widget>
 	    </widget>
 	  </widget>
 	</widget>

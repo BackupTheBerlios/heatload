@@ -7,6 +7,7 @@ bin_PROGRAMS = heatload
 sbin_SCRIPTS = set_throttling
 
 heatload_SOURCES = \
+   Gizmo.cc \
 	gtkacpi.cc\
    gtk_acpi_menu.cc \
 	gtk_acpi_glade.cc \
@@ -27,6 +28,7 @@ man_MANS = heatload.1 set_throttling.1
 EXTRA_DIST = $(man_MANS)
 
 noinst_HEADERS = \
+   Gizmo.hh \
 	gtk_acpi_glade.hh \
 	gtk_acpi.hh \
    MeterStruct.hh \

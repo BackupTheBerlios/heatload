@@ -35,7 +35,7 @@ void gtk_acpi::get_ac_adapter()
   std::string s1,s2;
   std::ifstream fin(FF.getFileName(heatload::eAC).c_str());
   fin >> s1 >>s2;
-  ac_adapter.state=s2;
+  ac_adapter.setValue(s2);
 }
 
 void gtk_acpi::get_thermal()
@@ -55,7 +55,9 @@ void gtk_acpi::get_thermal()
 //     if(!fin1.good())
 //      {cerr << "Sorry can't open '/proc/acpi/thermal_zone/THRM/cooling_mode'\n"; abort();}
    }
-  thermal=st_thermal(te,te2,cm);
+//  thermal=st_thermal(te,te2,cm);
+  thermal.setValue(te,te2);
+  fan.setValue(cm);
 }
          
 void gtk_acpi::get_battery()
@@ -78,7 +80,8 @@ void gtk_acpi::get_battery()
    }
   fin >> s1 >> s1 >> remaining_cap >> s1;  
 
-  bool bpresent,bcharging_state;
+  bool bpresent;
+  GizmoBattery::e_zustand bcharging_state;
   if(present=="yes") bpresent = true;
   else if (present=="no")  bpresent = false;
   else 
@@ -89,22 +92,23 @@ void gtk_acpi::get_battery()
        }
      bpresent = true;
    }
-  if(charging_state=="charging") bcharging_state = true;
-  else if(charging_state=="unknown") bcharging_state = true;
-  else if (charging_state=="discharging")  bcharging_state = false;
+  if(charging_state=="charging") bcharging_state = GizmoBattery::e_charging;
+  else if(charging_state=="unknown") bcharging_state = GizmoBattery::e_unknown;
+  else if (charging_state=="discharging")  bcharging_state = GizmoBattery::e_discharging;
   else 
    { static bool show=true;
      if(show) { show=false;
          cerr<<"'Present Rate:' should be 'charging', 'discharging' or 'unknown'\n"
          " in '"<<FF.getFileName(heatload::eBat)<<"'\n"
-         " but I it is '"<<charging_state<<"' assuming 'charging'\n"
+         " but I it is '"<<charging_state<<"' assuming 'unknown'\n"
          " if you have a 'charging state' in "<<FF.getFileName(heatload::eBat)<<"\n"
          " (or anywhere else) please submit a 'cat' of this file to me"
          " <thoma@muenster.de>\n";
         }
-     bcharging_state = true;
+     bcharging_state = GizmoBattery::e_unknown;
    }
-  battery=st_battery(bpresent,bcharging_state,present_rate,remaining_cap,max_cap,last_max_cap);
+cout <<"PP\t"<< present_rate<<'\t'<<remaining_cap<<'\n';
+ battery.setValue(bpresent,bcharging_state,present_rate,remaining_cap);
 }
 
 
@@ -124,7 +128,8 @@ gtk_acpi::st_throttling gtk_acpi::throttling_from_state(const std::string &s)
    {
      if(i->tstate==s) return *i;
    }
-  cerr << "never get here\n";
+  cerr << "Warning: throttling not supported,\n if '"+FF.getFileName(heatload::eCPUthrottling)+"' looking good\n please contact me <thoma@muenster.de>\n"
+          " if your CPU does not support throttling you can switch it of by pressing 'p'\n\n\n";
   return st_throttling();
 }
 
@@ -145,7 +150,8 @@ gtk_acpi::st_performance gtk_acpi::performance_from_state(const std::string &s)
    {
      if(i->tstate==s) return *i;
    }
-  cerr << "never get here\n";
+  cerr << "performance not supported,\n if '"+FF.getFileName(heatload::eCPUperformance)+"' looking good\n please contact me <thoma@muenster.de>\n"
+          " if your CPU does not support performance you can switch it of by pressing 'p'\n\n\n";
   return st_performance();
 }
 
@@ -201,5 +207,5 @@ void gtk_acpi::get_load_value()
     
     n = 1-n;
 
-   cpu_load.load= (guint8) (v*100);
+   cpu_load.setValue((guint8) (v*100),"%");
 }

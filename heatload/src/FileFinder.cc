@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.3 2002/12/20 09:55:51 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.4 2002/12/20 22:12:05 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -97,6 +97,11 @@ void FileFinder::init()
   VFiles[heatload::eCPUthrottling].push_back(st_file(FileMap[heatload::eCPUthrottling]));
   VFiles[heatload::eCPUthrottling].push_back(st_file(B,"/proc/acpi/processor/CPU0/throttling"));
   VFiles[heatload::eCPUthrottling].push_back(st_file(B,"/proc/acpi/processor/CPU1/throttling"));
+
+  B=Bezeichnung(heatload::eCPUperformance);
+  VFiles[heatload::eCPUperformance].push_back(st_file(FileMap[heatload::eCPUperformance]));
+  VFiles[heatload::eCPUperformance].push_back(st_file(B,"/proc/acpi/processor/CPU0/performance"));
+  VFiles[heatload::eCPUperformance].push_back(st_file(B,"/proc/acpi/processor/CPU1/performance"));
 }
 
 std::string FileFinder::looking_for(const heatload::e_find e)
@@ -106,6 +111,7 @@ std::string FileFinder::looking_for(const heatload::e_find e)
   if(e==heatload::eBatInfo) return "/proc/acpi/battery/*/info";
   if(e==heatload::eThermal) return "/proc/acpi/thermal[_zone]/*/[temperature|status]";
   if(e==heatload::eCPUthrottling) return "/proc/acpi/processor/*/throttling";
+  if(e==heatload::eCPUperformance) return "/proc/acpi/processor/*/performance";
   assert(!" never get here\n");
   abort();
 }
@@ -117,6 +123,7 @@ std::string FileFinder::Bezeichnung(const heatload::e_find e)
   if(e==heatload::eBatInfo) return "Battery-Info";
   if(e==heatload::eThermal) return "Thermal-Zone";
   if(e==heatload::eCPUthrottling) return "CPU-Throttling";
+  if(e==heatload::eCPUperformance) return "CPU-Performance";
   assert(!" never get here\n");
   abort();
 }
