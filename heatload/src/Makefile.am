@@ -2,6 +2,7 @@
 # using glademm V0.6.4b_cvs
 #
 # newer (non customized) versions of this file go to Makefile.am_new
+
 bin_PROGRAMS = heatload
 
 heatload_SOURCES = \
