@@ -1,6 +1,13 @@
+heatload (0.6.1) unstable; urgency=low
+
+  * lesser improvements for gcc3.2
+  * fan can be controled with menu
+  * small bugfixes
+
+ -- Malte Thoma <thoma@muenster.de>  Mon,  6 Jan 2003 21:02:46 +0100
+
 heatload (0.6.0) unstable; urgency=low
 
-  * 0.6.0
   * completed the strict class redesign
   * added performance adjustment/monitoring (untetsted)
   * added interface to suspend|awake the computer with swsusp
@@ -10,7 +17,6 @@ heatload (0.6.0) unstable; urgency=low
 
 heatload (0.5.0) unstable; urgency=low
 
-  * 0.5.0
   * much better class design
 
  -- Malte Thoma <thoma@sony>  Mon, 23 Dec 2002 09:00:12 +0100

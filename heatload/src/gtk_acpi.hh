@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.21 2003/01/05 09:24:24 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.22 2003/01/07 06:23:31 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -58,6 +58,7 @@ class gtk_acpi : public gtk_acpi_glade
         void menu_init() ;
         void select_throttling(guint i);
         void suspend_activate(const bool turn_to_sleep);
+        void fan_activate(const bool turn_on);
 
         void show_sudo_error(const heatload::e_find EF) const;
         void show_run_time_options();

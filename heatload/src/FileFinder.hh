@@ -1,4 +1,4 @@
-/* $Id: FileFinder.hh,v 1.4 2003/01/05 09:24:23 thoma Exp $ */
+/* $Id: FileFinder.hh,v 1.5 2003/01/07 06:23:31 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include <map>
 #include <vector>
 class gtk_acpi;
+class HeatloadGizmo;
 
 class FileFinder
 {
@@ -51,11 +52,11 @@ class FileFinder
 
    public:
         FileFinder();
-        void find();
+        void find(const HeatloadGizmo &HG);
 
         const std::string &getFileName(heatload::e_find e) const 
             {return const_cast<FileMap_t&>(FileMap)[e].name;}    
-        bool check(const bool fix);
+        bool check(const bool fix,const HeatloadGizmo &HG);
 
         const FileMap_t &getFileMap() const {return FileMap;}
         const st_file &getFile(heatload::e_find e) const {return  const_cast<FileMap_t&>(FileMap)[e];}    

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.8 2003/01/05 09:24:24 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.9 2003/01/07 06:23:31 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ void gtk_acpi::menu_init()
      performance_menu->append(*_t);
    }
   }
+
   Gtk::MenuItem *suspend = manage(new class Gtk::MenuItem("Suspend"));
   {
   Gtk::Menu *_menu=manage(new class Gtk::Menu());
@@ -54,18 +55,29 @@ void gtk_acpi::menu_init()
   _menu->append(*_suspend_awake);
   }
 
+  Gtk::MenuItem *fan = manage(new class Gtk::MenuItem("Fan"));
+  {
+  Gtk::Menu *_menu=manage(new class Gtk::Menu());
+  fan->set_submenu(*_menu);
+  Gtk::MenuItem *_m1 = manage(new class Gtk::MenuItem("On"));
+  _m1->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::fan_activate),true));
+  _menu->append(*_m1);
+  Gtk::MenuItem *_m2 = manage(new class Gtk::MenuItem("Off"));
+  _m2->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::fan_activate),false));
+  _menu->append(*_m2);
+  }
+
   Gtk::MenuItem *help = manage(new class Gtk::MenuItem("Help"));
   {
   Gtk::Menu *_menu=manage(new class Gtk::Menu());
-  suspend->set_submenu(*_menu);
-  Gtk::MenuItem *_help = manage(new class Gtk::MenuItem("Help"));
-  _help->activate.connect(SigC::slot(this,&gtk_acpi::show_run_time_options));
-  _menu->append(*_help);
-  Gtk::MenuItem *_about = manage(new class Gtk::MenuItem("About"));
-  _about->activate.connect(SigC::slot(this,&gtk_acpi::show_about));
-  _menu->append(*_about);
+  help->set_submenu(*_menu);
+  Gtk::MenuItem *_m1 = manage(new class Gtk::MenuItem("Help"));
+  _m1->activate.connect(SigC::slot(this,&gtk_acpi::show_run_time_options));
+  _menu->append(*_m1);
+  Gtk::MenuItem *_m2 = manage(new class Gtk::MenuItem("About"));
+  _m2->activate.connect(SigC::slot(this,&gtk_acpi::show_about));
+  _menu->append(*_m2);
   }
-
 
   Gtk::MenuItem *_close = manage(new class Gtk::MenuItem("Exit"));
   _close->activate.connect(SigC::slot(this,&gtk_acpi::ende));
@@ -73,6 +85,7 @@ void gtk_acpi::menu_init()
   menu->append(*throttling);
   menu->append(*performance);
   if(show_widget.swsusp) menu->append(*suspend);
+  menu->append(*fan);
   menu->append(*help);
   menu->append(*_close);
   menu->show_all();
@@ -86,6 +99,19 @@ void gtk_acpi::select_throttling(guint i)
   else show_sudo_error(heatload::eCPUthrottling);
 }
 
+void gtk_acpi::fan_activate(const bool turn_on)
+{
+  std::string com="sudo /usr/sbin/set_throttling " ;
+  if(turn_on) com += itos(0); // 0 = on
+  else        com += itos(3); // 3 = off
+  com += " "+FF.getFileName(heatload::eFan);  
+cout << com<<'\n';
+  int b=system(com.c_str());
+  if(!b) show_values();
+  else   show_sudo_error(heatload::eFan);
+}
+
+
 void gtk_acpi::suspend_activate(const bool turn_to_sleep)
 {
   std::string com="sudo ";
@@ -97,6 +123,7 @@ void gtk_acpi::suspend_activate(const bool turn_to_sleep)
   else if(!turn_to_sleep)show_sudo_error(heatload::eSuspend_awake);
   else assert(!"never get here");
 }
+
 
 
 #include "WindowInfo.hh"

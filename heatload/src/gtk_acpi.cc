@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.27 2003/01/05 09:24:24 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.28 2003/01/07 06:23:31 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ gtk_acpi::gtk_acpi(const FileFinder &_FF,const heatload::st_widget &_show_widget
    show_widget(_show_widget),
    show_sudo(_show_sudo)
 {
-  FF.find();
+  FF.find(HG);
   HG.battery.load_info_file(FF.getFileName(heatload::eBatInfo));
   HG.cpu_throttling.load_thrott_file(FF.getFileName(heatload::eCPUthrottling));
   HG.cpu_performance.load_thrott_file(FF.getFileName(heatload::eCPUperformance));
@@ -48,7 +48,7 @@ void gtk_acpi::init()
 {
 //  if(!FF.check(false)) return;
   HG.ac_adapter.setFileForValues(FF.getFile(heatload::eAC),Gizmo::st_value(1,2));
-  HG.fan.setFileForValues(FF.getFile(heatload::eFan),Gizmo::st_value(1,3));
+  HG.fan.setFileForValues(FF.getFile(heatload::eFan),Gizmo::st_value(1,2));
   HG.thermal.setFileForValues(FF.getFile(heatload::eThermal),Gizmo::st_value(1,2,3));
   HG.battery.setFileForValues(FF.getFile(heatload::eBat),Gizmo::st_value());
   HG.cpu_throttling.setFileForValues(FF.getFile(heatload::eCPUthrottling),Gizmo::st_value(2,3));

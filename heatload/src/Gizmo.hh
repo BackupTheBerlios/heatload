@@ -185,7 +185,7 @@ class HeatloadGizmo
                    cpu_performance(heatload::eCPUperformance),
                    thermal(heatload::eThermal),cpu_load(heatload::eLoad)
                      {};
-   
+        bool Visible(const heatload::e_find EF) const;
 };
 
 

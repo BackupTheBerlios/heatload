@@ -269,3 +269,18 @@ void GizmoLoad::get_value()
    setValue((unsigned int) (v*100),"%");
 }
 
+bool HeatloadGizmo::Visible(const heatload::e_find EF) const
+{
+  switch (EF) {
+    case heatload::eAC   : return ac_adapter.Visible();
+    case heatload::eBat  : return battery.Visible();
+    case heatload::eFan  : return fan.Visible();
+    case heatload::eThermal  : return thermal.Visible();
+    case heatload::eCPUthrottling  : return cpu_throttling.Visible();
+    case heatload::eCPUperformance  : return cpu_performance.Visible();
+    case heatload::eLoad  : return cpu_load.Visible();
+    default: return true;
+   }
+ assert(!"never ger here\n");
+ abort();
+}

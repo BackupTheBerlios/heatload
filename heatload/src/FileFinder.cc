@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.7 2003/01/05 09:24:23 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.8 2003/01/07 06:23:31 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -21,27 +21,28 @@
 #include "gtk_acpi.hh"
 #include "WindowInfo.hh"
 #include <fstream>
+#include "Gizmo.hh"
 
 FileFinder::FileFinder()
 {
   init();
 }
 
-void FileFinder::find()
+void FileFinder::find(const HeatloadGizmo &HG)
 {
   find_filenames();
-  check(true);
+  check(true,HG);
 }
 
 
 
-bool FileFinder::check(const bool fix)
+bool FileFinder::check(const bool fix,const HeatloadGizmo &HG)
 {
   bool alles_ok=true;
   for(std::map<heatload::e_find,std::vector<st_file> >::const_iterator i=VFiles.begin();i!=VFiles.end();++i)
    {
 //cout<<i->first<<'\t' <<FileMap[i->first].name<<'\t'<< FileMap[i->first].ok<<'\n';
-     if(!const_cast<FileMap_t&>(FileMap)[i->first].ok)
+     if(!const_cast<FileMap_t&>(FileMap)[i->first].ok && HG.Visible(i->first))
       {  
          set_dummy_file(FileMap[i->first],i->first);
          std::string s=" Sorry can't open any of the following files:\n";
@@ -97,7 +98,7 @@ void FileFinder::init()
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/0/info",true));
 
   B=Bezeichnung(heatload::eFan);
-  VFiles[heatload::eFan].push_back(st_file(B,"/proc/acpi/thermal_zone/THRM/cooling_mode"));
+  VFiles[heatload::eFan].push_back(st_file(B,"/proc/acpi/fan/FAN/state"));
 
   B=Bezeichnung(heatload::eThermal);
   VFiles[heatload::eThermal].push_back(st_file(B,"/proc/acpi/thermal_zone/THRM/temperature"));

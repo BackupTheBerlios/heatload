@@ -55,18 +55,6 @@ namespace heatload{
           st_widget() : x(110),y(65),refresh(2500),decoration(false),
                        label(true),graph(true),menu(true),swsusp(true) {}          
                     };
-
-/*
-    struct st_color{std::string temp_label;std::string bat_label;
-                        std::string load_label;
-                        std::string temp_meter;std::string bat_meter;
-                        std::string load_meter;
-            st_color() : temp_label("darkred"),bat_label("white"),
-                            load_label("SeaGreen"),
-                            temp_meter("tomato"),bat_meter("white"),
-                            load_meter("green"){}
-                        };
-*/
 }
 
 #endif

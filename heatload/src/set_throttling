@@ -12,4 +12,9 @@ case "$2" in
       ;;
 esac
 
+case "$2" in
+  /proc/acpi/*fan*)
+      /bin/echo "$1" > "$2"
+      ;;
+esac
 
