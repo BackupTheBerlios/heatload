@@ -1,5 +1,5 @@
 /*  heatload
- *  Copyright (C) 2002 , written by Lennart Poettering and Malte Thoma
+ *  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,17 +24,17 @@
 namespace heatload{
 
    struct st_widget{unsigned int x;unsigned int y;unsigned int refresh;
-                    bool decoration;bool label; bool graph;
-          st_widget() : x(100),y(50),refresh(2500),decoration(true),
-                       label(true),graph(true) {}          
+                    bool decoration;bool label; bool graph; bool menu;
+          st_widget() : x(100),y(50),refresh(2500),decoration(false),
+                       label(true),graph(true),menu(true) {}          
                     };
 
 
-   struct st_show{bool ac;bool bat; bool temp;bool load; bool fan;
-          st_show() : ac(true),bat(true),temp(true),load(true),fan(true){}
+   struct st_show{bool ac;bool bat; bool temp;bool load; bool fan; bool cpu_throttling;
+          st_show() : ac(true),bat(true),temp(true),load(true),fan(true),cpu_throttling(true) {}
 //          st_show(const bool a,const bool b,,const bool t,
-//                       ,const bool l,,const bool f)
-//                   : ac(a),bat(b),temp(t),load(l),fan(f){}
+//                       ,const bool l,,const bool f,const bool c)
+//                   : ac(a),bat(b),temp(t),load(l),fan(f),cpu_throttling(c){}
                        };
 
     struct st_color{std::string temp_label;std::string bat_label;

@@ -24,7 +24,7 @@ void usage(const std::string &name)
                "                            load_label    load_meter\n"
                "                          and color is named in '/usr/X11R6/lib/X11/rgb.txt'\n"
                "                          use this Option as often as you need it.\n"
-               " -d, --no_decoration      no decoration\n"
+               " -d, --decoration      with decoration\n"
 //               " -f X, --frame_size X     X = border-size sourounding boxes [5]\n"
                " -g, --no_graph           no graphical display\n"
                " -h, --help               display this help message and exit\n"
@@ -33,7 +33,7 @@ void usage(const std::string &name)
                " -x X, --x_size X         X = x-size of meter [256]\n"
                " -y X, --y_size X         X = y-size of meter [100]\n\n"
                " -h , --hide [OPTION]     OPTION must be one of\n"
-               "                            ac battery thermal load fan\n"
+               "                            ac battery thermal load fan cpu\n"
                "                          can be given as often as you need ist\n"
                " -m  , --read_max_capacity  This is a HACK: If you use this\n"
                "                     option the max_cap will be read from\n"
@@ -44,14 +44,15 @@ void usage(const std::string &name)
                "                     this laptop. If you don't have a Sony Vaio it should be\n"
                "                     save to use this option.\n\n"
                "    run-time-options:\n"
+               "    a        toggle show/hide ac\n\n"
+               "    b        toggle show/hide battery\n"
                "    c        Toggles between designed- and last-max-capacity\n"
                "              when calculating the batterys fill-percentage\n\n"
-               "    r        Immediate reload\n"
                "    f        toggle show/hide fan\n"
-               "    t        toggle show/hide thermal\n"
-               "    b        toggle show/hide battery\n"
                "    l        toggle show/hide load\n"
-               "    a        toggle show/hide ac\n\n"
+               "    r        Immediate reload\n"
+               "    t        toggle show/hide thermal\n"
+               "    u        toggle show/hide cpu throttling\n\n"
                " command-line options override the default settings in \n"
                "  './.heatloadrc', '~/.heatloadrc' resp. '/etc/heatload/heatload.conf'\n\n" 
                ;
@@ -65,6 +66,7 @@ void evaluate(const std::string &s,heatload::st_show &show_what)
   else if(s=="thermal") show_what.temp=false ; 
   else if(s=="load")    show_what.load=false ; 
   else if(s=="fan")     show_what.fan=false ; 
+  else if(s=="cpu")     show_what.cpu_throttling=false ; 
   else {cerr << s<<" unknown \n";}
 }
 
@@ -87,7 +89,7 @@ void change_color(const std::string &s,heatload::st_color &color,const std::stri
 
  
 const static struct option options[]=
-{{ "no_decoration", no_argument,      NULL, 'd' },
+{{ "decoration", no_argument,      NULL, 'd' },
  { "no_label", no_argument,      NULL, 'l' },
  { "no_graph", no_argument,      NULL, 'g' },
  { "help", no_argument,      NULL, '?' },
@@ -113,7 +115,7 @@ int main(int argc, char **argv)
     while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:x:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
-         case 'd' : show_widget.decoration=false; break;
+         case 'd' : show_widget.decoration=true; break;
          case 'l' : show_widget.label= false; break;
          case 'g' : show_widget.graph=false; break;
          case 'm' : read_max_cap=true; break;

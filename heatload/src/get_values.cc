@@ -26,7 +26,7 @@ void gtk_acpi::get_values()
  if(show_what.temp || show_what.fan) get_thermal();
  if(show_what.bat)  get_battery();
  if(show_what.load) get_load_value();
-
+ if(show_what.cpu_throttling) get_throttling();
 }
 
 void gtk_acpi::get_ac_adapter()
@@ -83,19 +83,21 @@ void gtk_acpi::get_battery()
   else 
    { static bool show=true;
      if(show) { show=false;
-        cerr<<"'Present:' should be 'yes' or 'no' in '/proc/acpi/battery/BAT1/state',\n"
+        cerr<<"'Present:' should be 'yes' or 'no' in '"<<bat_file.name<<"',\n"
               " it seems to be '"<<present<<"' assuming 'yes'\n";
        }
      bpresent = true;
    }
   if(charging_state=="charging") bcharging_state = true;
+  else if(charging_state=="unknown") bcharging_state = true;
   else if (charging_state=="discharging")  bcharging_state = false;
   else 
    { static bool show=true;
      if(show) { show=false;
-         cerr<<"'Present Rate:' should be 'charging' or 'discharging' in '/proc/acpi/battery/BAT1/state'\n"
+         cerr<<"'Present Rate:' should be 'charging', 'discharging' or 'unknown'\n"
+         " in '"<<bat_file.name<<"'\n"
          " but I it is '"<<charging_state<<"' assuming 'charging'\n"
-         " if you have a 'charging state' in /proc/acpi/battery/0/status\n"
+         " if you have a 'charging state' in "<<bat_file.name<<"\n"
          " (or anywhere else) please submit a 'cat' of this file to me"
          " <thoma@muenster.de>\n";
         }
@@ -103,6 +105,30 @@ void gtk_acpi::get_battery()
    }
   battery=st_battery(bpresent,bcharging_state,present_rate,remaining_cap,max_cap,last_max_cap);
 }
+
+
+void gtk_acpi::get_throttling()
+{
+  char c1[100];
+  std::string s1,s;
+  ifstream fin(cpu_thrott_file.name.c_str());
+  fin.getline(c1,sizeof(c1));
+  fin >> s1 >> s1 >> s;
+  cpu.throttling = throttling_from_state(s);
+}
+
+gtk_acpi::st_throttling gtk_acpi::throttling_from_state(const std::string &s)
+{
+  for(std::vector<st_throttling>::const_iterator i=vec_throttling.begin();i!=vec_throttling.end();++i) 
+   {
+     if(i->tstate==s) return *i;
+   }
+  cerr << "never get here\n";
+  return st_throttling();
+}
+
+
+
 
 void failure(const string &txt) 
 {         

@@ -7,6 +7,7 @@ bin_PROGRAMS = heatload
 
 heatload_SOURCES = \
 	gtkacpi.cc\
+   gtk_acpi_menu.cc \
 	gtk_acpi_glade.cc \
 	gtk_acpi.cc \
    show_values.cc \

@@ -1,3 +1,22 @@
+/* $Id: gtk_acpi.hh,v 1.14 2002/12/17 09:13:18 thoma Exp $ */
+/*  Copyright (C) 2002 Malte Thoma
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+
 // generated 2002/3/18 6:58:50 CET by thoma@Tiger.(none)
 // using glademm V0.6.4b_cvs
 //
@@ -17,9 +36,12 @@
 #include "GraphDrawingArea.hh"
 #include "itos.h"
 #include "Structs.hh"
+#include <gtk--/menu.h>
+#include <map>
 
 class gtk_acpi : public gtk_acpi_glade
 {  
+        Gtk::Menu *menu;
         heatload::st_widget show_widget;
         const bool read_max_cap_;
         heatload::st_show show_what;
@@ -29,7 +51,7 @@ class gtk_acpi : public gtk_acpi_glade
         
         friend class gtk_acpi_glade;
 
-        enum e_find{eAC,eBat,eThermal};
+        enum e_find{eAC,eBat,eThermal,eCPUthrottling};
         struct st_find_filename{std::string name;bool old_style;
                st_find_filename() : old_style(false) {}
                st_find_filename(const std::string n):name(n),old_style(false){}
@@ -37,8 +59,16 @@ class gtk_acpi : public gtk_acpi_glade
         st_find_filename ac_file;
         st_find_filename bat_file;
         st_find_filename therm_file;
+        st_find_filename cpu_thrott_file;
         
+        struct st_throttling{std::string tstate;int state;std::string prozent;
+               st_throttling() : state(-1){}
+               st_throttling(const std::string &t,const int s,const std::string &p)
+                  :tstate(t),state(s),prozent(p) {}};
+        std::vector<st_throttling> vec_throttling;
+
         struct st_ac_adapter{std::string state;};
+        struct st_cpu{st_throttling throttling;};
         struct st_cpu_load{guint load;};
         struct st_thermal{guint temp;std::string einheit;
                           std::string cooling_mode;
@@ -68,11 +98,18 @@ class gtk_acpi : public gtk_acpi_glade
                 };
               
         st_ac_adapter ac_adapter;
+        st_cpu cpu;
         st_thermal thermal;
         st_battery battery;
         st_cpu_load cpu_load;
 
         void init();
+        void menu_init();
+        gint on_eventbox_main_button_press_event(GdkEventButton *event);
+        void select_throttling(guint i);
+        void load_thrott_file();
+        st_throttling throttling_from_state(const std::string &s);
+
         void find_filenames();
         bool find_filename(const e_find EF,const std::vector<st_find_filename> &F);
 
@@ -84,6 +121,7 @@ class gtk_acpi : public gtk_acpi_glade
         void get_thermal();        
         void get_battery();        
         void get_load_value();
+        void get_throttling();
 
         void get_show();
         gint timeout();

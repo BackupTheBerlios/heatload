@@ -29,6 +29,7 @@ void gtk_acpi::show_values()
     if(show_what.fan)  label_cooling->set_text(thermal.cooling_mode);
     if(show_what.bat)  label_bat1->set_text(remaining_time());
     if(show_what.load) label_load->set_text(itos(cpu_load.load)+"%");
+    if(show_what.cpu_throttling)  label_cpu_throttling->set_text(cpu.throttling.prozent);
   }
  if(GDA && show_widget.graph)
   {

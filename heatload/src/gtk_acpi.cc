@@ -1,3 +1,22 @@
+/* $Id: gtk_acpi.cc,v 1.15 2002/12/17 09:13:18 thoma Exp $ */
+/*  Copyright (C) 2001 Malte Thoma
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+
 // generated 2002/3/18 6:58:50 CET by thoma@Tiger.(none)
 // using glademm V0.6.4b_cvs
 //
@@ -13,7 +32,8 @@
 
 gtk_acpi::gtk_acpi(const heatload::st_widget &_show_widget,const bool _read_max_cap,
          const heatload::st_show &_show_what,const heatload::st_color &_color)
-: show_widget(_show_widget),read_max_cap_(_read_max_cap),
+:  menu(0),
+   show_widget(_show_widget),read_max_cap_(_read_max_cap),
    show_what(_show_what),color(_color),use_max_cap(true),GDA(0)
 {
   init();
@@ -70,6 +90,12 @@ void gtk_acpi::find_filenames()
   F.push_back(st_find_filename("/proc/acpi/thermal/0/status",true));
   ok=find_filename(eThermal,F);
   if(!ok) alles_ok=ok;
+
+  F.clear();
+  F.push_back(st_find_filename("/proc/acpi/processor/CPU0/throttling"));
+  ok=find_filename(eCPUthrottling,F);
+  if(!ok) alles_ok=ok;
+
   if(!alles_ok) abort();
   cout <<"Reading from \n\t"<<ac_file.name<<"\n\t"<<bat_file.name
        <<"\n\t"<<therm_file.name<<'\n';
@@ -85,14 +111,15 @@ bool gtk_acpi::find_filename(const e_find EF,const std::vector<st_find_filename>
      if(fin.good())
       {
         switch (EF) {
-           case eAC:     ac_file=*i   ; return true;
-           case eBat:    bat_file=*i  ; return true;
-           case eThermal:therm_file=*i; return true;
+           case eAC:             ac_file=*i   ; return true;
+           case eBat:            bat_file=*i  ; return true;
+           case eThermal:        therm_file=*i; return true;
+           case eCPUthrottling : cpu_thrott_file=*i; return true;
          }
       }
    }
   // Fehler
-  cerr << " Sorry can't open one of the following files:\n";
+  cerr << " Sorry can't open any of the following files:\n";
   for(std::vector<st_find_filename>::const_iterator i=F.begin();i!=F.end();++i)
      cerr << '\t'<<i->name<<'\n';
   cerr << "\n";
@@ -122,6 +149,7 @@ void gtk_acpi::init()
      set_color(*label_load_,color.load_label);
      set_color(*label_load, color.load_label);
    }
+ if(show_widget.menu) menu_init();
 }
 
 void gtk_acpi::get_show()
@@ -160,15 +188,15 @@ void gtk_acpi::ende()
 gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
 {
 //  if(ev->keyval=='q') ende();
-  if     (ev->keyval=='c') use_max_cap = !use_max_cap;
-  else if(ev->keyval=='r') get_show();
-  else if(ev->keyval=='f') show_what.fan=!show_what.fan;
-  else if(ev->keyval=='t') show_what.temp=!show_what.temp;
+  if     (ev->keyval=='a') show_what.ac=!show_what.ac;
   else if(ev->keyval=='b') show_what.bat=!show_what.bat;
+  else if(ev->keyval=='c') use_max_cap = !use_max_cap;
+  else if(ev->keyval=='f') show_what.fan=!show_what.fan;
   else if(ev->keyval=='l') show_what.load=!show_what.load;
-  else if(ev->keyval=='a') show_what.ac=!show_what.ac;
+  else if(ev->keyval=='r') get_show();
+  else if(ev->keyval=='t') show_what.temp=!show_what.temp;
+  else if(ev->keyval=='u') show_what.cpu_throttling=!show_what.cpu_throttling;
   hide_or_show_elements();
-//  rc_file::save(show_what,color,show_widget,read_max_cap);
    rc_file::save(show_what,color,show_widget,read_max_cap_);
 
   return false;
@@ -190,5 +218,8 @@ void gtk_acpi::hide_or_show_elements()
 
   if(show_what.temp) { label_temp_->show(); label_temp->show(); }
   else               { label_temp_->hide(); label_temp->hide(); }
+
+  if(show_what.cpu_throttling) eventbox_cpu_throttling->show();
+  else               eventbox_cpu_throttling->hide();
 }
 
