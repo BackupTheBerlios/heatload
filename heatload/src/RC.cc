@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.3 2002/12/18 13:29:17 thoma Exp $ */
+/* $Id: RC.cc,v 1.4 2002/12/20 07:53:34 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -19,13 +19,14 @@
 
 #include "RC.hh"
 #include <vector>
+#include <map>
 #include <string>
 #include <unistd.h>
 #include <TagStream.hh>
 
 void rc_file::load(heatload::st_show &show_what,heatload::st_color &color,
                   heatload::st_widget &show_widget,bool &read_max_cap,
-                  bool &show_sudo)
+                  bool &show_sudo,FileFinder::FileMap_t &FileMap)
 {
   std::vector<std::string> V;
   char currentwd[10240];
@@ -71,6 +72,15 @@ cout << "looking for "<<*i<<'\n';
          color.load_label = tcolor->getAttr("Load_Label");
          color.load_meter = tcolor->getAttr("Load_Meter");
       }           
+     const Tag *files=data->find("Files");
+     if(files)
+      FOR_EACH_CONST_TAG_OF(i,*files,"File")
+       { 
+         FileMap[heatload::e_find(i->getIntAttr("Id"))]=
+               FileFinder::st_file(i->getAttr("Bezeichnung"),i->getAttr("Name"),
+                                   i->getBoolAttr("OldStyle",false));
+       }
+
      read_max_cap=data->getBoolAttr("ReadMaxCap",false);
      show_sudo=data->getBoolAttr("ShowSudo",true);
      return;
@@ -79,7 +89,8 @@ cout << "looking for "<<*i<<'\n';
 
 void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &color,
                   const heatload::st_widget &show_widget,const bool read_max_cap,
-                  const bool show_sudo)
+                  const bool show_sudo,
+                  const FileFinder::FileMap_t &FileMap)
 {                  
   std::string file=std::string(getenv("HOME"))+"/.heatloadrc";
   std::ofstream datei(file.c_str());
@@ -114,6 +125,17 @@ void rc_file::save(const heatload::st_show &show_what,const heatload::st_color &
   tcolor.setAttr("Battery_Meter",color.bat_meter);
   tcolor.setAttr("Load_Label",color.load_label);
   tcolor.setAttr("Load_Meter",color.load_meter);
+
+  Tag &files=data.push_back(Tag("Files"));
+  for(FileFinder::FileMap_t::const_iterator i=FileMap.begin();i!=FileMap.end();++i)
+   {
+     Tag &f=files.push_back(Tag("File"));
+     f.setAttr("Bezeichnung",i->second.bezeichnung);
+     f.setIntAttr("Id",i->first);
+     f.setAttr("Name",i->second.name);
+     if(i->second.old_style)
+        f.setBoolAttr("OldStyle",i->second.old_style);
+   }
 
   data.setBoolAttr("ReadMaxCap",read_max_cap);
   data.setBoolAttr("ShowSudo",show_sudo);

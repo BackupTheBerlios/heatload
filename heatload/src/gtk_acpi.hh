@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.15 2002/12/18 13:29:17 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.16 2002/12/20 07:53:34 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -38,6 +38,8 @@
 #include "Structs.hh"
 #include <gtk--/menu.h>
 #include <map>
+#include "FileFinder.hh"
+
 
 class gtk_acpi : public gtk_acpi_glade
 {  
@@ -46,22 +48,14 @@ class gtk_acpi : public gtk_acpi_glade
         const bool read_max_cap_;
         heatload::st_show show_what;
         heatload::st_color color;
-        bool use_max_cap,show_sudo;
+        bool use_max_cap;
+        mutable bool show_sudo;
         int max_cap,last_max_cap;
         
         friend class gtk_acpi_glade;
         friend class WindowInfo;
 
-        enum e_find{eAC,eBat,eThermal,eCPUthrottling};
-        struct st_find_filename{std::string name;bool old_style;
-               st_find_filename() : old_style(false) {}
-               st_find_filename(const std::string n):name(n),old_style(false){}
-               st_find_filename(const std::string n,const bool o):name(n),old_style(o){}};
-        st_find_filename ac_file;
-        st_find_filename bat_file;
-        st_find_filename therm_file;
-        st_find_filename cpu_thrott_file;
-        
+
         struct st_throttling{std::string tstate;int state;std::string prozent;
                st_throttling() : state(-1){}
                st_throttling(const std::string &t,const int s,const std::string &p)
@@ -113,8 +107,6 @@ class gtk_acpi : public gtk_acpi_glade
 
         void show_sudo_error();
         void show_run_time_options();
-        void find_filenames();
-        bool find_filename(const e_find EF,const std::vector<st_find_filename> &F);
 
         void read_max_cap();
         void show_values();
@@ -133,13 +125,18 @@ class gtk_acpi : public gtk_acpi_glade
         void hide_or_show_elements();
 
         GraphDrawingArea *GDA;
+        FileFinder FF;
         gint on_gtk_acpi_delete_event(GdkEventAny *ev);
         gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
-        void save();
         void ende();
    public:
-       gtk_acpi::gtk_acpi(const heatload::st_widget &show_widget,
+       gtk_acpi(const FileFinder::FileMap_t &_FileMap,
+             const heatload::st_widget &show_widget,
              const bool _read_max_cap, const bool _show_sudo,
              const heatload::st_show &_show_what,const heatload::st_color &_color);
+
+        void set_show_sudo(bool b) const {show_sudo=b;}
+        void save() const;
+        void re_init() {init();}
 };
 #endif

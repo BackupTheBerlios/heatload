@@ -41,10 +41,19 @@ namespace heatload{
                  ;
 
 
+        enum e_find{None=0,eAC='A',eBat='B',eThermal='T',eCPUthrottling='C'};
+
+        struct st_find_filename{std::string bezeichnung;std::string name;bool old_style;
+               st_find_filename() : old_style(false) {}
+               st_find_filename(const std::string n)
+                  : name(n),old_style(false){}
+               st_find_filename(const std::string n,const bool o)
+                  : name(n),old_style(o){}};
+
 
    struct st_widget{unsigned int x;unsigned int y;unsigned int refresh;
                     bool decoration;bool label; bool graph; bool menu;
-          st_widget() : x(100),y(70),refresh(2500),decoration(false),
+          st_widget() : x(110),y(65),refresh(2500),decoration(false),
                        label(true),graph(true),menu(true) {}          
                     };
 

@@ -32,7 +32,7 @@ void gtk_acpi::get_values()
 void gtk_acpi::get_ac_adapter()
 {
   std::string s1,s2;
-  ifstream fin(ac_file.name.c_str());
+  std::ifstream fin(FF.getFileName(heatload::eAC).c_str());
   fin >> s1 >>s2;
   ac_adapter.state=s2;
 }
@@ -42,14 +42,14 @@ void gtk_acpi::get_thermal()
   std::string s1,cm,te2;
   guint te;
 
-  ifstream fin(therm_file.name.c_str());
+  std::ifstream fin(FF.getFileName(heatload::eThermal).c_str());
   fin >> s1 >> te  >> te2;
 
-  if(!therm_file.old_style)
+  if(!FF.getFile(heatload::eThermal).old_style)
    {
-     ifstream fin1("/proc/acpi/thermal_zone/THRM/cooling_mode");
+     std::ifstream fin1("/proc/acpi/thermal_zone/THRM/cooling_mode");
      if(fin1.good()) fin1 >> s1>>s1 >>cm;  
-//     ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
+//     std::ifstream fin3("/proc/acpi/thermal_zone/THRM/state");
 //     fin3 >> s1 >>st;  
 //     if(!fin1.good())
 //      {cerr << "Sorry can't open '/proc/acpi/thermal_zone/THRM/cooling_mode'\n"; abort();}
@@ -63,10 +63,10 @@ void gtk_acpi::get_battery()
   std::string present,charging_state;
   std::string spresent_rate;
   int present_rate=0,remaining_cap=0;
-  ifstream fin(bat_file.name.c_str());
+  std::ifstream fin(FF.getFileName(heatload::eBat).c_str());
   fin >> s1 >> present;
   fin >> s1 >> s1;
-  if(!bat_file.old_style) 
+  if(!FF.getFile(heatload::eBat).old_style) 
    { fin >> s1;
      fin >> s1 >> s1 >> charging_state;
    }
@@ -83,7 +83,7 @@ void gtk_acpi::get_battery()
   else 
    { static bool show=true;
      if(show) { show=false;
-        cerr<<"'Present:' should be 'yes' or 'no' in '"<<bat_file.name<<"',\n"
+        cerr<<"'Present:' should be 'yes' or 'no' in '"<<FF.getFileName(heatload::eBat)<<"',\n"
               " it seems to be '"<<present<<"' assuming 'yes'\n";
        }
      bpresent = true;
@@ -95,9 +95,9 @@ void gtk_acpi::get_battery()
    { static bool show=true;
      if(show) { show=false;
          cerr<<"'Present Rate:' should be 'charging', 'discharging' or 'unknown'\n"
-         " in '"<<bat_file.name<<"'\n"
+         " in '"<<FF.getFileName(heatload::eBat)<<"'\n"
          " but I it is '"<<charging_state<<"' assuming 'charging'\n"
-         " if you have a 'charging state' in "<<bat_file.name<<"\n"
+         " if you have a 'charging state' in "<<FF.getFileName(heatload::eBat)<<"\n"
          " (or anywhere else) please submit a 'cat' of this file to me"
          " <thoma@muenster.de>\n";
         }
@@ -111,7 +111,7 @@ void gtk_acpi::get_throttling()
 {
   char c1[100];
   std::string s1,s;
-  ifstream fin(cpu_thrott_file.name.c_str());
+  ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
   fin.getline(c1,sizeof(c1));
   fin >> s1 >> s1 >> s;
   cpu.throttling = throttling_from_state(s);

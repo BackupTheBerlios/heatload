@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.3 2002/12/18 13:29:17 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.4 2002/12/20 07:53:34 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -32,14 +32,20 @@ void gtk_acpi::menu_init()
      _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state));
      throttling_menu->append(*_t);
    }
+  Gtk::MenuItem *_close = manage(new class Gtk::MenuItem("Exit"));
+  _close->activate.connect(SigC::slot(this,&gtk_acpi::ende));
+
   menu->append(*throttling);
+  menu->append(*_close);
   menu->show_all();
 }
 
 void gtk_acpi::load_thrott_file()
 {
   char c1[100];
-  ifstream fin(cpu_thrott_file.name.c_str());
+//  std::ifstream fin(cpu_thrott_file.name.c_str());
+//  std::ifstream fin(FileMap[heatload::eCPUthrottling].name.c_str());
+  std::ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
   for(int i=0;i<3;++i) fin.getline(c1,sizeof(c1));  // Kommentarzeilen
   while(fin)
    { fin.getline(c1,sizeof(c1));
@@ -48,7 +54,8 @@ void gtk_acpi::load_thrott_file()
      std::string::size_type st1 = s1.find("T");
      std::string::size_type st2 = s1.find_first_of(":");
      std::string::size_type st3 = s1.find_last_of(" ");
-     if(st1==std::string::npos||st2==std::string::npos) {cerr<<"Error while reading "<<cpu_thrott_file.name<<'\n';abort();}
+     if(st1==std::string::npos||st2==std::string::npos) 
+         {cerr<<"Error while reading "<<FF.getFileName(heatload::eCPUthrottling)<<'\n';abort();}
      std::string st(s1,st1,st2-st1);
      std::string sv(s1,st1+1,st2-st1-1);
      std::string sp(s1,st3+1,std::string::npos);
@@ -59,7 +66,7 @@ void gtk_acpi::load_thrott_file()
 
 void gtk_acpi::select_throttling(guint i)
 {
-  std::string com = "sudo /usr/sbin/set_throttling "+itos(i)+" "+cpu_thrott_file.name;
+  std::string com = "sudo /usr/sbin/set_throttling "+itos(i)+" "+FF.getFileName(heatload::eCPUthrottling);
   int b=system(com.c_str());
   if(!b) get_show();
   else show_sudo_error();

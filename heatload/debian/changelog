@@ -1,3 +1,11 @@
+heatload (0.4.1) unstable; urgency=low
+
+  * 0.4.1
+  * Exit in the menu
+  * pop-up if the acpi-files can't be found
+
+ -- Malte Thoma <thoma@sony>  Fri, 20 Dec 2002 08:36:03 +0100
+
 heatload (0.4.0) unstable; urgency=low
 
   * 'unknown' charging state => without warning

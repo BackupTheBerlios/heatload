@@ -20,6 +20,7 @@ heatload_SOURCES = \
    Tag.cc \
    WindowInfo.cc \
    WindowInfo_glade.cc \
+   FileFinder.cc \
    itos.cc
 
 man_MANS = heatload.1 set_throttling.1
@@ -35,6 +36,7 @@ noinst_HEADERS = \
    Tag.hh \
    WindowInfo.hh \
    WindowInfo_glade.hh \
+   FileFinder.hh \
    itos.h 
 
 CXXFLAGS = @CXXFLAGS@ @GTKMM_CFLAGS@ 

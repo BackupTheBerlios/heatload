@@ -9,6 +9,7 @@
 #include "gtk_acpi.hh"
 #include <getopt.h>
 #include "RC.hh"
+#include "FileFinder.hh"
 
 void usage(const std::string &name)
 {
@@ -118,7 +119,9 @@ int main(int argc, char **argv)
     heatload::st_widget show_widget;
     heatload::st_show show_what;
     heatload::st_color color;
-    rc_file::load(show_what,color,show_widget,read_max_cap,show_sudo);
+//    std::map<heatload::e_find,heatload::st_find_filename> FileMap;
+    FileFinder::FileMap_t FileMap;
+    rc_file::load(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
     while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:sx:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
@@ -135,10 +138,10 @@ int main(int argc, char **argv)
          default : usage(argv[0]);
        }
      }  
-   rc_file::save(show_what,color,show_widget,read_max_cap,show_sudo);
+   rc_file::save(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(show_widget,read_max_cap,show_sudo,show_what,color));
+   manage(new class gtk_acpi(FileMap,show_widget,read_max_cap,show_sudo,show_what,color));
    m.run();
    return 0;
 }

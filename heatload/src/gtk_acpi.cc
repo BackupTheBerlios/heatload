@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.20 2002/12/18 17:00:58 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.21 2002/12/20 07:53:34 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -29,21 +29,18 @@
 #include <gtk--/main.h>
 #include <fstream>
 #include "RC.hh"
+#include "WindowInfo.hh"
 
-gtk_acpi::gtk_acpi(const heatload::st_widget &_show_widget,
+gtk_acpi::gtk_acpi(const FileFinder::FileMap_t &_FileMap,
+         const heatload::st_widget &_show_widget,
          const bool _read_max_cap,const bool _show_sudo,
          const heatload::st_show &_show_what,const heatload::st_color &_color)
 :
    menu(0),show_widget(_show_widget),read_max_cap_(_read_max_cap),
    show_what(_show_what),color(_color),use_max_cap(true),show_sudo(_show_sudo),
-   GDA(0)
+   GDA(0),FF(FileFinder(this,_FileMap))
 {
   init();
-  hide_or_show_elements();
-  read_max_cap();
-  get_show();
-  Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
-  if(show_sudo) show_sudo_error();
 }
 
 
@@ -70,72 +67,9 @@ void gtk_acpi::read_max_cap()
  else { max_cap=44100; last_max_cap=41000;}
 }
 
-
-void gtk_acpi::find_filenames()
-{
-  bool alles_ok=true;
-  std::vector<st_find_filename> F;
-  F.push_back(st_find_filename("/proc/acpi/ac_adapter/AC0/state"));
-  F.push_back(st_find_filename("/proc/acpi/ac_adapter/ACAD/state"));
-  F.push_back(st_find_filename("/proc/acpi/ac_adapter/0/status"));
-  bool ok=find_filename(eAC,F);
-  if(!ok) alles_ok=ok;
-
-  F.clear(); 
-  F.push_back(st_find_filename("/proc/acpi/battery/BAT0/state"));
-  F.push_back(st_find_filename("/proc/acpi/battery/BAT1/state"));
-  F.push_back(st_find_filename("/proc/acpi/battery/0/status",true));
-  ok=find_filename(eBat,F);
-  if(!ok) alles_ok=ok;
-
-  F.clear(); 
-  F.push_back(st_find_filename("/proc/acpi/thermal_zone/THRM/temperature"));
-  F.push_back(st_find_filename("/proc/acpi/thermal_zone/THM0"));
-  F.push_back(st_find_filename("/proc/acpi/thermal_zone"));
-  F.push_back(st_find_filename("/proc/acpi/thermal/0/status",true));
-  ok=find_filename(eThermal,F);
-  if(!ok) alles_ok=ok;
-
-  F.clear();
-  F.push_back(st_find_filename("/proc/acpi/processor/CPU0/throttling"));
-  F.push_back(st_find_filename("/proc/acpi/processor/CPU1/throttling"));
-  ok=find_filename(eCPUthrottling,F);
-  if(!ok) alles_ok=ok;
-
-  if(!alles_ok) abort();
-  cout <<"Reading from \n\t"<<ac_file.name<<"\n\t"<<bat_file.name
-       <<"\n\t"<<therm_file.name<<'\n';
-}
-
-bool gtk_acpi::find_filename(const e_find EF,const std::vector<st_find_filename> &F)
-{
-  ifstream fin;
-  for(std::vector<st_find_filename>::const_iterator i=F.begin();i!=F.end();++i)
-   {
-     fin.close();
-     fin.open(i->name.c_str());
-     if(fin.good())
-      {
-        switch (EF) {
-           case eAC:             ac_file=*i   ; return true;
-           case eBat:            bat_file=*i  ; return true;
-           case eThermal:        therm_file=*i; return true;
-           case eCPUthrottling : cpu_thrott_file=*i; return true;
-         }
-      }
-   }
-  // Fehler
-  cerr << " Sorry can't open any of the following files:\n";
-  for(std::vector<st_find_filename>::const_iterator i=F.begin();i!=F.end();++i)
-     cerr << '\t'<<i->name<<'\n';
-  cerr << "\n";
-  return false;
-}
-
-
 void gtk_acpi::init()
 {
-  find_filenames();
+  if(!FF.check(false)) return;
 
   GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,color));
   frame_draw->add(*GDA);
@@ -151,6 +85,12 @@ void gtk_acpi::init()
    set_color(*label_load, color.load_label);
 
    if(show_widget.menu) menu_init();
+
+   hide_or_show_elements();
+   read_max_cap();
+   get_show();
+   Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
+   if(show_sudo) show_sudo_error();
 }
 
 void gtk_acpi::get_show()
@@ -186,9 +126,9 @@ void gtk_acpi::ende()
   Gtk::Main::instance()->quit(); 
 }
 
-void gtk_acpi::save()
+void gtk_acpi::save() const
 {
-  rc_file::save(show_what,color,show_widget,read_max_cap_,show_sudo);
+  rc_file::save(show_what,color,show_widget,read_max_cap_,show_sudo,FF.getFileMap());
 }
 
 

@@ -15,12 +15,17 @@
 
 class gtk_acpi;
 
+#include "Structs.hh"
+
 class WindowInfo : public WindowInfo_glade
 {  
-      gtk_acpi *hauptfenster;
+      const gtk_acpi *hauptfenster;
+      
+      void init(const std::string &s);
       void on_button_close_clicked();
       void on_checkbutton_show_toggled();
+
    public:
-      WindowInfo(gtk_acpi *h,const std::string &s,const bool show_checkbutton);
+      WindowInfo(const gtk_acpi *h,const std::string &s,const bool show_checkbutton);
 };
 #endif
