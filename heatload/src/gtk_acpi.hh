@@ -20,16 +20,11 @@
 
 class gtk_acpi : public gtk_acpi_glade
 {  
-        guint  x_size,y_size;
-        const bool show_graph;
-        const bool show_label;
-        const bool show_decoration;
+        heatload::st_widget show_widget;
         const bool read_max_cap_;
-
         heatload::st_show show_what;
-        bool use_max_cap;
-        
         heatload::st_color color;
+        bool use_max_cap;
         int max_cap,last_max_cap;
         
         friend class gtk_acpi_glade;
@@ -101,6 +96,10 @@ class gtk_acpi : public gtk_acpi_glade
         gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
         void ende();
    public:
+       gtk_acpi::gtk_acpi(const heatload::st_widget &show_widget,const bool _read_max_cap,
+             const heatload::st_show &_show_what,const heatload::st_color &_color);
+                
+/*
         gtk_acpi(const guint x,const guint y,const guint refresh,
                  const bool show_graph,const bool show_label,
                  const bool show_decoration,
@@ -108,5 +107,6 @@ class gtk_acpi : public gtk_acpi_glade
                  const heatload::st_show &show_what,
                  const heatload::st_color &color);
 
+*/
 };
 #endif

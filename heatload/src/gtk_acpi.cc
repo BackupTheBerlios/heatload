@@ -9,20 +9,18 @@
 #include "gtk_acpi.hh"
 #include <gtk--/main.h>
 #include <fstream>
+#include "RC.hh"
 
-gtk_acpi::gtk_acpi(const guint x,const guint y,const guint refresh,
-   const bool _show_graph,const bool _show_label,const bool _show_decoration,
-   const bool _read_max_cap,const heatload::st_show &_show_what,
-   const heatload::st_color &_color)
-: x_size(x),y_size(y),show_graph(_show_graph),show_label(_show_label),
-   show_decoration(_show_decoration),read_max_cap_(_read_max_cap),
+gtk_acpi::gtk_acpi(const heatload::st_widget &_show_widget,const bool _read_max_cap,
+         const heatload::st_show &_show_what,const heatload::st_color &_color)
+: show_widget(_show_widget),read_max_cap_(_read_max_cap),
    show_what(_show_what),color(_color),use_max_cap(true),GDA(0)
 {
   init();
   hide_or_show_elements();
   read_max_cap();
   get_show();
-  Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),refresh);
+  Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
 }
 
 
@@ -105,16 +103,16 @@ bool gtk_acpi::find_filename(const e_find EF,const std::vector<st_find_filename>
 void gtk_acpi::init()
 {
   find_filenames();
-  if(show_graph)
+  if(show_widget.graph)
    {
-     GDA = manage(new GraphDrawingArea(x_size,y_size,color));
+     GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,color));
      frame_draw->add(*GDA);
      GDA->show();
    }
-  if(show_decoration) label_decoration->set_text("Heatload written by Lennart Poettering (2002)\n"
+  if(show_widget.decoration) label_decoration->set_text("Heatload written by Lennart Poettering (2002)\n"
                   "rewritten and enhanced by Malte Thoma");
   else label_decoration->hide();
-  if(!show_label) frame_label->hide();
+  if(!show_widget.label) frame_label->hide();
   else 
    {
      set_color(*label_temp_,color.temp_label);
@@ -170,6 +168,9 @@ gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
   else if(ev->keyval=='l') show_what.load=!show_what.load;
   else if(ev->keyval=='a') show_what.ac=!show_what.ac;
   hide_or_show_elements();
+//  rc_file::save(show_what,color,show_widget,read_max_cap);
+   rc_file::save(show_what,color,show_widget,read_max_cap_);
+
   return false;
 }
 

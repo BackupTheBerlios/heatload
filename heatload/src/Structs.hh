@@ -19,7 +19,16 @@
 #ifndef   _STRUCTS_HH_
 #  define _STRUCTS_HH_
 
+#include <string>
+
 namespace heatload{
+
+   struct st_widget{unsigned int x;unsigned int y;unsigned int refresh;
+                    bool decoration;bool label; bool graph;
+          st_widget() : x(100),y(50),refresh(2500),decoration(true),
+                       label(true),graph(true) {}          
+                    };
+
 
    struct st_show{bool ac;bool bat; bool temp;bool load; bool fan;
           st_show() : ac(true),bat(true),temp(true),load(true),fan(true){}

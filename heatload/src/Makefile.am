@@ -13,6 +13,9 @@ heatload_SOURCES = \
    get_values.cc \
    MeterStruct.cc \
    GraphDrawingArea.cc \
+   RC.cc \
+   TagStream.cc \
+   Tag.cc \
    itos.cc
 
 man_MANS = heatload.1
@@ -23,6 +26,9 @@ noinst_HEADERS = \
 	gtk_acpi.hh \
    MeterStruct.hh \
    GraphDrawingArea.hh \
+   RC.hh \
+   TagStream.hh \
+   Tag.hh \
    itos.h 
 
 CXXFLAGS = @CXXFLAGS@ @GTKMM_CFLAGS@ 

@@ -8,11 +8,13 @@
 #include <gtk--/main.h>
 #include "gtk_acpi.hh"
 #include <getopt.h>
+#include "RC.hh"
 
 void usage(const std::string &name)
 {
   std::cerr << "\n  heatload is written by Malte Thoma (thoma@muenster.de),\n"
-          "  based upon code of Lennart Poettering\n"
+          "  Gtk::DrawingArea-code by Lennart Poettering,\n"
+          "  XML-code by Christof Petig\n\n"
           "  heatload is free software under the terms of the GNU General Public License\n\n"
                "  Usage: "<<name<<" [OPTION]... \n"
                "  [OPTION]... can be a combination of the following items: \n"
@@ -50,7 +52,8 @@ void usage(const std::string &name)
                "    b        toggle show/hide battery\n"
                "    l        toggle show/hide load\n"
                "    a        toggle show/hide ac\n\n"
-               " in the very near future: /etc/heatloadrc ... for the preferences\n"
+               " command-line options override the default settings in \n"
+               "  './.heatloadrc', '~/.heatloadrc' resp. '/etc/heatload/heatload.conf'\n\n" 
                ;
   exit(1);
 }
@@ -81,13 +84,13 @@ void change_color(const std::string &s,heatload::st_color &color,const std::stri
  else  {std::cerr << "Wrong color: "<<s<<'\n'; usage(name);}
 }
 
+
  
 const static struct option options[]=
 {{ "no_decoration", no_argument,      NULL, 'd' },
  { "no_label", no_argument,      NULL, 'l' },
  { "no_graph", no_argument,      NULL, 'g' },
- { "help", no_argument,      NULL, 'h' },
-// { "frame_size", required_argument,      NULL, 'f' },
+ { "help", no_argument,      NULL, '?' },
  { "read_max_capacity", required_argument,      NULL, 'm' },   
  { "refresh", required_argument,      NULL, 'r' },   
  { "x_size", required_argument,      NULL, 'x' },    
@@ -97,40 +100,35 @@ const static struct option options[]=
  { NULL,      0,       NULL, 0 }
 };
  
-  
 
 int main(int argc, char **argv)
 {  
     int opt;
-    bool show_decoration=true;
-    bool show_label=true;
-    bool show_graph=true;
+
     bool read_max_cap=false;
-//    int frame_size=5;
-    guint x=100;
-    guint y=50;
-    guint refresh=2500;
+    heatload::st_widget show_widget;
     heatload::st_show show_what;
     heatload::st_color color;
-    while ((opt=getopt_long(argc,argv,"c:dlfghmr:x:y:h?",options,NULL))!=EOF)
+    rc_file::load(show_what,color,show_widget,read_max_cap);
+    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:x:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
-         case 'd' : show_decoration=false; break;
-         case 'l' : show_label= false; break;
-//         case 'f' : frame_size=atoi(optarg); break;
-         case 'g' : show_graph=false; break;
+         case 'd' : show_widget.decoration=false; break;
+         case 'l' : show_widget.label= false; break;
+         case 'g' : show_widget.graph=false; break;
          case 'm' : read_max_cap=true; break;
-         case 'r' : refresh=atoi(optarg); break;   
-         case 'x' : x=atoi(optarg); break;
-         case 'y' : y=atoi(optarg); break;
+         case 'r' : show_widget.refresh=atoi(optarg); break;   
+         case 'x' : show_widget.x=atoi(optarg); break;
+         case 'y' : show_widget.y=atoi(optarg); break;
          case 'h' : evaluate(optarg,show_what); break;
          case 'c' : change_color(optarg,color,argv[0]); break;
          default : usage(argv[0]);
        }
      }  
+   rc_file::save(show_what,color,show_widget,read_max_cap);
    
    Gtk::Main m(&argc, &argv);
-   manage(new class gtk_acpi(x,y,refresh,show_graph,show_label,show_decoration,read_max_cap,show_what,color));
+   manage(new class gtk_acpi(show_widget,read_max_cap,show_what,color));
    m.run();
    return 0;
 }
