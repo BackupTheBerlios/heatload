@@ -22,11 +22,26 @@
 #include <string>
 #include <vector>
 #include "itos.h"
+#include "Structs.hh"
+#include "FileFinder.hh"
 
 class Gizmo{
-
+   private:
+      const heatload::e_find what;
    public:
       static const int invalid = -99;   
+      struct st_value{int line_of_interest; int column_of_value; 
+                      bool value_is_int; int column_of_unit;
+             st_value() : line_of_interest(invalid),column_of_value(invalid),
+                      value_is_int(false), column_of_unit(invalid) {}
+             st_value(int i,int v,int u) : line_of_interest(i),column_of_value(v),
+                      value_is_int(true), column_of_unit(u) {}
+             st_value(int i,int v) : line_of_interest(i),column_of_value(v),
+                      value_is_int(false), column_of_unit(invalid) {}
+                      };
+   private:
+      st_value file_value;
+      FileFinder::st_file file_for_values;
    protected:   
 
       bool visible;
@@ -34,22 +49,31 @@ class Gizmo{
       std::string s_value;
       int i_value;
       std::string einheit;
+      const std::string &getFilenameForValues() const {return file_for_values.name;}
+      const bool getFileOldStyleForValues() const {return file_for_values.old_style;}
+public:
+      virtual void get_value();
 
    public:
-      Gizmo() : /*active(false),*/visible(true), i_value(invalid) {}
+      Gizmo(const heatload::e_find _what) : what(_what),
+                             visible(true), i_value(invalid) {}
       virtual ~Gizmo() {}
 
-      virtual const std::string Value() const ;
+
+      virtual const std::string Value() ;
       int IValue() const {return i_value;}
       const std::string &Einheit() const {return einheit;}
       
-      void setValue(const std::string &s) {s_value=s;}
+      void setFileForValues(const FileFinder::st_file &s,const st_value &fv) 
+         { file_for_values=s;file_value=fv;}
+
+      void setValue(const std::string &s) { s_value=s;}
       void setValue(int i,const std::string &s) {i_value=i;einheit=s;}
 
       bool Visible() const {return visible;}
       void setVisible(const bool b) {visible=b;}
       void toggleVisible() {visible=!visible;}
-
+      
       const std::string& ColorLabel() const {return color_label;}
       const std::string& ColorMeter() const {return color_meter;}
       void setColorLabel(const std::string &c) {color_label=c;}
@@ -60,8 +84,8 @@ class Gizmo{
 class GizmoThermal : public Gizmo
 {
     public:
-      GizmoThermal() : Gizmo() {}
-      const std::string Value() const ;
+      GizmoThermal(const heatload::e_find what) : Gizmo(what) {}
+      const std::string Value() ;
 };
 
 class GizmoThrottling : public Gizmo
@@ -75,7 +99,7 @@ class GizmoThrottling : public Gizmo
         std::vector<st_state> vec_state;
 
    public:
-        GizmoThrottling(){};
+        GizmoThrottling(const heatload::e_find what): Gizmo(what){};
          
         void load_thrott_file(const std::string &filename);
         const std::vector<st_state>& getVec() const {return vec_state;}
@@ -95,18 +119,19 @@ class GizmoBattery : public Gizmo
      int max_capacity_mWh;
      int last_max_capacity_mWh;
      
-     const std::string Value() const {return "forbidden";}// explicitly forbidden to use
      
      void read_info(const std::string &filename);
 
     public:
-      GizmoBattery() : Gizmo(),
+      GizmoBattery(const heatload::e_find what) : Gizmo(what),
                        read_max_cap(false),use_max_cap(true),
                        present(false),zustand(e_unknown),present_rate_mW(0),
                        remaining_capacity_mWh(0),max_capacity_mWh(0),
                        last_max_capacity_mWh(0) 
                         {}
       void load_info_file(const std::string &info_filename);
+      void get_value();
+      const std::string Value() ;
 
       void setValue(const bool p,const e_zustand z,const int pr,
                const int r)
@@ -132,18 +157,31 @@ class GizmoBattery : public Gizmo
 
 };
 
+class GizmoLoad : public Gizmo
+{
+  public:
+      GizmoLoad(const heatload::e_find what): Gizmo(what){};
+      void get_value();
+};
+
+
 class HeatloadGizmo
 {
    public:
         Gizmo ac_adapter;
         GizmoBattery battery;
-        GizmoThrottling cpu_throttling;
-        Gizmo cpu_performance;
-        GizmoThermal thermal;
         Gizmo fan;
-        Gizmo cpu_load;
+        GizmoThrottling cpu_throttling;
+        GizmoThrottling cpu_performance;
+        GizmoThermal thermal;
+        GizmoLoad cpu_load;
 
-        HeatloadGizmo(){};
+        HeatloadGizmo() : ac_adapter(heatload::eAC),battery(heatload::eBat),
+                   fan(heatload::eFan),
+                   cpu_throttling(heatload::eCPUthrottling),
+                   cpu_performance(heatload::eCPUperformance),
+                   thermal(heatload::eThermal),cpu_load(heatload::eLoad)
+                     {};
    
 };
 

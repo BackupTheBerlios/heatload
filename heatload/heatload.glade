@@ -15,6 +15,8 @@
 <widget>
   <class>GtkWindow</class>
   <name>gtk_acpi</name>
+  <tooltip>Press '?' for run-time options</tooltip>
+  <can_focus>True</can_focus>
   <events>GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK</events>
   <signal>
     <name>delete_event</name>
@@ -40,7 +42,7 @@
     <signal>
       <name>button_press_event</name>
       <handler>on_eventbox_main_button_press_event</handler>
-      <last_modification_time>Tue, 17 Dec 2002 07:18:09 GMT</last_modification_time>
+      <last_modification_time>Thu, 26 Dec 2002 23:25:42 GMT</last_modification_time>
     </signal>
 
     <widget>

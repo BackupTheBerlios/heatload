@@ -13,7 +13,6 @@ heatload_SOURCES = \
 	gtk_acpi_glade.cc \
 	gtk_acpi.cc \
    show_values.cc \
-   get_values.cc \
    MeterStruct.cc \
    GraphDrawingArea.cc \
    RC.cc \

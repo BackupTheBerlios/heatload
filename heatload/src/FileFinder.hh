@@ -1,4 +1,4 @@
-/* $Id: FileFinder.hh,v 1.2 2002/12/23 07:59:28 thoma Exp $ */
+/* $Id: FileFinder.hh,v 1.3 2002/12/27 08:27:30 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -42,8 +42,6 @@ class FileFinder
    private:
         std::map<heatload::e_find,std::vector<st_file> > VFiles;
         FileMap_t FileMap;
-
-         
 
         void init();
         void find_filenames();

@@ -24,13 +24,13 @@ void gtk_acpi::show_values()
 {
  if(show_widget.label)
   {
-    if(HG.ac_adapter.Visible())   label_ac->set_text(HG.ac_adapter.Value()); 
-    if(HG.thermal.Visible())      label_temp->set_text(HG.thermal.Value()); 
-    if(HG.fan.Visible())          label_cooling->set_text(HG.fan.Value());
-    if(HG.battery.Visible())      label_bat1->set_text(itos(HG.battery.Prozent())+HG.battery.Einheit()+" "+HG.battery.RemainingTime());
-    if(HG.cpu_load.Visible())     label_load->set_text(HG.cpu_load.Value());
-    if(HG.cpu_throttling.Visible())label_cpu_throttling->set_text(HG.cpu_throttling.Value());
-//    if(show_what.cpu_performance) label_cpu_performance->set_text(HG.cpu.performance.value);
+    label_ac->set_text(HG.ac_adapter.Value());
+    label_temp->set_text(HG.thermal.Value());
+    label_cooling->set_text(HG.fan.Value());
+    label_bat1->set_text(HG.battery.Value());
+    label_load->set_text(HG.cpu_load.Value());
+    label_cpu_throttling->set_text(HG.cpu_throttling.Value());
+    label_cpu_performance->set_text(HG.cpu_performance.Value());
   }
  if(GDA && show_widget.graph)
   {

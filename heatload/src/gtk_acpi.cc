@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.25 2002/12/23 07:59:28 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.26 2002/12/27 08:27:30 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,14 @@ gtk_acpi::gtk_acpi(const FileFinder &_FF,const heatload::st_widget &_show_widget
 
 void gtk_acpi::init()
 {
-  if(!FF.check(false)) return;
+//  if(!FF.check(false)) return;
+  HG.ac_adapter.setFileForValues(FF.getFile(heatload::eAC),Gizmo::st_value(1,2));
+  HG.fan.setFileForValues(FF.getFile(heatload::eFan),Gizmo::st_value(1,3));
+  HG.thermal.setFileForValues(FF.getFile(heatload::eThermal),Gizmo::st_value(1,2,3));
+  HG.battery.setFileForValues(FF.getFile(heatload::eBat),Gizmo::st_value());
+  HG.cpu_throttling.setFileForValues(FF.getFile(heatload::eCPUthrottling),Gizmo::st_value(2,3));
+  HG.cpu_performance.setFileForValues(FF.getFile(heatload::eCPUperformance),Gizmo::st_value());
+  HG.cpu_load.setFileForValues(FF.getFile(heatload::eLoad),Gizmo::st_value());
 
   GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,HG));
   frame_draw->add(*GDA);
@@ -63,21 +70,15 @@ void gtk_acpi::init()
    if(show_widget.menu) menu_init();
 
    hide_or_show_elements();
-   get_show();
+   show_values();
    Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
    if(show_sudo) show_sudo_error();
    save();
 }
 
-void gtk_acpi::get_show()
-{
-  get_values();
-  show_values();
-}
-
 gint gtk_acpi::timeout()
 { 
-  get_show();
+  show_values();
   return 1;
 }
 
@@ -114,7 +115,7 @@ gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
   else if(ev->keyval=='g') show_widget.graph = !show_widget.graph;
   else if(ev->keyval=='l') HG.cpu_load.toggleVisible();
   else if(ev->keyval=='p') HG.cpu_performance.toggleVisible();
-  else if(ev->keyval=='r') get_show();
+  else if(ev->keyval=='r') show_values();
   else if(ev->keyval=='s') show_sudo_error();
   else if(ev->keyval=='t') HG.thermal.toggleVisible();
   else if(ev->keyval=='u') HG.cpu_throttling.toggleVisible();

@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.5 2002/12/23 07:59:28 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.6 2002/12/27 08:27:30 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -96,6 +96,9 @@ void FileFinder::init()
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT1/info"));
   VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/0/info",true));
 
+  B=Bezeichnung(heatload::eFan);
+  VFiles[heatload::eFan].push_back(st_file(B,"/proc/acpi/thermal_zone/THRM/cooling_mode"));
+
   B=Bezeichnung(heatload::eThermal);
   VFiles[heatload::eThermal].push_back(st_file(B,"/proc/acpi/thermal_zone/THRM/temperature"));
   VFiles[heatload::eThermal].push_back(st_file(B,"/proc/acpi/thermal_zone/THM0"));
@@ -108,11 +111,15 @@ void FileFinder::init()
   B=Bezeichnung(heatload::eCPUperformance);
   VFiles[heatload::eCPUperformance].push_back(st_file(B,"/proc/acpi/processor/CPU0/performance"));
   VFiles[heatload::eCPUperformance].push_back(st_file(B,"/proc/acpi/processor/CPU1/performance"));
+
+  B=Bezeichnung(heatload::eLoad);
+  VFiles[heatload::eLoad].push_back(st_file(B,"/proc/stat"));
 }
 
 std::string FileFinder::looking_for(const heatload::e_find e)
 {
   if(e==heatload::eAC) return "/proc/acpi/ac_adapter/*/state";
+  if(e==heatload::eFan) return "/proc/acpi/fan/*/state";
   if(e==heatload::eBat) return "/proc/acpi/battery/*/state";
   if(e==heatload::eBatInfo) return "/proc/acpi/battery/*/info";
   if(e==heatload::eThermal) return "/proc/acpi/thermal[_zone]/*/[temperature|status]";
@@ -125,11 +132,13 @@ std::string FileFinder::looking_for(const heatload::e_find e)
 std::string FileFinder::Bezeichnung(const heatload::e_find e)
 {
   if(e==heatload::eAC) return  "AC";
+  if(e==heatload::eFan) return "Fan";
   if(e==heatload::eBat) return "Battery-State";
   if(e==heatload::eBatInfo) return "Battery-Info";
   if(e==heatload::eThermal) return "Thermal-Zone";
   if(e==heatload::eCPUthrottling) return "CPU-Throttling";
   if(e==heatload::eCPUperformance) return "CPU-Performance";
+  if(e==heatload::eLoad) return "CPU-Load";
   assert(!" never get here\n");
   abort();
 }

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.19 2002/12/23 07:59:28 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.20 2002/12/27 08:27:30 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -56,23 +56,12 @@ class gtk_acpi : public gtk_acpi_glade
 
         void init();
         void menu_init();
-        gint on_eventbox_main_button_press_event(GdkEventButton *event);
         void select_throttling(guint i);
 
         void show_sudo_error();
         void show_run_time_options();
 
         void show_values();
-        void get_values();
-        void get_ac_adapter();        
-        void get_thermal();        
-        void get_battery();        
-        void get_load_value();
-        void get_throttling();
-        
-        void load();
-      
-        void get_show();
         gint timeout();
 
         void set_color(Gtk::Widget &W,const std::string &color);
@@ -80,12 +69,12 @@ class gtk_acpi : public gtk_acpi_glade
 
         gint on_gtk_acpi_delete_event(GdkEventAny *ev);
         gint on_gtk_acpi_key_press_event(GdkEventKey *ev);
+        gint on_eventbox_main_button_press_event(GdkEventButton *event);
         void ende();
    public:
-       gtk_acpi(const FileFinder &FF,const heatload::st_widget &show_widget,
+        gtk_acpi(const FileFinder &FF,const heatload::st_widget &show_widget,
                 const bool _show_sudo,HeatloadGizmo &HG);
         void set_show_sudo(bool b) const {show_sudo=b;}
         void save() const;
-        void re_init() {init();}
 };
 #endif

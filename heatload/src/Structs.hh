@@ -29,7 +29,7 @@ namespace heatload{
 
  static std::string run_time_options="    run-time-options:\n"
                  "    ?        show summery of all run time options\n"
-                 "    a        toggle show/hide ac\n\n"
+                 "    a        toggle show/hide ac\n"
                  "    b        toggle show/hide battery\n"
                  "    c        toggles between designed- and last-max-capacity\n"
                  "              when calculating the batterys fill-percentage\n"
@@ -46,8 +46,10 @@ namespace heatload{
                  ;
 
 
-        enum e_find{None=0,eAC='A',eBat='B',eBatInfo='I',eThermal='T',
-                    eCPUthrottling='C',eCPUperformance};
+        enum e_find{None=0,eAC='A',eBat='B',eBatInfo='I',eFan='F',
+                    eThermal='T',
+                    eCPUthrottling='C',eCPUperformance='P',
+                    eLoad='L'};
 
         struct st_find_filename{std::string bezeichnung;std::string name;bool old_style;
                st_find_filename() : old_style(false) {}
