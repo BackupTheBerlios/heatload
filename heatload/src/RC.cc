@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.9 2003/03/24 12:27:45 thoma Exp $ */
+/* $Id: RC.cc,v 1.10 2003/03/24 12:36:42 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -150,8 +150,7 @@ void gtk_acpi::save() const
         f.setBoolAttr("OldStyle",i->second.old_style);
    }
 
-/* 
-  Tag &auto_throt=data.push_back(Tag("Auto");
+  Tag &auto_throt=data.push_back(Tag("Auto"));
   for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
    {
      if(i->EF==heatload::eCPUthrottling)
@@ -167,7 +166,6 @@ void gtk_acpi::save() const
         a.setIntAttr("State",i->state);
       }
    }
- */
  
   data.setBoolAttr("ReadMaxCap",HG.battery.ReadMaxCap());
   data.setBoolAttr("ShowSudo",show_sudo);
