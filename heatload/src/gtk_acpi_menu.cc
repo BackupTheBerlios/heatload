@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.13 2003/03/28 07:13:48 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.14 2003/03/28 07:36:58 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -163,12 +163,10 @@ void gtk_acpi::show_run_time_options()
      std::string s1 = FileFinder::Bezeichnung(i->EF);
      for(int j=s1.size();j<20;++j) s1+=" ";
      std::string s2 = "("+itos(i->temperature)+")";
-//     std::string s3; /*if(i->state!=-1)*/ s3 = " => "+(i->state);
-     sx += s1+s2 + '\n';
-std::cout << "I: "<<s1<<s2<<'\n';
+     std::string s3; if(i->state!=-1) s3 = " => "+itos((i->state));
+     sx += s1+s2+s3+ '\n';
    }
-std::cout << s+sx<<'\n';
-   manage(new WindowInfo(this,heatload::run_time_options+sx,false));
+  manage(new WindowInfo(this,heatload::run_time_options+sx,false));
 }
 
 

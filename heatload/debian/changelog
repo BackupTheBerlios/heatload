@@ -1,3 +1,12 @@
+heatload (0.7.2) unstable; urgency=low
+
+  * small improvements for the ACPI filefinder
+  * Auto suspend-to-disk included
+  * include-files gcc3.2 style
+  * Menu->Help shows the auto-performed actions
+
+ -- Malte Thoma <thoma@muenster.de>  Thu, 27 Mar 2003 21:12:54 +0100
+
 heatload (0.7.1) unstable; urgency=low
 
   * Newer Version of the Tag- and TagStream-classes included

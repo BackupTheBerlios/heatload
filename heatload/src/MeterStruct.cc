@@ -50,7 +50,7 @@ void MeterStruct::add_value(guint8 b,const guint x_size)
 void MeterStruct::draw(Gdk_Drawable &d, Gdk_GC &g) 
 {
     gint lx = -1, ly = -1;
-    deque<guint8> copy = data_deque;
+    std::deque<guint8> copy = data_deque;
 
     for (gint x = d.width()-1; x >= 0; x--) 
       {

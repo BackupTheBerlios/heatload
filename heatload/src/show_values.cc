@@ -19,6 +19,7 @@
 #include "gtk_acpi.hh"
 #include <cstdio>
 #include "itos.h"
+#include <iostream> // debug
 
 void gtk_acpi::show_values()
 {
@@ -45,12 +46,17 @@ void gtk_acpi::test_auto_tp()
 {
    for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
     {
+//if(i->EF==heatload::eSuspend_sleep)
+//std::cout << i->set<<' '<<i->temperature<<' '<<HG.battery.Prozent()<<'\n';
       if(i->set) continue;
-      if(i->EF==heatload::eSuspend_sleep &&
-         i->temperature >= HG.battery.Prozent())
+      if(i->EF==heatload::eSuspend_sleep)
        {
-         suspend_activate(true);
-         i->set=true;
+        if(i->temperature >= HG.battery.Prozent())
+          {
+//std::cout << "SUSPEND\n";
+            suspend_activate(true);
+            i->set=true;
+          }
        }
       else if(i->temperature <= HG.thermal.IValue())
        { 

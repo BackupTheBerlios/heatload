@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.12 2003/03/28 07:13:48 thoma Exp $ */
+/* $Id: RC.cc,v 1.13 2003/03/28 07:36:58 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -26,6 +26,7 @@
 #include "Gizmo.hh"
 #include "RC.hh"
 #include <fstream>
+#include <iostream>
 
 void rc_file::load(HeatloadGizmo &HG,heatload::st_widget &show_widget,
                    bool &show_sudo,FileFinder &FF,std::vector<heatload::st_auto> &AutoVec)
