@@ -41,7 +41,8 @@ namespace heatload{
                  ;
 
 
-        enum e_find{None=0,eAC='A',eBat='B',eThermal='T',eCPUthrottling='C'};
+        enum e_find{None=0,eAC='A',eBat='B',eBatInfo='I',eThermal='T',
+                    eCPUthrottling='C',eCPUperformance};
 
         struct st_find_filename{std::string bezeichnung;std::string name;bool old_style;
                st_find_filename() : old_style(false) {}

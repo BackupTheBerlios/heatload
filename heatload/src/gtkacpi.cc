@@ -138,7 +138,7 @@ int main(int argc, char **argv)
          default : usage(argv[0]);
        }
      }  
-   rc_file::save(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
+//   rc_file::save(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
    
    Gtk::Main m(&argc, &argv);
    manage(new class gtk_acpi(FileMap,show_widget,read_max_cap,show_sudo,show_what,color));

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.21 2002/12/20 07:53:34 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.22 2002/12/20 08:31:55 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -49,16 +49,7 @@ void gtk_acpi::read_max_cap()
  #warning HACK 
  if(read_max_cap_)
   {
-   ifstream fin("/proc/acpi/battery/0/info");
-   if(!fin.good()) {
-      fin.close();
-      fin.open("/proc/acpi/battery/BAT0/info");
-      if(!fin.good()) {
-         fin.close();
-         fin.open("/proc/acpi/battery/BAT1/info"); }
-      if(!fin.good()) 
-         {cerr << "Sorry can't open 'battery info' in /proc/acpi\n"; exit(1);}
-     }
+   std::ifstream fin(FF.getFileName(heatload::eBatInfo).c_str());
    std::string s1,s2;
    fin >> s1 >> s1;
    fin >> s1 >> s1 >> max_cap;
@@ -91,6 +82,7 @@ void gtk_acpi::init()
    get_show();
    Gtk::Main::timeout.connect(slot(this,&gtk_acpi::timeout),show_widget.refresh);
    if(show_sudo) show_sudo_error();
+   save();
 }
 
 void gtk_acpi::get_show()

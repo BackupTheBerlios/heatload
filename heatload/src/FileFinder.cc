@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.1 2002/12/20 08:03:55 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.2 2002/12/20 08:31:55 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -69,7 +69,6 @@ void FileFinder::find_filenames()
 
 void FileFinder::init()
 {
-  VFiles.clear();
   std::string B=Bezeichnung(heatload::eAC);
   VFiles[heatload::eAC].push_back(st_file(FileMap[heatload::eAC]));
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/AC0/state"));
@@ -81,6 +80,12 @@ void FileFinder::init()
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT0/state"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT1/state"));
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/0/status",true));
+
+  B=Bezeichnung(heatload::eBatInfo);
+  VFiles[heatload::eBatInfo].push_back(st_file(FileMap[heatload::eBatInfo]));
+  VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT0/info"));
+  VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/BAT1/info"));
+  VFiles[heatload::eBatInfo].push_back(st_file(B,"/proc/acpi/battery/0/info",true));
 
   B=Bezeichnung(heatload::eThermal);
   VFiles[heatload::eThermal].push_back(st_file(FileMap[heatload::eThermal]));
@@ -98,6 +103,7 @@ std::string FileFinder::looking_for(const heatload::e_find e)
 {
   if(e==heatload::eAC) return "/proc/acpi/ac_adapter/*/state";
   if(e==heatload::eBat) return "/proc/acpi/battery/*/state";
+  if(e==heatload::eBatInfo) return "/proc/acpi/battery/*/info";
   if(e==heatload::eThermal) return "/proc/acpi/thermal[_zone]/*/[temperature|status]";
   if(e==heatload::eCPUthrottling) return "/proc/acpi/processor/*/throttling";
   assert(!" never get here\n");
@@ -108,6 +114,7 @@ std::string FileFinder::Bezeichnung(const heatload::e_find e)
 {
   if(e==heatload::eAC) return  "AC";
   if(e==heatload::eBat) return "Battery-State";
+  if(e==heatload::eBatInfo) return "Battery-Info";
   if(e==heatload::eThermal) return "Thermal-Zone";
   if(e==heatload::eCPUthrottling) return "CPU-Throttling";
   assert(!" never get here\n");
