@@ -22,12 +22,12 @@
 
 #include <gtk/gtkrc.h>
 #include <gtk--/drawingarea.h>
-#include <deque.h>
+#include <deque>
 
 class MeterStruct {
     
 protected:
-    deque<guint8> data_deque;
+    std::deque<guint8> data_deque;
     glong last_time;
     bool modified;  
 

@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.11 2003/03/24 12:53:05 thoma Exp $ */
+/* $Id: RC.cc,v 1.12 2003/03/28 07:13:48 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -89,10 +89,12 @@ cout << "FOUND   \n";
      const Tag *auto_throt =data->find("Auto");
      if(auto_throt)
       {
-        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"Throttling")
+        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"CPU-Throttling")
             AutoVec.push_back(heatload::st_auto(heatload::eCPUthrottling,t->getIntAttr("Temperature"),t->getIntAttr("State")));
-        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"Performance")
+        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"CPU-Performance")
             AutoVec.push_back(heatload::st_auto(heatload::eCPUperformance,t->getIntAttr("Temperature"),t->getIntAttr("State")));
+        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"Suspend-Sleep")
+            AutoVec.push_back(heatload::st_auto(heatload::eSuspend_sleep,t->getIntAttr("Battery")));
       }
 
      HG.battery.setReadMaxCap(data->getBoolAttr("ReadMaxCap",false));
@@ -153,6 +155,17 @@ void gtk_acpi::save() const
   Tag &auto_throt=data.push_back(Tag("Auto"));
   for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
    {
+     Tag &a=auto_throt.push_back(Tag(FileFinder::Bezeichnung(i->EF)));
+     if(i->EF==heatload::eSuspend_sleep)
+      {     
+        a.setIntAttr("Battery",i->temperature);
+      }
+     else
+      {
+        a.setIntAttr("Temperature",i->temperature);
+        a.setIntAttr("State",i->state);
+      }
+#if 0
      if(i->EF==heatload::eCPUthrottling)
       {
         Tag &a=auto_throt.push_back(Tag("Throttling"));
@@ -165,6 +178,12 @@ void gtk_acpi::save() const
         a.setIntAttr("Temperature",i->temperature);
         a.setIntAttr("State",i->state);
       }
+     else if(i->EF==heatload::eSuspend_sleep)
+      {
+        Tag &a=auto_throt.push_back(Tag("Suspend_to_disk"));
+        a.setIntAttr("Battery",i->temperature);
+      }
+#endif
    }
  
   data.setBoolAttr("ReadMaxCap",HG.battery.ReadMaxCap());

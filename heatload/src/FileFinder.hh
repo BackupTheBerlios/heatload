@@ -1,4 +1,4 @@
-/* $Id: FileFinder.hh,v 1.5 2003/01/07 06:23:31 thoma Exp $ */
+/* $Id: FileFinder.hh,v 1.6 2003/03/28 07:13:48 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,6 @@ class FileFinder
 
         void init();
         void find_filenames();
-        std::string Bezeichnung(const heatload::e_find e);
         std::string looking_for(const heatload::e_find e);
         void set_dummy_file(st_file &FM,const heatload::e_find e);
 
@@ -63,6 +62,8 @@ class FileFinder
 
         void NewFileName(heatload::e_find e,const st_file &s)
                {VFiles[e].push_back(s);}
+
+        static std::string Bezeichnung(const heatload::e_find e);
             
 };
 

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.12 2003/03/24 12:27:45 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.13 2003/03/28 07:13:48 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 
 #include "gtk_acpi.hh"
 #include <fstream>
+#include <iostream> // debug
 
 void gtk_acpi::menu_init() 
 {
@@ -115,6 +116,8 @@ void gtk_acpi::fan_activate(const bool turn_on)
 
 void gtk_acpi::suspend_activate(const bool turn_to_sleep)
 {
+  if(!turn_to_sleep) reset_auto_tp();
+
   std::string com="sudo ";
   if(turn_to_sleep) com += FF.getFileName(heatload::eSuspend_sleep); 
   else              com += FF.getFileName(heatload::eSuspend_awake); 
@@ -151,7 +154,21 @@ void gtk_acpi::show_sudo_error(const heatload::e_find EF) const
 
 void gtk_acpi::show_run_time_options()
 {
-   manage(new WindowInfo(this,heatload::run_time_options,false));
+  std::string s = heatload::run_time_options;
+//  s+="\n";
+
+  std::string sx;
+  for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
+   {
+     std::string s1 = FileFinder::Bezeichnung(i->EF);
+     for(int j=s1.size();j<20;++j) s1+=" ";
+     std::string s2 = "("+itos(i->temperature)+")";
+//     std::string s3; /*if(i->state!=-1)*/ s3 = " => "+(i->state);
+     sx += s1+s2 + '\n';
+std::cout << "I: "<<s1<<s2<<'\n';
+   }
+std::cout << s+sx<<'\n';
+   manage(new WindowInfo(this,heatload::run_time_options+sx,false));
 }
 
 

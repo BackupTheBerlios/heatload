@@ -12,6 +12,7 @@
 #include "Gizmo.hh"
 #include "RC.hh"
 #include <config.h>
+#include <iostream>
 
 void show_version()
 {

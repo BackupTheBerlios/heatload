@@ -45,7 +45,14 @@ void gtk_acpi::test_auto_tp()
 {
    for(std::vector<heatload::st_auto>::const_iterator i=AutoVec.begin();i!=AutoVec.end();++i)
     {
-      if(!i->set && i->temperature <= HG.thermal.IValue())
+      if(i->set) continue;
+      if(i->EF==heatload::eSuspend_sleep &&
+         i->temperature >= HG.battery.Prozent())
+       {
+         suspend_activate(true);
+         i->set=true;
+       }
+      else if(i->temperature <= HG.thermal.IValue())
        { 
          select_throttling(i->state,i->EF);
          i->set=true;
