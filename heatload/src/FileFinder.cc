@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.8 2003/01/07 06:23:31 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.9 2003/03/26 08:01:06 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -86,6 +86,7 @@ void FileFinder::init()
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/AC0/state"));
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/ACAD/state"));
   VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/0/status"));
+  VFiles[heatload::eAC].push_back(st_file(B,"/proc/acpi/ac_adapter/AC/state"));
 
   B=Bezeichnung(heatload::eBat);
   VFiles[heatload::eBat].push_back(st_file(B,"/proc/acpi/battery/BAT0/state"));
