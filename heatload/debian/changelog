@@ -1,3 +1,10 @@
+heatload (0.7.0) unstable; urgency=low
+
+  * --version (-v) workes
+  * auto-throttling and auto-performance to prevent overheating !!!!
+
+ -- Malte Thoma <thoma@muenster.de>  Mon, 24 Mar 2003 13:46:31 +0100
+
 heatload (0.6.2) unstable; urgency=low
 
   * some bugfixes, eg. performance selection

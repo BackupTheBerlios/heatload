@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.10 2003/03/24 12:36:42 thoma Exp $ */
+/* $Id: RC.cc,v 1.11 2003/03/24 12:53:05 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -21,7 +21,7 @@
 #include <map>
 #include <string>
 #include <unistd.h>
-#include <TagStream.h>
+#include "TagStream.h"
 #include "gtk_acpi.hh"
 #include "Gizmo.hh"
 #include "RC.hh"

@@ -11,6 +11,13 @@
 #include "FileFinder.hh"
 #include "Gizmo.hh"
 #include "RC.hh"
+#include <config.h>
+
+void show_version()
+{
+   std::cout << "\n This is heatload "<<VERSION<<"\n\n";
+   exit(0);
+}
 
 void usage(const std::string &name)
 {
@@ -49,7 +56,9 @@ void usage(const std::string &name)
                "    run-time-options:\n"
                + heatload::run_time_options+
                " command-line options override the default settings in \n"
-               "  './.heatloadrc', '~/.heatloadrc' resp. '/etc/heatload/heatload.conf'\n\n" 
+               "  './.heatloadrc', '~/.heatloadrc' resp. '/etc/heatload/heatload.conf'\n\n"
+               " within the 'Auto'-Tag in '.heatloadrc' auto-throttling and/or \n"
+               " auto-performance can be adjusted to prevent overheating\n\n"
                ;
   exit(1);
 }
@@ -97,6 +106,7 @@ const static struct option options[]=
  { "y_size", required_argument,      NULL, 'y' },    
  { "hide", required_argument,      NULL, 'h' },    
  { "color", required_argument,      NULL, 'c' },    
+ { "version", no_argument,      NULL, 'v' },    
  { NULL,      0,       NULL, 0 }
 };
  
@@ -111,7 +121,7 @@ int main(int argc, char **argv)
     std::vector<heatload::st_auto> AutoVec;
     rc_file::load(HG,show_widget,show_sudo,FF,AutoVec);
                                                             
-    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:tx:y:?",options,NULL))!=EOF)
+    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:tvx:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
          case 'd' : show_widget.decoration=!show_widget.decoration; break;
@@ -124,6 +134,7 @@ int main(int argc, char **argv)
          case 'y' : show_widget.y=atoi(optarg); break;
          case 'h' : evaluate(optarg,HG,show_widget); break;
          case 'c' : change_color(optarg,HG,argv[0]); break;
+         case 'v' : show_version(); break;
          default : usage(argv[0]);
        }
      }  
