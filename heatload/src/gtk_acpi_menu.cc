@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.4 2002/12/20 07:53:34 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.5 2002/12/20 09:55:51 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -32,10 +32,22 @@ void gtk_acpi::menu_init()
      _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state));
      throttling_menu->append(*_t);
    }
+
+  Gtk::MenuItem *performance = manage(new class Gtk::MenuItem("CPU performance"));
+  Gtk::Menu *performance_menu = manage(new class Gtk::Menu());
+  performance->set_submenu(*performance_menu);
+  for(std::vector<st_performance>::const_iterator i=vec_performance.begin();i!=vec_performance.end();++i){
+     Gtk::MenuItem *_t = manage(new class Gtk::MenuItem(i->value));
+     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_performance),i->state));
+     performance_menu->append(*_t);
+   }
+
+
   Gtk::MenuItem *_close = manage(new class Gtk::MenuItem("Exit"));
   _close->activate.connect(SigC::slot(this,&gtk_acpi::ende));
 
   menu->append(*throttling);
+  menu->append(*performance);
   menu->append(*_close);
   menu->show_all();
 }
@@ -43,8 +55,6 @@ void gtk_acpi::menu_init()
 void gtk_acpi::load_thrott_file()
 {
   char c1[100];
-//  std::ifstream fin(cpu_thrott_file.name.c_str());
-//  std::ifstream fin(FileMap[heatload::eCPUthrottling].name.c_str());
   std::ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
   for(int i=0;i<3;++i) fin.getline(c1,sizeof(c1));  // Kommentarzeilen
   while(fin)
@@ -72,10 +82,42 @@ void gtk_acpi::select_throttling(guint i)
   else show_sudo_error();
 }
 
+
+void gtk_acpi::load_performance_file()
+{
+  char c1[100];
+  std::ifstream fin(FF.getFileName(heatload::eCPUperformance).c_str());
+  for(int i=0;i<3;++i) fin.getline(c1,sizeof(c1));  // Kommentarzeilen
+  while(fin)
+   { fin.getline(c1,sizeof(c1));
+     if(!fin.good()) break;
+     std::string s1=c1;
+     std::string::size_type st1 = s1.find("T");
+     std::string::size_type st2 = s1.find_first_of(":");
+     std::string::size_type st3 = s1.find_last_of(" ");
+     if(st1==std::string::npos||st2==std::string::npos) 
+         {cerr<<"Error while reading "<<FF.getFileName(heatload::eCPUperformance)<<'\n';abort();}
+     std::string st(s1,st1,st2-st1);
+     std::string sv(s1,st1+1,st2-st1-1);
+     std::string sp(s1,st3+1,std::string::npos);
+     vec_performance.push_back(st_performance(st,atoi(sv.c_str()),sp));
+   }
+}
+
+
+void gtk_acpi::select_performance(guint i)
+{
+  std::string com = "sudo /usr/sbin/set_performance "+itos(i)+" "+FF.getFileName(heatload::eCPUperformance);
+  int b=system(com.c_str());
+  if(!b) get_show();
+  else show_sudo_error();
+}
+
+
 #include "WindowInfo.hh"
 void gtk_acpi::show_sudo_error()
 {
-   std::string s="To use the throttling adjustment, check the following:\n\n"
+   std::string s="To use the throttling/performance adjustment, check the following:\n\n"
        " * is '/usr/sbin/set_throttling' installed?'\n"
        " * are the permissons set to '-rwx------' (chmod 700) correctly?\n"
        " * is 'sudo' installed ? (apt-get install sudo for debian)\n"

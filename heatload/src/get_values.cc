@@ -27,6 +27,7 @@ void gtk_acpi::get_values()
  if(show_what.bat)  get_battery();
  if(show_what.load) get_load_value();
  if(show_what.cpu_throttling) get_throttling();
+ if(show_what.cpu_performance) get_performance();
 }
 
 void gtk_acpi::get_ac_adapter()
@@ -111,7 +112,7 @@ void gtk_acpi::get_throttling()
 {
   char c1[100];
   std::string s1,s;
-  ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
+  std::ifstream fin(FF.getFileName(heatload::eCPUthrottling).c_str());
   fin.getline(c1,sizeof(c1));
   fin >> s1 >> s1 >> s;
   cpu.throttling = throttling_from_state(s);
@@ -128,6 +129,25 @@ gtk_acpi::st_throttling gtk_acpi::throttling_from_state(const std::string &s)
 }
 
 
+void gtk_acpi::get_performance()
+{
+  char c1[100];
+  std::string s1,s;
+  std::ifstream fin(FF.getFileName(heatload::eCPUperformance).c_str());
+  fin.getline(c1,sizeof(c1));
+  fin >> s1 >> s1 >> s;
+  cpu.performance = performance_from_state(s);
+}
+
+gtk_acpi::st_performance gtk_acpi::performance_from_state(const std::string &s)
+{
+  for(std::vector<st_performance>::const_iterator i=vec_performance.begin();i!=vec_performance.end();++i) 
+   {
+     if(i->tstate==s) return *i;
+   }
+  cerr << "never get here\n";
+  return st_performance();
+}
 
 
 void failure(const string &txt) 

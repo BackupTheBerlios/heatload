@@ -1,4 +1,4 @@
-/* $Id: FileFinder.cc,v 1.2 2002/12/20 08:31:55 thoma Exp $ */
+/* $Id: FileFinder.cc,v 1.3 2002/12/20 09:55:51 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ void FileFinder::find_filenames()
     {
       for(std::vector<st_file>::const_iterator j=i->second.begin();j!=i->second.end();++j)
        {
-         ifstream fin(j->name.c_str());
+         std::ifstream fin(j->name.c_str());
          if(fin.good())
            {
              FileMap[i->first]=*j;

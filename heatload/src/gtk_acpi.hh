@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.hh,v 1.16 2002/12/20 07:53:34 thoma Exp $ */
+/* $Id: gtk_acpi.hh,v 1.17 2002/12/20 09:55:51 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -57,13 +57,20 @@ class gtk_acpi : public gtk_acpi_glade
 
 
         struct st_throttling{std::string tstate;int state;std::string prozent;
-               st_throttling() : state(-1){}
+               st_throttling() : state(-1),prozent("?") {}
                st_throttling(const std::string &t,const int s,const std::string &p)
                   :tstate(t),state(s),prozent(p) {}};
         std::vector<st_throttling> vec_throttling;
 
+        struct st_performance{std::string tstate;int state;std::string value;
+               st_performance() : state(-1),value("?"){}
+               st_performance(const std::string &t,const int s,const std::string &p)
+                  :tstate(t),state(s),value(p) {}};
+        std::vector<st_performance> vec_performance;
+
+
         struct st_ac_adapter{std::string state;};
-        struct st_cpu{st_throttling throttling;};
+        struct st_cpu{st_throttling throttling;st_performance performance;};
         struct st_cpu_load{guint load;};
         struct st_thermal{guint temp;std::string einheit;
                           std::string cooling_mode;
@@ -104,6 +111,9 @@ class gtk_acpi : public gtk_acpi_glade
         void select_throttling(guint i);
         void load_thrott_file();
         st_throttling throttling_from_state(const std::string &s);
+        void load_performance_file();
+        void select_performance(guint i);
+        st_performance performance_from_state(const std::string &s);
 
         void show_sudo_error();
         void show_run_time_options();
@@ -117,6 +127,8 @@ class gtk_acpi : public gtk_acpi_glade
         void get_battery();        
         void get_load_value();
         void get_throttling();
+        void get_performance();
+        
 
         void get_show();
         gint timeout();

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.22 2002/12/20 08:31:55 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.23 2002/12/20 09:55:51 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -135,6 +135,7 @@ gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
   else if(ev->keyval=='f') show_what.fan=!show_what.fan;
   else if(ev->keyval=='g') show_widget.graph = !show_widget.graph;
   else if(ev->keyval=='l') show_what.load=!show_what.load;
+  else if(ev->keyval=='p') show_what.cpu_performance=!show_what.cpu_performance;
   else if(ev->keyval=='r') get_show();
   else if(ev->keyval=='s') show_sudo_error();
   else if(ev->keyval=='t') show_what.temp=!show_what.temp;
@@ -170,6 +171,9 @@ void gtk_acpi::hide_or_show_elements()
   else               { label_temp_->hide(); label_temp->hide(); }
 
   if(show_what.cpu_throttling) eventbox_cpu_throttling->show();
-  else               eventbox_cpu_throttling->hide();
+  else                         eventbox_cpu_throttling->hide();
+
+  if(show_what.cpu_performance) eventbox_cpu_performance->show();
+  else                          eventbox_cpu_performance->hide();
 }
 

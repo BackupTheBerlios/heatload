@@ -34,10 +34,11 @@ namespace heatload{
                  "    f        toggle show/hide fan\n"   
                  "    g        toggles show/hide graph\n"
                  "    l        toggle show/hide load\n"  
+                 "    p        toggle show/hide cpu-performance\n"  
                  "    r        immediate reload\n"
                  "    s        show sudo hints\n" 
                  "    t        toggle show/hide thermal\n"
-                 "    u        toggle show/hide cpu throttling\n\n"
+                 "    u        toggle show/hide cpu-throttling\n\n"
                  ;
 
 
@@ -59,11 +60,13 @@ namespace heatload{
                     };
 
 
-   struct st_show{bool ac;bool bat; bool temp;bool load; bool fan; bool cpu_throttling;
-          st_show() : ac(true),bat(true),temp(true),load(true),fan(true),cpu_throttling(true) {}
+   struct st_show{bool ac;bool bat; bool temp;bool load; bool fan; 
+                  bool cpu_throttling; bool cpu_performance;
+          st_show() : ac(true),bat(true),temp(true),load(true),fan(true),
+                      cpu_throttling(true),cpu_performance(true) {}
 //          st_show(const bool a,const bool b,,const bool t,
-//                       ,const bool l,,const bool f,const bool c)
-//                   : ac(a),bat(b),temp(t),load(l),fan(f),cpu_throttling(c){}
+//                       ,const bool l,,const bool f,const bool c,const bool cp)
+//                   : ac(a),bat(b),temp(t),load(l),fan(f),cpu_throttling(c),cpu_performance(cp){}
                        };
 
     struct st_color{std::string temp_label;std::string bat_label;

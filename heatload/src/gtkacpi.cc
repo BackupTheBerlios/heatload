@@ -29,7 +29,8 @@ void usage(const std::string &name)
                " -d, --decoration         toggles show/hide decoration\n"
                " -g, --graph           toggles graphical display\n"
                " -h , --hide [OPTION]     OPTION must be one of\n"
-               "                            ac battery thermal load fan cpu\n"
+               "                            ac battery thermal load fan\n"
+               "                            cpu_throttling cpu_performance\n"
                "                          can be given as often as you need ist\n"
                " -l, --label           toggles numerical thermal and load display\n"
                " -m  , --read_max_capacity  This is a HACK: If you use this\n"
@@ -41,7 +42,7 @@ void usage(const std::string &name)
                "                     this laptop. If you don't have a Sony Vaio it should be\n"
                "                     save (and good idea :-) to use this option.\n\n"
                " -r X, --refresh X        X = refresh rate [2500]\n"
-               " -t  , --show throttling hint   pop up the throttling hint window\n"
+               " -t  , --show_throttling_hint   pop up the throttling hint window\n"
                " -x X, --x_size X         X = x-size of meter [100]\n"
                " -y X, --y_size X         X = y-size of meter [70]\n\n"
                "    run-time-options:\n"
@@ -74,7 +75,8 @@ void evaluate(const std::string &s,heatload::st_show &show_what)
   else if(s=="thermal") show_what.temp=false ; 
   else if(s=="load")    show_what.load=false ; 
   else if(s=="fan")     show_what.fan=false ; 
-  else if(s=="cpu")     show_what.cpu_throttling=false ; 
+  else if(s=="cpu_throttling")   show_what.cpu_throttling=false ; 
+  else if(s=="cpu_performance")   show_what.cpu_performance=false ; 
   else {cerr << s<<" unknown \n";}
 }
 
@@ -103,6 +105,7 @@ const static struct option options[]=
  { "help", no_argument,      NULL, '?' },
  { "read_max_capacity", required_argument,      NULL, 'm' },   
  { "refresh", required_argument,      NULL, 'r' },   
+ { "show_throttling_hint",no_argument,      NULL, 't' },
  { "x_size", required_argument,      NULL, 'x' },    
  { "y_size", required_argument,      NULL, 'y' },    
  { "hide", required_argument,      NULL, 'h' },    
@@ -119,10 +122,9 @@ int main(int argc, char **argv)
     heatload::st_widget show_widget;
     heatload::st_show show_what;
     heatload::st_color color;
-//    std::map<heatload::e_find,heatload::st_find_filename> FileMap;
     FileFinder::FileMap_t FileMap;
     rc_file::load(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
-    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:sx:y:?",options,NULL))!=EOF)
+    while ((opt=getopt_long(argc,argv,"c:dlfgh:mr:tx:y:?",options,NULL))!=EOF)
      {
       switch(opt) {
          case 'd' : show_widget.decoration=!show_widget.decoration; break;
@@ -130,7 +132,7 @@ int main(int argc, char **argv)
          case 'g' : show_widget.graph= !show_widget.graph; break;
          case 'm' : read_max_cap=true; break;
          case 'r' : show_widget.refresh=atoi(optarg); break;   
-         case 's' : show_sudo=true; break;   
+         case 't' : show_sudo=true; break;   
          case 'x' : show_widget.x=atoi(optarg); break;
          case 'y' : show_widget.y=atoi(optarg); break;
          case 'h' : evaluate(optarg,show_what); break;
@@ -138,7 +140,6 @@ int main(int argc, char **argv)
          default : usage(argv[0]);
        }
      }  
-//   rc_file::save(show_what,color,show_widget,read_max_cap,show_sudo,FileMap);
    
    Gtk::Main m(&argc, &argv);
    manage(new class gtk_acpi(FileMap,show_widget,read_max_cap,show_sudo,show_what,color));
