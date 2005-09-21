@@ -46,12 +46,13 @@ void Gizmo::get_value()
   else                        fin >> svalue;
   if(file_value.column_of_unit==file_value.column_of_value+1)
      fin >> unit;
-//cout <<'\t'<< sdummy <<'\t'<<ivalue<<'*'<<svalue<<'\t'
-// <<unit<<"#"<< file_value.column_of_unit<<'\n';
   if     (what==heatload::eCPUthrottling) setValue(static_cast<GizmoThrottling&>(*this).prozent_from_state(svalue));
 //  else if(what==heatload::eCPUperformance_cur_scale) setValue(static_cast<GizmoPerformance_cur_scale&>(*this).prozent(svalue));
   else if(!file_value.value_is_int) setValue(svalue);
   else                              setValue(ivalue,unit);
+
+//cout <<'\t'<< sdummy <<'\t'<<ivalue<<'*'<<svalue<<'\t'
+// <<unit<<"#"<< file_value.column_of_unit<<'\n';
 }
 
 
