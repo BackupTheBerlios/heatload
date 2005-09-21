@@ -95,7 +95,7 @@ class GizmoPerformance_cur_scale : public Gizmo
       double max_scale ;
     public:
       GizmoPerformance_cur_scale(const heatload::e_find what) : Gizmo(what) 
-         {color_label="LightSlateBlue"; color_meter="LightSlateBlue"; }
+         {color_label="MediumBlue"; color_meter="LightSlateBlue"; }
       const std::string Value() ;
 
       const std::string prozent(const std::string &s);

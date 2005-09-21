@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.15 2005/09/21 15:13:59 thoma Exp $ */
+/* $Id: RC.cc,v 1.16 2005/09/21 15:40:34 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -143,6 +143,8 @@ void gtk_acpi::save() const
   tcolor.setAttr("Battery_Meter",HG.battery.ColorMeter());
   tcolor.setAttr("Load_Label",HG.cpu_load.ColorLabel());
   tcolor.setAttr("Load_Meter",HG.cpu_load.ColorMeter());
+  tcolor.setAttr("CPU_cur_scale_Label",HG.cpu_performance_cur_scale.ColorLabel());
+  tcolor.setAttr("CPU_cur_scale_Meter",HG.cpu_performance_cur_scale.ColorMeter());
 
   Tag &files=data.push_back(Tag("Files"));
   for(FileFinder::FileMap_t::const_iterator i=FF.getFileMap().begin();i!=FF.getFileMap().end();++i)
