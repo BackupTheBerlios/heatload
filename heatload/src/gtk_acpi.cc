@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.30 2005/09/21 14:12:11 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.31 2005/09/21 14:23:13 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@ void gtk_acpi::init()
   HG.thermal.setFileForValues(FF.getFile(heatload::eThermal),Gizmo::st_value(1,2,3));
   HG.battery.setFileForValues(FF.getFile(heatload::eBat),Gizmo::st_value());
   HG.cpu_throttling.setFileForValues(FF.getFile(heatload::eCPUthrottling),Gizmo::st_value(2,3));
-  HG.cpu_performance_cur_scale.setFileForValues(FF.getFile(heatload::eCPUperformance_cur_scale),Gizmo::st_value(1,1));
+  HG.cpu_performance_cur_scale.setFileForValues(FF.getFile(heatload::eCPUperformance_cur_scale),Gizmo::st_value(1,1,Gizmo::invalid));
   HG.cpu_load.setFileForValues(FF.getFile(heatload::eLoad),Gizmo::st_value());
 
   GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,HG));

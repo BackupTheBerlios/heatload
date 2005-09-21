@@ -102,7 +102,9 @@ class GizmoPerformance_cur_scale : public Gizmo
       void load_max_scale(const std::string &filename);
       void load_cur_scale(const std::string &filename);
 
-      const int Prozent() const { return int(i_value/max_scale*100.);}
+      
+      const int IProzent() const { return int(i_value/max_scale*100.);}
+      const std::string Prozent() const { return itos(IProzent())+"%";}
 //      const std::string prozent(const std::string &s);
 
 };

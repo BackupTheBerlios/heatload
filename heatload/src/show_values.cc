@@ -39,7 +39,7 @@ void gtk_acpi::show_values()
     if(HG.thermal.Visible())  GDA->getVM()[1].meter.add_value(HG.thermal.IValue(),show_widget.x);
     if(HG.battery.Visible())  GDA->getVM()[2].meter.add_value(HG.battery.Prozent(),show_widget.x);
     if(HG.cpu_performance_cur_scale.Visible())  
-                              GDA->getVM()[3].meter.add_value(HG.cpu_performance_cur_scale.Prozent(),show_widget.x);
+                              GDA->getVM()[3].meter.add_value(HG.cpu_performance_cur_scale.IProzent(),show_widget.x);
     GDA->refresh_pixmap();
   }
 }

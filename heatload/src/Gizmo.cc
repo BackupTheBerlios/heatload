@@ -70,7 +70,7 @@ const std::string GizmoPerformance_cur_scale::Value()
 { 
   if(!Visible()) return "";
   get_value();
-  return  itos(Prozent());
+  return  Prozent();
   return "?";
 }
 

@@ -28,6 +28,7 @@ GraphDrawingArea::GraphDrawingArea(const guint x,const guint y,
     VM.push_back(st_meter("Load",HG.cpu_load.ColorMeter()));
     VM.push_back(st_meter("Temperature",HG.thermal.ColorMeter()));
     VM.push_back(st_meter("Battery",HG.battery.ColorMeter()));
+    VM.push_back(st_meter("CPU scale",HG.cpu_performance_cur_scale.ColorMeter()));
     set_usize(x_size,y_size);
 }
 
