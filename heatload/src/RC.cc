@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.14 2005/09/21 14:12:11 thoma Exp $ */
+/* $Id: RC.cc,v 1.15 2005/09/21 15:13:59 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -77,6 +77,8 @@ cout << "FOUND   \n";
          HG.battery.setColorMeter(tcolor->getAttr("Battery_Meter"));
          HG.cpu_load.setColorLabel(tcolor->getAttr("Load_Label"));
          HG.cpu_load.setColorMeter(tcolor->getAttr("Load_Meter"));
+         HG.cpu_performance_cur_scale.setColorLabel(tcolor->getAttr("CPU_cur_scale_Label"));
+         HG.cpu_performance_cur_scale.setColorMeter(tcolor->getAttr("CPU_cur_scale_Meter"));
       }           
      const Tag *files=data->find("Files");
      if(files)

@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.31 2005/09/21 14:23:13 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.32 2005/09/21 15:13:59 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -67,6 +67,8 @@ void gtk_acpi::init()
    set_color(*label_bat1, HG.battery.ColorLabel());
    set_color(*label_load_,HG.cpu_load.ColorLabel());
    set_color(*label_load, HG.cpu_load.ColorLabel());
+   set_color(*label_cpu_performance_,HG.cpu_performance_cur_scale.ColorLabel());
+   set_color(*label_cpu_performance,HG.cpu_performance_cur_scale.ColorLabel());
 
    if(show_widget.menu) menu_init();
 
