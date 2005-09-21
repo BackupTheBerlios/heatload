@@ -49,7 +49,7 @@ void Gizmo::get_value()
 //cout <<'\t'<< sdummy <<'\t'<<ivalue<<'*'<<svalue<<'\t'
 // <<unit<<"#"<< file_value.column_of_unit<<'\n';
   if     (what==heatload::eCPUthrottling) setValue(static_cast<GizmoThrottling&>(*this).prozent_from_state(svalue));
-  else if(what==heatload::eCPUperformance)setValue(static_cast<GizmoThrottling&>(*this).prozent_from_state(svalue));
+//  else if(what==heatload::eCPUperformance_cur_scale) setValue(static_cast<GizmoPerformance_cur_scale&>(*this).prozent(svalue));
   else if(!file_value.value_is_int) setValue(svalue);
   else                              setValue(ivalue,unit);
 }
@@ -64,6 +64,15 @@ const std::string GizmoThermal::Value()
   if (i_value!=invalid) return itos(int((i_value/10.)-273.15))+einheit;
   return "?";
 }
+
+const std::string GizmoPerformance_cur_scale::Value()
+{ 
+  if(!Visible()) return "";
+  get_value();
+  return  itos(Prozent());
+  return "?";
+}
+
 
 
 const std::string GizmoBattery::Value()
@@ -130,7 +139,7 @@ void GizmoBattery::get_value()
      std::getline(fin,s1);
      if(s1.find_last_of(" ")!=std::string::npos)
        s1=s1.substr(s1.find_last_of(" ")+1,std::string::npos);
-     if(s1=="charging" || s1=="unknown" || s1=="discharging")
+     if(s1=="charging" || s1=="charged" || s1=="unknown" || s1=="discharging")
       {
         charging_state=s1;
         break; 
@@ -157,6 +166,7 @@ void GizmoBattery::get_value()
      bpresent = true;
    }
   if(charging_state=="charging") bcharging_state = GizmoBattery::e_charging;
+  else if(charging_state=="charged") bcharging_state = GizmoBattery::e_charging;
   else if(charging_state=="unknown") bcharging_state = GizmoBattery::e_unknown;
   else if (charging_state=="discharging")  bcharging_state = GizmoBattery::e_discharging;
   else
@@ -185,6 +195,22 @@ void delete_leading_space(std::string &s)
    }
 }
 
+void GizmoPerformance_cur_scale::load_cur_scale(const std::string &filename)
+{
+  std::ifstream fin(filename.c_str());
+  if(!fin.good()) assert(!"never get here: load_cur_scale");
+
+  fin >>  i_value;
+}
+
+void GizmoPerformance_cur_scale::load_max_scale(const std::string &filename)
+{
+  std::ifstream fin(filename.c_str());
+  if(!fin.good()) assert(!"never get here: load_max_scale");
+
+  fin >>  max_scale;
+}
+
 void GizmoThrottling::load_thrott_file(const std::string &filename)
 {
   char c1[100];
@@ -196,9 +222,9 @@ void GizmoThrottling::load_thrott_file(const std::string &filename)
      std::string s1=c1;
 
      std::string C;
-     if     (What()==heatload::eCPUthrottling) C="T";
-     else if(What()==heatload::eCPUperformance)C="P";
-     else assert(!"never get here");
+//     if     (What()==heatload::eCPUthrottling) C="T";
+//     else if(What()==heatload::eCPUperformance_cur_scale)C="P";
+//     else assert(!"never get here");
      std::string::size_type st1 = s1.find(C);
      std::string::size_type st2 = s1.find_first_of(":");
      if(st1==std::string::npos||st2==std::string::npos) 
@@ -222,7 +248,7 @@ const std::string GizmoThrottling::prozent_from_state(const std::string &s)
    }
    std::string ss,ss2;
    if     (What()==heatload::eCPUthrottling)  {ss="throttling"; ss2="u";}
-   else if(What()==heatload::eCPUperformance) {ss="performance"; ss2="p";}
+//   else if(What()==heatload::eCPUperformance_cur_scale) {ss="performance"; ss2="p";}
    else assert(!"never get here");
    cerr << "Warning: "<<ss<<" not supported,\n if the "<<ss<<"-file "
              " looking good\n please contact me <thoma@muenster.de>\n"
@@ -294,7 +320,7 @@ bool HeatloadGizmo::Visible(const heatload::e_find EF) const
     case heatload::eFan  : return fan.Visible();
     case heatload::eThermal  : return thermal.Visible();
     case heatload::eCPUthrottling  : return cpu_throttling.Visible();
-    case heatload::eCPUperformance  : return cpu_performance.Visible();
+    case heatload::eCPUperformance_cur_scale  : return cpu_performance_cur_scale.Visible();
     case heatload::eLoad  : return cpu_load.Visible();
     default: return true;
    }

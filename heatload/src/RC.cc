@@ -1,4 +1,4 @@
-/* $Id: RC.cc,v 1.13 2003/03/28 07:36:58 thoma Exp $ */
+/* $Id: RC.cc,v 1.14 2005/09/21 14:12:11 thoma Exp $ */
 /*  libcommonc++: ManuProC's main OO library
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -66,7 +66,7 @@ cout << "FOUND   \n";
         HG.thermal.setVisible(show->getBoolAttr("Thermal",true));
         HG.fan.setVisible(show->getBoolAttr("Fan",true));
         HG.cpu_throttling.setVisible(show->getBoolAttr("CPU-Throttling",true));
-        HG.cpu_performance.setVisible(show->getBoolAttr("CPU-Performance",true));
+        HG.cpu_performance_cur_scale.setVisible(show->getBoolAttr("CPU-Performance_cur_scale",true));
       }           
      const Tag *tcolor=data->find("Color");
      if(!show) {std::cerr << "Wrong format in '"<<*i<<"': 'Show' not found\n'"; }     
@@ -92,8 +92,8 @@ cout << "FOUND   \n";
       {
         FOR_EACH_CONST_TAG_OF(t,*auto_throt,"CPU-Throttling")
             AutoVec.push_back(heatload::st_auto(heatload::eCPUthrottling,t->getIntAttr("Temperature"),t->getIntAttr("State")));
-        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"CPU-Performance")
-            AutoVec.push_back(heatload::st_auto(heatload::eCPUperformance,t->getIntAttr("Temperature"),t->getIntAttr("State")));
+//        FOR_EACH_CONST_TAG_OF(t,*auto_throt,"CPU-Performance_cur_scale")
+//            AutoVec.push_back(heatload::st_auto(heatload::eCPUperformance_cur_scale,t->getIntAttr("Temperature"),t->getIntAttr("State")));
         FOR_EACH_CONST_TAG_OF(t,*auto_throt,"Suspend-Sleep")
             AutoVec.push_back(heatload::st_auto(heatload::eSuspend_sleep,t->getIntAttr("Battery")));
       }
@@ -132,7 +132,7 @@ void gtk_acpi::save() const
   show.setBoolAttr("Thermal",HG.thermal.Visible());
   show.setBoolAttr("Fan",HG.fan.Visible());
   show.setBoolAttr("CPU-Throttling",HG.cpu_throttling.Visible());
-  show.setBoolAttr("CPU-Performance",HG.cpu_performance.Visible());
+  show.setBoolAttr("CPU-Performance_cur_scale",HG.cpu_performance_cur_scale.Visible());
 
   Tag &tcolor=data.push_back(Tag("Color"));
   tcolor.setAttr("Thermal_Label",HG.thermal.ColorLabel());

@@ -72,7 +72,7 @@ void evaluate(const std::string &s,HeatloadGizmo &HG,heatload::st_widget &show_w
   else if(s=="load")    HG.cpu_load.toggleVisible() ; 
   else if(s=="fan")     HG.fan.toggleVisible() ; 
   else if(s=="cpu_throttling")   HG.cpu_throttling.toggleVisible() ; 
-  else if(s=="cpu_performance")  HG.cpu_performance.toggleVisible() ; 
+  else if(s=="cpu_performance")  HG.cpu_performance_cur_scale.toggleVisible() ; 
   else if(s=="swsusp")  show_widget.swsusp=!show_widget.swsusp;
   else {cerr << s<<" unknown \n";}
 }

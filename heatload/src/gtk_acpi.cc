@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi.cc,v 1.29 2003/03/24 12:27:45 thoma Exp $ */
+/* $Id: gtk_acpi.cc,v 1.30 2005/09/21 14:12:11 thoma Exp $ */
 /*  Copyright (C) 2001 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@ gtk_acpi::gtk_acpi(const FileFinder &_FF,const heatload::st_widget &_show_widget
   FF.find(HG);
   HG.battery.load_info_file(FF.getFileName(heatload::eBatInfo));
   HG.cpu_throttling.load_thrott_file(FF.getFileName(heatload::eCPUthrottling));
-  HG.cpu_performance.load_thrott_file(FF.getFileName(heatload::eCPUperformance));
+  HG.cpu_performance_cur_scale.load_max_scale("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
   init();
 }
 
@@ -52,7 +52,7 @@ void gtk_acpi::init()
   HG.thermal.setFileForValues(FF.getFile(heatload::eThermal),Gizmo::st_value(1,2,3));
   HG.battery.setFileForValues(FF.getFile(heatload::eBat),Gizmo::st_value());
   HG.cpu_throttling.setFileForValues(FF.getFile(heatload::eCPUthrottling),Gizmo::st_value(2,3));
-  HG.cpu_performance.setFileForValues(FF.getFile(heatload::eCPUperformance),Gizmo::st_value(2,3));
+  HG.cpu_performance_cur_scale.setFileForValues(FF.getFile(heatload::eCPUperformance_cur_scale),Gizmo::st_value(1,1));
   HG.cpu_load.setFileForValues(FF.getFile(heatload::eLoad),Gizmo::st_value());
 
   GDA = manage(new GraphDrawingArea(show_widget.x,show_widget.y,HG));
@@ -116,7 +116,7 @@ gint gtk_acpi::on_gtk_acpi_key_press_event(GdkEventKey *ev)
   else if(ev->keyval=='f') HG.fan.toggleVisible();
   else if(ev->keyval=='g') show_widget.graph = !show_widget.graph;
   else if(ev->keyval=='l') HG.cpu_load.toggleVisible();
-  else if(ev->keyval=='p') HG.cpu_performance.toggleVisible();
+  else if(ev->keyval=='p') HG.cpu_performance_cur_scale.toggleVisible();
   else if(ev->keyval=='r') show_values();
   else if(ev->keyval=='s') show_sudo_error(heatload::eCPUthrottling);
   else if(ev->keyval=='t') HG.thermal.toggleVisible();
@@ -154,7 +154,7 @@ void gtk_acpi::hide_or_show_elements()
   if(HG.cpu_throttling.Visible()) eventbox_cpu_throttling->show();
   else                         eventbox_cpu_throttling->hide();
 
-  if(HG.cpu_performance.Visible()) eventbox_cpu_performance->show();
+  if(HG.cpu_performance_cur_scale.Visible()) eventbox_cpu_performance->show();
   else                          eventbox_cpu_performance->hide();
 }
 

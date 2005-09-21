@@ -46,7 +46,7 @@ namespace heatload{
 
         enum e_find{None=0,eAC='A',eBat='B',eBatInfo='I',eFan='F',
                     eThermal='T',
-                    eCPUthrottling='C',eCPUperformance='P',
+                    eCPUthrottling='C',eCPUperformance_cur_scale='P',
                     eLoad='L',eSuspend_sleep='S',eSuspend_awake='a'};
 
    struct st_widget{unsigned int x;unsigned int y;unsigned int refresh;

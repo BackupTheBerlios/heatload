@@ -51,7 +51,7 @@ class Gizmo{
       std::string einheit;
       const std::string &getFilenameForValues() const {return file_for_values.name;}
       const bool getFileOldStyleForValues() const {return file_for_values.old_style;}
-public:
+   public:
       virtual void get_value();
 
    public:
@@ -69,6 +69,7 @@ public:
 
       void setValue(const std::string &s) { s_value=s;}
       void setValue(int i,const std::string &s) {i_value=i;einheit=s;}
+      void setValue(int i) {i_value=i;}
 
       bool Visible() const {return visible;}
       void setVisible(const bool b) {visible=b;}
@@ -87,6 +88,23 @@ class GizmoThermal : public Gizmo
       GizmoThermal(const heatload::e_find what) : Gizmo(what) 
          {color_label="darkred"; color_meter="tomato"; }
       const std::string Value() ;
+};
+
+class GizmoPerformance_cur_scale : public Gizmo
+{
+      double max_scale ;
+    public:
+      GizmoPerformance_cur_scale(const heatload::e_find what) : Gizmo(what) 
+         {color_label="blue1"; color_meter="SteelBlue1"; }
+      const std::string Value() ;
+
+      const std::string prozent(const std::string &s);
+      void load_max_scale(const std::string &filename);
+      void load_cur_scale(const std::string &filename);
+
+      const int Prozent() const { return int(i_value/max_scale*100.);}
+//      const std::string prozent(const std::string &s);
+
 };
 
 class GizmoThrottling : public Gizmo
@@ -175,14 +193,16 @@ class HeatloadGizmo
         GizmoBattery battery;
         Gizmo fan;
         GizmoThrottling cpu_throttling;
-        GizmoThrottling cpu_performance;
+//        GizmoThrottling cpu_performance;
+        GizmoPerformance_cur_scale cpu_performance_cur_scale;
         GizmoThermal thermal;
         GizmoLoad cpu_load;
 
         HeatloadGizmo() : ac_adapter(heatload::eAC),battery(heatload::eBat),
                    fan(heatload::eFan),
                    cpu_throttling(heatload::eCPUthrottling),
-                   cpu_performance(heatload::eCPUperformance),
+//                   cpu_performance(heatload::eCPUperformance),
+                   cpu_performance_cur_scale(heatload::eCPUperformance_cur_scale),
                    thermal(heatload::eThermal),cpu_load(heatload::eLoad)
                      {};
         bool Visible(const heatload::e_find EF) const;

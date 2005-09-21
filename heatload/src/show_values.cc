@@ -31,13 +31,15 @@ void gtk_acpi::show_values()
     label_bat1->set_text(HG.battery.Value());
     label_load->set_text(HG.cpu_load.Value());
     label_cpu_throttling->set_text(HG.cpu_throttling.Value());
-    label_cpu_performance->set_text(HG.cpu_performance.Value());
+    label_cpu_performance->set_text(HG.cpu_performance_cur_scale.Value());
   }
  if(GDA && show_widget.graph)
   {
     if(HG.cpu_load.Visible()) GDA->getVM()[0].meter.add_value(HG.cpu_load.IValue(),show_widget.x);
     if(HG.thermal.Visible())  GDA->getVM()[1].meter.add_value(HG.thermal.IValue(),show_widget.x);
     if(HG.battery.Visible())  GDA->getVM()[2].meter.add_value(HG.battery.Prozent(),show_widget.x);
+    if(HG.cpu_performance_cur_scale.Visible())  
+                              GDA->getVM()[3].meter.add_value(HG.cpu_performance_cur_scale.Prozent(),show_widget.x);
     GDA->refresh_pixmap();
   }
 }

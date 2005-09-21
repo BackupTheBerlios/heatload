@@ -1,4 +1,4 @@
-/* $Id: gtk_acpi_menu.cc,v 1.15 2003/06/20 06:50:06 thoma Exp $ */
+/* $Id: gtk_acpi_menu.cc,v 1.16 2005/09/21 14:12:11 thoma Exp $ */
 /*  Copyright (C) 2002 Malte Thoma
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -34,17 +34,18 @@ void gtk_acpi::menu_init()
      throttling_menu->append(*_t);
    }
   }
+#if 0
   Gtk::MenuItem *performance = manage(new class Gtk::MenuItem("CPU performance"));
   {
   Gtk::Menu *performance_menu = manage(new class Gtk::Menu());
   performance->set_submenu(*performance_menu);
-  for(std::vector<GizmoThrottling::st_state>::const_iterator i=HG.cpu_performance.getVec().begin();i!=HG.cpu_performance.getVec().end();++i)
+  for(std::vector<GizmoThrottling::st_state>::const_iterator i=HG.cpu_performance_cur_scale.getVec().begin();i!=HG.cpu_performance_cur_scale.getVec().end();++i)
    {Gtk::MenuItem *_t = manage(new class Gtk::MenuItem(i->prozent));
-     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state,heatload::eCPUperformance));
+     _t->activate.connect(SigC::bind(SigC::slot(this,&gtk_acpi::select_throttling),i->state,heatload::eCPUperformance_cur_scale));
      performance_menu->append(*_t);
    }
   }
-
+#endif
   Gtk::MenuItem *suspend = manage(new class Gtk::MenuItem("Suspend"));
   {
   Gtk::Menu *_menu=manage(new class Gtk::Menu());
@@ -85,7 +86,7 @@ void gtk_acpi::menu_init()
   _close->activate.connect(SigC::slot(this,&gtk_acpi::ende));
 
   menu->append(*throttling);
-  menu->append(*performance);
+//  menu->append(*performance);
   if(show_widget.swsusp) menu->append(*suspend);
   menu->append(*fan);
   menu->append(*help);
